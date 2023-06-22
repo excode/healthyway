@@ -25,26 +25,6 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/secure": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/secure.js"
-    ],
-    "/secure/chef": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/secure/chef.js"
-    ],
-    "/secure/delivery": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/secure/delivery.js"
-    ],
-    "/secure/subscription": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/secure/subscription.js"
-    ],
     "/secure/users": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
