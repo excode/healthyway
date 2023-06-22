@@ -1,0 +1,10 @@
+{
+  "/_app": "pages/_app.js",
+  "/_document": "pages/_document.js",
+  "/_error": "pages/_error.js",
+  "/secure": "pages/secure.js",
+  "/secure/users": "pages/secure/users.js",
+  "/secure/delivery": "pages/secure/delivery.js",
+  "/secure/chef": "pages/secure/chef.js",
+  "/secure/subscription": "pages/secure/subscription.js"
+}
