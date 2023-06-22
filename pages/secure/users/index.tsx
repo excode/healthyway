@@ -21,8 +21,10 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useEffect, useRef, useState } from "react";
+import countryData from "../../utilities/countryData.json";
 
 const UsersPage = () => {
+  console.log({ countryData });
   const { asPath } = useRouter();
   const validation = [
     { id: "firstName", type: validate.text, max: 50, min: 2, required: true },
@@ -45,6 +47,7 @@ const UsersPage = () => {
     email: "",
     lastName: "",
   };
+
   const [userss, setUserss] = useState<Users[]>([]);
   const [backupUserss, setBackupUserss] = useState<Users[]>([]);
   const [loading, setLoading] = useState(false);
@@ -71,6 +74,7 @@ const UsersPage = () => {
   const clearFilter1 = () => {
     initFilters1();
   };
+
   useEffect(() => {
     setLoading(true);
     (async () => {
@@ -80,7 +84,6 @@ const UsersPage = () => {
         setBackupUserss(d.docs);
         setLoading(false);
         setTotalRecords(d.count);
-
         let dataKitchens_ = await kitchenService.getKitchenAll({});
         setDataKitchens(dataKitchens_.data);
 
@@ -136,13 +139,13 @@ const UsersPage = () => {
     });
   };
 
-  const datacountrys = [{ value: "NA", name: "NA" }];
+  const datacountrys = countryData;
 
   const datauserTypes = [
     { value: "Super Admin", name: "Super Admin" },
     { value: "Admin", name: "Admin" },
     { value: "Kitchen", name: "Kitchen" },
-    { value: "Cheif", name: "Cheif" },
+    { value: "Chef", name: "Chef" },
     { value: "Customer", name: "Customer" },
   ];
 
@@ -681,6 +684,16 @@ const UsersPage = () => {
 
             <Column
               showAddButton={false}
+              field="lastName"
+              header="Last Name"
+              sortable
+              headerStyle={{ minWidth: "10rem" }}
+              filter
+              filterPlaceholder="Search by lastName"
+            ></Column>
+
+            <Column
+              showAddButton={false}
               field="email"
               header="Email"
               sortable
@@ -719,16 +732,6 @@ const UsersPage = () => {
               filterField="userType"
               filter
               filterElement={userTypeFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="lastName"
-              header="Last Name"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by lastName"
             ></Column>
 
             <Column
