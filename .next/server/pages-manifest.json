@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/secure/chef/dataview": "pages/secure/chef/dataview.js",
-  "/secure/chef": "pages/secure/chef.js"
+  "/secure/mealGroup/dataview": "pages/secure/mealGroup/dataview.js",
+  "/secure/promotions/dataview": "pages/secure/promotions/dataview.js"
 }
