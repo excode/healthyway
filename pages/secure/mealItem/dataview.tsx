@@ -234,7 +234,7 @@ const MealItemDataview = () => {
             <div className="text-2xl font-bold text-center mt-3 mb-1">
               {data.name}
             </div>
-            <div className="mb-3">{data.groupName}</div>
+            <div className="mb-3 ">{data.groupName}</div>
             {/* <div className="text-2xl font-bold">{data.createBy}</div> */}
             {/* <div className="mb-3">{data.updateBy}</div> */}
             <Rating value={data.id} readOnly cancel={false} />
