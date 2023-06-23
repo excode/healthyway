@@ -151,6 +151,7 @@ const LoginPage: Page = () => {
                 </a>
               </div>
               <Button
+                loading={loading}
                 label="Sign In"
                 className="w-full p-3 text-xl"
                 onClick={onSubmit}
