@@ -132,6 +132,7 @@ const MealItemPage = () => {
     })();
     initFilters1();
   }, [refreshFlag]);
+
   const initFilters1 = () => {
     setFilters1({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
