@@ -17,6 +17,7 @@ import {
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
@@ -24,7 +25,6 @@ import React, { useEffect, useRef, useState } from "react";
 import countryData from "../../utilities/countryData.json";
 
 const UsersPage = () => {
-  console.log({ countryData });
   const { asPath } = useRouter();
   const validation = [
     { id: "firstName", type: validate.text, max: 50, min: 2, required: true },
@@ -142,11 +142,11 @@ const UsersPage = () => {
   const datacountrys = countryData;
 
   const datauserTypes = [
-    { value: "Super Admin", name: "Super Admin" },
-    { value: "Admin", name: "Admin" },
-    { value: "Kitchen", name: "Kitchen" },
-    { value: "Chef", name: "Chef" },
-    { value: "Customer", name: "Customer" },
+    { value: "0", name: "Super Admin" },
+    { value: "1", name: "Admin" },
+    { value: "2", name: "Kitchen" },
+    { value: "3", name: "Chef" },
+    { value: "4", name: "Customer" },
   ];
 
   const countryFilterTemplate = (options: any) => {
@@ -247,6 +247,7 @@ const UsersPage = () => {
     if (validationErrors.length == 0) {
       let _userss: Users[] = [...userss];
       let _users: Users = { ...users };
+
       if (users.id) {
         let d = await usersService.updateUsers(_users);
         if (d.error == undefined) {
@@ -271,6 +272,7 @@ const UsersPage = () => {
           });
         }
       } else {
+        console.log({ _users });
         let d = await usersService.addUsers(_users);
         if (d.error == undefined) {
           var newID = d.id;
@@ -545,12 +547,12 @@ const UsersPage = () => {
       <>
         <Button
           icon="pi pi-pencil"
-          className="p-button-rounded p-button-success mr-2"
+          className="p-button-rounded p-button-success "
           onClick={() => editUsers(rowData)}
         />
         <Button
           icon="pi pi-trash"
-          className="p-button-rounded p-button-warning"
+          className="p-button-rounded p-button-warning mx-2"
           onClick={() => confirmDeleteUsers(rowData)}
         />
 
@@ -765,6 +767,7 @@ const UsersPage = () => {
                 <label htmlFor="firstName">First Name</label>
                 <InputText
                   id="firstName"
+                  placeholder="First Name"
                   value={users.firstName}
                   onChange={(e) => onInputChange(e, "firstName")}
                   required
@@ -778,6 +781,7 @@ const UsersPage = () => {
                 <label htmlFor="lastName">Last Name</label>
                 <InputText
                   id="lastName"
+                  placeholder="Last Name"
                   value={users.lastName}
                   onChange={(e) => onInputChange(e, "lastName")}
                   required
@@ -788,24 +792,11 @@ const UsersPage = () => {
               </div>
             </div>
 
-            {/* <div className="field">
-              <label htmlFor="password">Password</label>
-              <Password
-                id="password"
-                value={users.password}
-                onChange={(e) => onInputChange(e, "password")}
-                toggleMask
-                required
-                className={classNames({
-                  "p-invalid": submitted && !users.password,
-                })}
-              />
-            </div> */}
-
             <div className="field">
               <label htmlFor="email">Email</label>
               <InputText
                 id="email"
+                placeholder="Email"
                 value={users.email}
                 onChange={(e) => onInputChange(e, "email")}
                 required
@@ -819,8 +810,23 @@ const UsersPage = () => {
               <label htmlFor="mobile">Mobile</label>
               <InputText
                 id="mobile"
+                placeholder="Mobile number"
                 value={users.mobile}
                 onChange={(e) => onInputChange(e, "mobile")}
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="password">Password</label>
+              <Password
+                id="password"
+                value={users.password}
+                onChange={(e) => onInputChange(e, "password")}
+                toggleMask
+                required
+                className={classNames({
+                  "p-invalid": submitted && !users.password,
+                })}
               />
             </div>
 
@@ -829,6 +835,7 @@ const UsersPage = () => {
                 <label htmlFor="country">Country</label>
                 <Dropdown
                   id="country"
+                  placeholder=""
                   optionLabel="name"
                   value={users.country}
                   options={datacountrys}

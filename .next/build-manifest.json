@@ -25,10 +25,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/secure/users": [
+    "/secure/mealItem/dataview": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/secure/users.js"
+      "static/chunks/pages/secure/mealItem/dataview.js"
     ]
   },
   "ampFirstPages": []
