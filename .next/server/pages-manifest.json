@@ -2,5 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/secure/ingredient/dataview": "pages/secure/ingredient/dataview.js"
+  "/secure/mealItem": "pages/secure/mealItem.js"
 }
