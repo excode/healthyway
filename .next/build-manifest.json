@@ -25,30 +25,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/secure": [
+    "/secure/mealGroup/dataview": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/secure.js"
+      "static/chunks/pages/secure/mealGroup/dataview.js"
     ],
-    "/secure/chef": [
+    "/secure/promotions/dataview": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/secure/chef.js"
-    ],
-    "/secure/delivery": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/secure/delivery.js"
-    ],
-    "/secure/subscription": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/secure/subscription.js"
-    ],
-    "/secure/users": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/secure/users.js"
+      "static/chunks/pages/secure/promotions/dataview.js"
     ]
   },
   "ampFirstPages": []
