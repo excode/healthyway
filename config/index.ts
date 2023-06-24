@@ -7,7 +7,7 @@ type Config={
     jwt_secret:string,
 };
 export default {
-    serverURI:'https://dev.ikra.my',
+    serverURI:'http://dev.ikra.my',
     title:"Meal Delivery & Subscription",
     fixedLayout: false,
     hideLogoOnMobile: false,

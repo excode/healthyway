@@ -23,9 +23,14 @@ import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useEffect, useRef, useState } from "react";
 import countryData from "../../utilities/countryData.json";
-
+import { UserData } from '@services/Login';
+import { GetLoginResponse } from "@lib/httpRequest";
+import { useCookies } from 'react-cookie';
+import jwt_decode, { JwtPayload } from 'jwt-decode';
 const UsersPage = () => {
   const { asPath } = useRouter();
+  const [userData,setUserData] = useState<UserData>({email:''});
+  const [cookies, setCookie,removeCookie] = useCookies(['user']);
   const validation = [
     { id: "firstName", type: validate.text, max: 50, min: 2, required: true },
     {
@@ -105,6 +110,13 @@ const UsersPage = () => {
     })();
     initFilters1();
   }, [refreshFlag]);
+  useEffect(() => {
+        
+    const data:GetLoginResponse =  cookies.user
+    let token:string = data.accessToken||''
+    const decoded:UserData = jwt_decode<JwtPayload>(token) as UserData;
+    setUserData(decoded);
+}, []);
   const initFilters1 = () => {
     setFilters1({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -142,11 +154,10 @@ const UsersPage = () => {
   const datacountrys = countryData;
 
   const datauserTypes = [
-    { value: "0", name: "Super Admin" },
-    { value: "1", name: "Admin" },
-    { value: "2", name: "Kitchen" },
-    { value: "3", name: "Chef" },
-    { value: "4", name: "Customer" },
+    { value: 0, name: "Admin" },
+    { value: 1, name: "Kitchen" },
+    { value: 2, name: "Chef" },
+    { value: 3, name: "Customer" },
   ];
 
   const countryFilterTemplate = (options: any) => {
@@ -171,7 +182,7 @@ const UsersPage = () => {
         <div className="mb-3 text-bold">UserType Picker</div>
         <Dropdown
           value={options.value}
-          options={datauserTypes}
+          options={datauserTypes.filter(e=>e.value>userData!.permissionLevel!)}
           onChange={(e) => options.filterCallback(e.value)}
           optionLabel="name"
           optionValue="value"
@@ -831,7 +842,7 @@ const UsersPage = () => {
             </div>
 
             <div className="grid">
-              <div className="field col-4">
+              <div className="field col-6">
                 <label htmlFor="country">Country</label>
                 <Dropdown
                   id="country"
@@ -842,18 +853,22 @@ const UsersPage = () => {
                   onChange={(e) => onInputChange(e, "country")}
                 />
               </div>
-              <div className="field col-4">
+              <div className="field col-6">
                 <label htmlFor="userType">User Types</label>
                 <Dropdown
                   id="userType"
                   optionLabel="name"
                   value={users.userType}
-                  options={datauserTypes}
+                  options={datauserTypes.filter(e=>e.value>userData!.permissionLevel!)}
                   onChange={(e) => onInputChange(e, "userType")}
                 />
               </div>
 
-              <div className="field col-4">
+              
+            </div>
+            
+            {userData.permissionLevel==0?(
+            <div className="field">
                 <label htmlFor="kitchen">Kitchen</label>
                 <Dropdown
                   id="kitchen"
@@ -864,7 +879,10 @@ const UsersPage = () => {
                   onChange={(e) => onInputChange(e, "kitchen")}
                 />
               </div>
-            </div>
+            ):(
+              <p></p>
+            )}
+            
           </Dialog>
 
           <Dialog

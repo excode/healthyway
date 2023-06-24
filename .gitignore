@@ -39,3 +39,4 @@ jspm_packages
 
 #restApi
 restclient
+config/index.ts
