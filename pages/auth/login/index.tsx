@@ -67,7 +67,6 @@ const LoginPage: Page = () => {
       <div className="flex flex-column align-items-center justify-content-center">
         <img
           src={`/layout/images/logo.png`}
-          // src={"/layout/"}
           // src={"/logo.png"}
           //   src={`/layout/images/logo-${
           //     layoutConfig?.colorScheme === "light" ? "dark" : "white"

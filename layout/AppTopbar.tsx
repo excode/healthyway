@@ -45,6 +45,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     router.push("/auth/login");
   };
 
+  console.log(userData);
   return (
     <div className="layout-topbar">
       <Link href="/" className="layout-topbar-logo">
@@ -84,7 +85,13 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
           "layout-topbar-menu-mobile-active": layoutState.profileSidebarVisible,
         })}
       >
-        <span className="p-link layout-topbar-button">
+        <span className="p-link layout-topbar-button flex gap-2 mr-2">
+          {userData.permissionLevel === 2 && (
+            <img src="/layout/images/chef.png" width={30} height={30} />
+          )}
+          {userData.permissionLevel === 1 && (
+            <img src="/layout/images/kitchen.png" width={30} height={30} />
+          )}
           {userData.firstName} {userData.lastName}
         </span>
         <button
