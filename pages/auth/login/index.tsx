@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { LoginData } from "@services/Login";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
@@ -66,14 +65,16 @@ const LoginPage: Page = () => {
     <div className={containerClassName}>
       <Toast ref={toast} />
       <div className="flex flex-column align-items-center justify-content-center">
-        <Image
-          src={"/logo.png"}
+        <img
+          src={`/layout/images/logo.png`}
+          // src={"/layout/"}
+          // src={"/logo.png"}
           //   src={`/layout/images/logo-${
           //     layoutConfig?.colorScheme === "light" ? "dark" : "white"
           //   }.svg`}
           width={100}
           height={100}
-          alt="Sakai logo"
+          alt="logo"
           className="mb-5 flex-shrink-0"
         />
         <div
