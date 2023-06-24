@@ -146,7 +146,6 @@ const Dashboard = () => {
       ) {
         setCustomers(dCustomers.docs);
         setMealItems(dMeal.docs);
-        console.log({ dMeal });
         // setBackupCustomers(d.docs);
         // setLoading(false);
         setTotalCustomerRecords(dCustomers.count);
@@ -170,7 +169,6 @@ const Dashboard = () => {
       currency: "USD",
     });
   };
-  console.log({ mealItems });
   return (
     <div className="grid">
       <div className="col-12 lg:col-6 xl:col-3">
