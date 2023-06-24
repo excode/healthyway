@@ -6,7 +6,8 @@ export type LoginData = {
 };
 export type UserData = {
   email:String,
-  name?: String,
+  firstName?: String,
+  lastName?: String,
   mobile?: String,
   userId?: String,
   image?: String,

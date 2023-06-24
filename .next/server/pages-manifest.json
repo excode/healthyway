@@ -2,8 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/secure/subscription": "pages/secure/subscription.js",
-  "/secure/mealGroup": "pages/secure/mealGroup.js",
-  "/secure/users": "pages/secure/users.js",
-  "/secure/customer": "pages/secure/customer.js"
+  "/auth/login": "pages/auth/login.js",
+  "/secure": "pages/secure.js",
+  "/": "pages/index.js"
 }
