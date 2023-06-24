@@ -135,6 +135,7 @@ const Dashboard = () => {
     // setLoading(true);
     (async () => {
       let dCustomers = await customerService.getCustomer({ limit: 10 });
+      // console.log(dCustomers)
       let dMeal = await mealitemService.getMealItem({ limit: 10 });
       let dMealOrder = await mealorderitemService.getMealOrderItem({
         limit: 10,
