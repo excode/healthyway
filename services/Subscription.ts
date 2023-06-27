@@ -22,7 +22,7 @@ export type Subscription = {
   lunch?: string[] | any;
   dinner?: string[] | any;
   kitchen?: string | any;
-  day: string;
+  day?: string;
 };
 
 export type SubscriptionQuery = Omit<
@@ -42,6 +42,7 @@ export type SubscriptionQuery = Omit<
   endDate_mode?: string;
   status_mode?: string;
   kitchen_mode?: string;
+  day_mode?: string;
   page?: number;
   limit?: number;
   totalPages?: number;

@@ -871,7 +871,9 @@ const SubscriptionPage = () => {
             onHide={hideDialog}
           >
             <div className="field">
-              <label htmlFor="customerId">Customer Id</label>
+              <label className="font-bold" htmlFor="customerId">
+                Customer Id
+              </label>
               <AutoComplete
                 field="name"
                 id="customerId"
@@ -884,7 +886,9 @@ const SubscriptionPage = () => {
 
             <div className="flex gap-5">
               <div className="field">
-                <label htmlFor="startDate">Start Date</label>
+                <label className="font-bold" htmlFor="startDate">
+                  Start Date
+                </label>
                 <Calendar
                   id="startDate"
                   value={
@@ -904,7 +908,9 @@ const SubscriptionPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="endDate">End Date</label>
+                <label className="font-bold" htmlFor="endDate">
+                  End Date
+                </label>
                 <Calendar
                   id="endDate"
                   value={
@@ -923,7 +929,9 @@ const SubscriptionPage = () => {
             </div>
             <div className="flex gap-2">
               <div className="field ">
-                <label htmlFor="status">Status</label>
+                <label className="font-bold" htmlFor="status">
+                  Status
+                </label>
                 <Dropdown
                   id="status"
                   optionLabel="name"
@@ -934,7 +942,9 @@ const SubscriptionPage = () => {
               </div>
 
               <div className="field ">
-                <label htmlFor="weekday">Weekday</label>
+                <label className="font-bold" htmlFor="weekday">
+                  Weekday
+                </label>
                 <Dropdown
                   id="day"
                   optionLabel="name"
@@ -945,7 +955,9 @@ const SubscriptionPage = () => {
               </div>
             </div>
             <div className="field">
-              <label htmlFor="breakfast">Breakfast</label>
+              <label className="font-bold" htmlFor="breakfast">
+                Breakfast
+              </label>
               <Dropdown
                 id="breakfast"
                 optionLabel="name"
@@ -965,7 +977,9 @@ const SubscriptionPage = () => {
             </div>
 
             <div className="field">
-              <label htmlFor="lunch">Lunch</label>
+              <label className="font-bold" htmlFor="lunch">
+                Lunch
+              </label>
               <Dropdown
                 id="breakfast"
                 optionLabel="name"
@@ -985,7 +999,9 @@ const SubscriptionPage = () => {
             </div>
 
             <div className="field">
-              <label htmlFor="dinner">Dinner</label>
+              <label className="font-bold" htmlFor="dinner">
+                Dinner
+              </label>
               <Dropdown
                 id="dinner"
                 optionLabel="name"

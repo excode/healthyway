@@ -207,7 +207,7 @@ const MealItemPage = () => {
           alt="image"
           preview
           downloadable
-          width="100"
+          width="50"
         />
       );
     } else if (rowData.image == undefined || rowData.image == "") {
@@ -955,7 +955,9 @@ const MealItemPage = () => {
             onHide={hideDialog}
           >
             <div className="field">
-              <label htmlFor="groupName">Group Name</label>
+              <label className="font-bold" htmlFor="groupName">
+                Group Name
+              </label>
               <Dropdown
                 id="groupName"
                 optionLabel="name"
@@ -967,7 +969,9 @@ const MealItemPage = () => {
             </div>
 
             <div className="field">
-              <label htmlFor="name">name</label>
+              <label className="font-bold" htmlFor="name">
+                Name
+              </label>
               <InputText
                 id="name"
                 value={mealItem.name}
@@ -980,7 +984,9 @@ const MealItemPage = () => {
             </div>
 
             <div className="field">
-              <label htmlFor="code">Code</label>
+              <label className="font-bold" htmlFor="code">
+                Code
+              </label>
               <InputText
                 id="code"
                 value={mealItem.code}
@@ -993,7 +999,9 @@ const MealItemPage = () => {
             </div>
 
             <div className="field">
-              <label htmlFor="weekdays">Week Days</label>
+              <label className="font-bold" htmlFor="weekdays">
+                Week Days
+              </label>
               <div className="">
                 <div className="grid gap-3 mt-3">
                   {dataweekdayss.map((item) => {
@@ -1021,33 +1029,38 @@ const MealItemPage = () => {
             </div>
 
             <div className="field">
-              <label htmlFor="mealType">Meal type</label>
-
-              {datamealTypes.map((item) => {
-                return (
-                  <div
-                    key={item.value}
-                    className="flex gap-1 mb-1 align-items-center"
-                  >
-                    <Checkbox
-                      inputId={item.value}
-                      name="mealType"
-                      value={item}
-                      onChange={(e) => onInputChange(e, "mealType")}
-                      checked={mealItem.mealType.some(
-                        (i: any) => i === item.value
-                      )}
-                    />
-                    <label htmlFor={item.value} className="ml-2">
-                      {item.name}
-                    </label>
-                  </div>
-                );
-              })}
+              <label className="font-bold" htmlFor="mealType ">
+                Meal type
+              </label>
+              <div className="flex gap-3 mt-2">
+                {datamealTypes.map((item) => {
+                  return (
+                    <div
+                      key={item.value}
+                      className="flex gap-1 mb-1 align-items-center"
+                    >
+                      <Checkbox
+                        inputId={item.value}
+                        name="mealType"
+                        value={item}
+                        onChange={(e) => onInputChange(e, "mealType")}
+                        checked={mealItem.mealType.some(
+                          (i: any) => i === item.value
+                        )}
+                      />
+                      <label htmlFor={item.value} className="ml-0">
+                        {item.name}
+                      </label>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="field">
-              <label htmlFor="description">description</label>
+              <label className="font-bold" htmlFor="description">
+                Description
+              </label>
               <InputTextarea
                 id="description"
                 value={mealItem.description}
@@ -1062,7 +1075,9 @@ const MealItemPage = () => {
             </div>
 
             <div className="field">
-              <label htmlFor="price">price</label>
+              <label className="font-bold" htmlFor="price">
+                Price
+              </label>
               <InputNumber
                 id="price"
                 value={mealItem.price}
@@ -1071,7 +1086,9 @@ const MealItemPage = () => {
             </div>
 
             <div className="field">
-              <label htmlFor="active">Active</label>
+              <label className="font-bold" htmlFor="active">
+                Active
+              </label>
               <TriStateCheckbox
                 name="active"
                 id="active"

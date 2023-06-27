@@ -278,6 +278,7 @@ const Dashboard = () => {
                 />
               )}
             />
+
             <Column
               field="name"
               header="Name"
