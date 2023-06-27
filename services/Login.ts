@@ -1,32 +1,26 @@
-import {postLoginData} from '@lib/httpRequest'
+import { postLoginData } from "@lib/httpRequest";
 
 export type LoginData = {
-  email:String,
-  password: String
+  email: String;
+  password: String;
 };
 export type UserData = {
-  email:String,
-  firstName?: String,
-  lastName?: String,
-  mobile?: String,
-  userId?: String,
-  image?: String,
-  expireAt?:number,
-  permissionLevel?:number,
-  webAccess?:number
+  email: String;
+  firstName?: String;
+  lastName?: String;
+  mobile?: String;
+  userId?: String;
+  image?: String;
+  expireAt?: number;
+  permissionLevel?: number;
+  webAccess?: number;
 };
 
-    export class LoginService {
-      constructor() {
-          
-      }
-    
-      
-       login (request:LoginData) {
-        const response =  postLoginData('/auth',request);
-        return response;
-      }
-      
-      
-   
-    }
+export class LoginService {
+  constructor() {}
+
+  login(request: LoginData) {
+    const response = postLoginData("/auth", request);
+    return response;
+  }
+}

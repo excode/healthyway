@@ -1,7 +1,10 @@
+import { GetLoginResponse } from "@lib/httpRequest";
 import { validate, validateForm } from "@lib/validation";
 import { SortType } from "@services/CommonTypes";
 import { Kitchen, KitchenService } from "@services/Kitchen";
+import { UserData } from "@services/Login";
 import { Users, UsersKey, UsersQuery, UsersService } from "@services/Users";
+import jwt_decode, { JwtPayload } from "jwt-decode";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -22,15 +25,12 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useEffect, useRef, useState } from "react";
+import { useCookies } from "react-cookie";
 import countryData from "../../utilities/countryData.json";
-import { UserData } from '@services/Login';
-import { GetLoginResponse } from "@lib/httpRequest";
-import { useCookies } from 'react-cookie';
-import jwt_decode, { JwtPayload } from 'jwt-decode';
 const UsersPage = () => {
   const { asPath } = useRouter();
-  const [userData,setUserData] = useState<UserData>({email:''});
-  const [cookies, setCookie,removeCookie] = useCookies(['user']);
+  const [userData, setUserData] = useState<UserData>({ email: "" });
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const validation = [
     { id: "firstName", type: validate.text, max: 50, min: 2, required: true },
     {
@@ -111,12 +111,11 @@ const UsersPage = () => {
     initFilters1();
   }, [refreshFlag]);
   useEffect(() => {
-        
-    const data:GetLoginResponse =  cookies.user
-    let token:string = data.accessToken||''
-    const decoded:UserData = jwt_decode<JwtPayload>(token) as UserData;
+    const data: GetLoginResponse = cookies.user;
+    let token: string = data.accessToken || "";
+    const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
     setUserData(decoded);
-}, []);
+  }, []);
   const initFilters1 = () => {
     setFilters1({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -182,7 +181,9 @@ const UsersPage = () => {
         <div className="mb-3 text-bold">UserType Picker</div>
         <Dropdown
           value={options.value}
-          options={datauserTypes.filter(e=>e.value>userData!.permissionLevel!)}
+          options={datauserTypes.filter(
+            (e) => e.value > userData!.permissionLevel!
+          )}
           onChange={(e) => options.filterCallback(e.value)}
           optionLabel="name"
           optionValue="value"
@@ -859,16 +860,16 @@ const UsersPage = () => {
                   id="userType"
                   optionLabel="name"
                   value={users.userType}
-                  options={datauserTypes.filter(e=>e.value>userData!.permissionLevel!)}
+                  options={datauserTypes.filter(
+                    (e) => e.value > userData!.permissionLevel!
+                  )}
                   onChange={(e) => onInputChange(e, "userType")}
                 />
               </div>
-
-              
             </div>
-            
-            {userData.permissionLevel==0?(
-            <div className="field">
+
+            {userData.permissionLevel == 0 ? (
+              <div className="field">
                 <label htmlFor="kitchen">Kitchen</label>
                 <Dropdown
                   id="kitchen"
@@ -879,10 +880,9 @@ const UsersPage = () => {
                   onChange={(e) => onInputChange(e, "kitchen")}
                 />
               </div>
-            ):(
+            ) : (
               <p></p>
             )}
-            
           </Dialog>
 
           <Dialog
