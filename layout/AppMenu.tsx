@@ -1,21 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
-import { useContext, useEffect, useState} from "react";
+import { GetLoginResponse } from "@lib/httpRequest";
+import jwt_decode, { JwtPayload } from "jwt-decode";
+import { useContext, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import { AppMenuItem } from "../types/types";
 import AppMenuitem from "./AppMenuitem";
+import chefMenus from "./chef-menuItems";
 import { LayoutContext } from "./context/layoutcontext";
 import { MenuProvider } from "./context/menucontext";
-import adminMenus from "./menuItems";
-import chefMenus from "./chef-menuItems";
 import kitchenMenus from "./kitchen-menuItems";
-import { GetLoginResponse } from "@lib/httpRequest";
-import { useCookies } from 'react-cookie';
-import jwt_decode, { JwtPayload } from 'jwt-decode';
+import adminMenus from "./menuItems";
 
 import { UserData } from "@services/Login";
 
 const AppMenu = () => {
   const { layoutConfig } = useContext(LayoutContext);
-  const [cookies, setCookie,removeCookie] = useCookies(['user']);
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [menus, setMenus] = useState<AppMenuItem>(adminMenus);
   var model: AppMenuItem[] = [
     {
@@ -26,18 +26,17 @@ const AppMenu = () => {
   ];
 
   useEffect(() => {
-        
-    const data:GetLoginResponse =  cookies.user
-    let token:string = data.accessToken||''
-    const decoded:UserData = jwt_decode<JwtPayload>(token) as UserData;
-    if(decoded.permissionLevel==0){
-      setMenus(adminMenus)
-    }else if(decoded.permissionLevel==1){
-      setMenus(kitchenMenus)
-    }else if(decoded.permissionLevel==2){
-      setMenus(chefMenus)
+    const data: GetLoginResponse = cookies.user;
+    let token: string = data.accessToken || "";
+    const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
+    if (decoded.permissionLevel == 0) {
+      setMenus(adminMenus);
+    } else if (decoded.permissionLevel == 1) {
+      setMenus(kitchenMenus);
+    } else if (decoded.permissionLevel == 2) {
+      setMenus(chefMenus);
     }
-}, []);
+  }, []);
 
   return (
     <MenuProvider>

@@ -207,7 +207,7 @@ const MealItemPage = () => {
           alt="image"
           preview
           downloadable
-          width="250"
+          width="100"
         />
       );
     } else if (rowData.image == undefined || rowData.image == "") {
@@ -216,7 +216,7 @@ const MealItemPage = () => {
           onMouseOver={(e: any) => setCurrentImage(rowData.id ?? "")}
           src="/photo_na.png"
           alt="image"
-          width="250"
+          width="100"
         />
       );
     }
@@ -253,7 +253,7 @@ const MealItemPage = () => {
 
   const datamealTypes = [
     { value: "Lunch", name: "Lunch" },
-    { value: " Dinner", name: " Dinner" },
+    { value: "Dinner", name: "Dinner" },
     { value: "Breakfast", name: "Breakfast" },
   ];
 

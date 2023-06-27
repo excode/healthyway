@@ -1,8 +1,6 @@
 const menus = {
   label: "Chef Dashboard",
   items: [
-    
-   
     {
       label: "MealOrder",
       icon: "pi pi-fw pi-cart-plus",
@@ -24,9 +22,6 @@ const menus = {
       icon: "pi pi-fw pi-bell",
       to: "/secure/notification",
     },
-    
-    
-   
   ],
 };
 
