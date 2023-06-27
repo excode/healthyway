@@ -8,7 +8,6 @@ import {
   SubscriptionQuery,
   SubscriptionService,
 } from "@services/Subscription";
-import { weekdays } from "moment";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -25,7 +24,6 @@ import {
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { ListBox } from "primereact/listbox";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
@@ -41,7 +39,9 @@ const SubscriptionPage = () => {
     { id: "breakfast", type: validate.array, required: true },
     { id: "lunch", type: validate.array, required: true },
     { id: "dinner", type: validate.array, required: true },
+    { id: "day", type: validate.text, require: true },
   ];
+
   let emptySubscription: Subscription = {
     customerId: "",
     startDate: new Date(),
@@ -50,6 +50,7 @@ const SubscriptionPage = () => {
     breakfast: [],
     lunch: [],
     dinner: [],
+    day: "",
   };
 
   const dataWeekdays = [
@@ -107,7 +108,6 @@ const SubscriptionPage = () => {
     setLoading(true);
     (async () => {
       let d = await subscriptionService.getSubscription({ limit: row });
-      let dMealItem = await mealitemService.getMealItem({ limit: row });
       if (d.error == undefined) {
         setSubscriptions(d.docs);
         setBackupSubscriptions(d.docs);
@@ -324,7 +324,7 @@ const SubscriptionPage = () => {
   const openNew = async () => {
     const allMealItem = await mealitemService.getMealItemAll({});
     setAllMealItem(allMealItem?.data);
-    console.log(allMealItem?.data);
+    // console.log(allMealItem?.data);
 
     const breakFastMeal = allMealItem?.data.filter((meal) =>
       meal.mealType.includes("Breakfast")
@@ -341,9 +341,9 @@ const SubscriptionPage = () => {
     );
     setDinnerMeal(dinnerMeal);
 
-    console.log({ breakFastMeal });
-    console.log({ lunchMeal });
-    console.log({ dinnerMeal });
+    // console.log({ breakFastMeal });
+    // console.log({ lunchMeal });
+    // console.log({ dinnerMeal });
     // setAllMealItem();
     setSubscription(emptySubscription);
     setSubmitted(false);
@@ -879,67 +879,69 @@ const SubscriptionPage = () => {
               />
             </div>
 
+            <div className="flex gap-5">
+              <div className="field">
+                <label htmlFor="startDate">Start Date</label>
+                <Calendar
+                  id="startDate"
+                  value={
+                    subscription.startDate
+                      ? new Date(subscription.startDate)
+                      : null
+                  }
+                  onChange={(e) => onInputChange(e, "startDate")}
+                  dateFormat="mm/dd/yy"
+                  placeholder="mm/dd/yyyy"
+                  mask="99/99/9999"
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !subscription.startDate,
+                  })}
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="endDate">End Date</label>
+                <Calendar
+                  id="endDate"
+                  value={
+                    subscription.endDate ? new Date(subscription.endDate) : null
+                  }
+                  onChange={(e) => onInputChange(e, "endDate")}
+                  dateFormat="mm/dd/yy"
+                  placeholder="mm/dd/yyyy"
+                  mask="99/99/9999"
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !subscription.endDate,
+                  })}
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <div className="field ">
+                <label htmlFor="status">Status</label>
+                <Dropdown
+                  id="status"
+                  optionLabel="name"
+                  value={subscription.status}
+                  options={datastatuss}
+                  onChange={(e) => onInputChange(e, "status")}
+                />
+              </div>
+
+              <div className="field ">
+                <label htmlFor="weekday">Weekday</label>
+                <Dropdown
+                  id="day"
+                  optionLabel="name"
+                  value={subscription.day}
+                  options={dataWeekdays}
+                  onChange={(e) => onInputChange(e, "day")}
+                />
+              </div>
+            </div>
             <div className="field">
-              <label htmlFor="startDate">Start Date</label>
-              <Calendar
-                id="startDate"
-                value={
-                  subscription.startDate
-                    ? new Date(subscription.startDate)
-                    : null
-                }
-                onChange={(e) => onInputChange(e, "startDate")}
-                dateFormat="mm/dd/yy"
-                placeholder="mm/dd/yyyy"
-                mask="99/99/9999"
-                required
-                className={classNames({
-                  "p-invalid": submitted && !subscription.startDate,
-                })}
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="endDate">End Date</label>
-              <Calendar
-                id="endDate"
-                value={
-                  subscription.endDate ? new Date(subscription.endDate) : null
-                }
-                onChange={(e) => onInputChange(e, "endDate")}
-                dateFormat="mm/dd/yy"
-                placeholder="mm/dd/yyyy"
-                mask="99/99/9999"
-                required
-                className={classNames({
-                  "p-invalid": submitted && !subscription.endDate,
-                })}
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="status">Status</label>
-              <ListBox
-                id="status"
-                optionLabel="name"
-                value={subscription.status}
-                options={datastatuss}
-                onChange={(e) => onInputChange(e, "status")}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="weekday">Weekday</label>
-              <Dropdown
-                id="weekdays"
-                optionLabel="name"
-                value={subscription}
-                options={dataWeekdays}
-                // onChange={(e) => onInputChange(e, "weekdays")}
-              />
-            </div>
-
-            <div className="field mt-3">
               <label htmlFor="breakfast">Breakfast</label>
               <Dropdown
                 id="breakfast"
