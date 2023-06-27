@@ -322,7 +322,9 @@ const SubscriptionPage = () => {
     e.target.src = "/photo_na.png";
   };
   const openNew = async () => {
+    setLoading(true);
     const allMealItem = await mealitemService.getMealItemAll({});
+    allMealItem && setLoading(false);
     setAllMealItem(allMealItem?.data);
     // console.log(allMealItem?.data);
 
@@ -642,6 +644,7 @@ const SubscriptionPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
+            loading={loading}
             label="New"
             icon="pi pi-plus"
             className="p-button-success mr-2"
