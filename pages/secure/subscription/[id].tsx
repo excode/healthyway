@@ -1,7 +1,6 @@
 import { Subscription, SubscriptionService } from "@services/Subscription";
 import moment from "moment";
 import { useRouter } from "next/router";
-import { Chip } from "primereact/chip";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import BlockViewer from "../../../components/BlockViewer";
@@ -146,7 +145,7 @@ const SubscriptionDetails = () => {
                   </div>
                 </li>
 
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
                     Breakfast
                   </div>
@@ -155,28 +154,21 @@ const SubscriptionDetails = () => {
                       subscription?.subPlans?.map((t: any, k: any) => (
                         <Chip key={k} label={t.breakfast}></Chip>
                       ))}
-                    {/* {subscription.breakfast &&
-                      subscription.breakfast.map((t: any, k: any) => (
-                        <Chip key={k} label={t}></Chip>
-                      ))} */}
                   </div>
-                </li>
+                </li> */}
 
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Lunch</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription?.subPlans &&
                       subscription?.subPlans?.map((t: any, k: any) => (
                         <Chip key={k} label={t}></Chip>
                       ))}
-                    {/* {subscription.lunch &&
-                      subscription.lunch.map((t: any, k: any) => (
-                        <Chip key={k} label={t}></Chip>
-                      ))} */}
+                    
                   </div>
-                </li>
+                </li> */}
 
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Dinner</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription?.subPlans &&
@@ -184,7 +176,7 @@ const SubscriptionDetails = () => {
                         <Chip key={k} label={t}></Chip>
                       ))}
                   </div>
-                </li>
+                </li> */}
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
