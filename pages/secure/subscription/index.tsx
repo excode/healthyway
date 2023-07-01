@@ -1092,6 +1092,18 @@ const SubscriptionPage = () => {
                   })}
                 />
               </div>
+              <div className="field ">
+                <label className="font-bold" htmlFor="status">
+                  Status
+                </label>
+                <Dropdown
+                  id="status"
+                  optionLabel="name"
+                  value={subscription.status}
+                  options={datastatuss}
+                  onChange={(e) => onInputChange(e, "status")}
+                />
+              </div>
             </div>
 
             <DataTable value={subscription.subPlans}>
