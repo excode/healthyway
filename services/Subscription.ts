@@ -18,11 +18,27 @@ export type Subscription = {
   startDate?: Date | any;
   endDate?: Date | any;
   status: string | any;
-  breakfast?: string[] | any;
-  lunch?: string[] | any;
-  dinner?: string[] | any;
+  subPlans: [
+    { day: "saturday"; breakfast: ""; lunch: ""; dinner: "" },
+    { day: "sunday"; breakfast: ""; lunch: ""; dinner: "" },
+    { day: "monday"; breakfast: ""; lunch: ""; dinner: "" },
+    { day: "tuesday"; breakfast: ""; lunch: ""; dinner: "" },
+    { day: "wednesday"; breakfast: ""; lunch: ""; dinner: "" },
+    { day: "thursday"; breakfast: ""; lunch: ""; dinner: "" },
+    { day: "friday"; breakfast: ""; lunch: ""; dinner: "" }
+  ];
   kitchen?: string | any;
-  day?: string;
+  // breakfast?: string[] | any;
+  // lunch?: string[] | any;
+  // dinner?: string[] | any;
+  // day?: string;
+  // saturday?: string[];
+  // sunday?: string[];
+  // monday?: string[];
+  // tuesday?: string[];
+  // wednesday?: string[];
+  // thursday?: string[];
+  // friday?: string[];
 };
 
 export type SubscriptionQuery = Omit<
@@ -48,6 +64,7 @@ export type SubscriptionQuery = Omit<
   totalPages?: number;
   sortBy?: string;
   sortDirection?: number;
+  subPlans: any;
 };
 export type SubscriptionKey = keyof Subscription;
 

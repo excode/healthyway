@@ -192,6 +192,7 @@ const MealItemPage = () => {
   };
 
   const imageBodyTemplate = (rowData: MealItem) => {
+    console.log({ rowData });
     let imageURL = config.serverURI + "/" + rowData.image;
     let fileURL = "/file_icon.png";
     let fileNoURL = "/file_icon_na.png";
@@ -402,7 +403,7 @@ const MealItemPage = () => {
   const defaultImage = (e: any) => {
     e.target.src = "/photo_na.png";
   };
-  const openNew = () => {
+  const openNew = async () => {
     setMealItem(emptyMealItem);
     setSubmitted(false);
     setMealItemDialog(true);

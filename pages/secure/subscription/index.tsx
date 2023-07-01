@@ -1,3 +1,4 @@
+import config from "@config/index";
 import { validate, validateForm } from "@lib/validation";
 import { SortType } from "@services/CommonTypes";
 import { Customer, CustomerService } from "@services/Customer";
@@ -42,15 +43,36 @@ const SubscriptionPage = () => {
     { id: "day", type: validate.text, require: true },
   ];
 
+  interface WeekdayDate {
+    weekday: string;
+    date: Date;
+  }
+
   let emptySubscription: Subscription = {
     customerId: "",
     startDate: new Date(),
     endDate: new Date(),
     status: "",
-    breakfast: [],
-    lunch: [],
-    dinner: [],
-    day: "",
+    subPlans: [
+      { day: "saturday", breakfast: "", lunch: "", dinner: "" },
+      { day: "sunday", breakfast: "", lunch: "", dinner: "" },
+      { day: "monday", breakfast: "", lunch: "", dinner: "" },
+      { day: "tuesday", breakfast: "", lunch: "", dinner: "" },
+      { day: "wednesday", breakfast: "", lunch: "", dinner: "" },
+      { day: "thursday", breakfast: "", lunch: "", dinner: "" },
+      { day: "friday", breakfast: "", lunch: "", dinner: "" },
+    ],
+    // saturday: [],
+    // sunday: [],
+    // monday: [],
+    // tuesday: [],
+    // wednesday: [],
+    // thursday: [],
+    // friday: [],
+    // breakfast: [],
+    // lunch: [],
+    // dinner: [],
+    // day: "",
   };
 
   const dataWeekdays = [
@@ -67,6 +89,7 @@ const SubscriptionPage = () => {
   const [backupSubscriptions, setBackupSubscriptions] = useState<
     Subscription[]
   >([]);
+
   const [loading, setLoading] = useState(false);
   const [subscriptionDialog, setSubscriptionDialog] = useState(false);
   const [deleteSubscriptionDialog, setDeleteSubscriptionDialog] =
@@ -100,10 +123,15 @@ const SubscriptionPage = () => {
   const [lunchMeal, setLunchMeal] = useState<MealItem[]>([]);
   const [dinnerMeal, setDinnerMeal] = useState<MealItem[]>([]);
 
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
+  console.log({ startDate });
+
   const [filters1, setFilters1] = useState<DataTableFilterMeta | undefined>({});
   const clearFilter1 = () => {
     initFilters1();
   };
+
   useEffect(() => {
     setLoading(true);
     (async () => {
@@ -132,6 +160,41 @@ const SubscriptionPage = () => {
     })();
     initFilters1();
   }, [refreshFlag]);
+
+  function getWeekdayNames(startDate: Date, endDate: Date): WeekdayDate[] {
+    const weekdays: string[] = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const weekdayDates: WeekdayDate[] = [];
+
+    const currentDate: Date = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      if (weekdays.includes(weekdays[currentDate.getDay()])) {
+        const weekdayName: string = weekdays[currentDate.getDay()];
+        const weekdayDate: Date = new Date(currentDate);
+
+        const weekdayObject: WeekdayDate = {
+          weekday: weekdayName,
+          date: weekdayDate,
+        };
+
+        weekdayDates.push(weekdayObject);
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return weekdayDates;
+  }
+  const weekDayNames = getWeekdayNames(startDate, endDate);
+  console.log({ weekDayNames });
+
   const initFilters1 = () => {
     setFilters1({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -371,12 +434,15 @@ const SubscriptionPage = () => {
     if (validationErrors.length == 0) {
       let _subscriptions: Subscription[] = [...subscriptions];
       let _subscription: Subscription = { ...subscription };
+      console.log({ _subscription });
+      console.log("------------------");
       if (subscription.id) {
         let d = await subscriptionService.updateSubscription(_subscription);
         if (d.error == undefined) {
           const index = _subscriptions.findIndex(
             (c) => c.id === subscription.id
           );
+
           if (index !== -1) {
             _subscriptions[index] = {
               ..._subscription,
@@ -512,11 +578,17 @@ const SubscriptionPage = () => {
 
     setSubscription(_subscription);
   };
+
   const onInputChange = (e: any, name: SubscriptionKey) => {
     let val = (e.target && e.target.value) || undefined;
     const ctrlType = e.target.type;
     if (typeof val === "object") {
       if (val instanceof Date && isFinite(val.getTime())) {
+        if (name === "startDate") {
+          setStartDate(val);
+        } else if (name === "endDate") {
+          setEndDate(val);
+        }
         val = val;
       } else if ("value" in val) {
         let aVal = subscription[name];
@@ -549,6 +621,7 @@ const SubscriptionPage = () => {
 
     setSubscription(_subscription);
   };
+
   const getNewData = async (e: any, type: number = 0) => {
     setLoading(true);
     let searchObj: SubscriptionQuery = {};
@@ -639,6 +712,7 @@ const SubscriptionPage = () => {
       setSubscriptions(backupSubscriptions);
     }
   };
+
   const leftToolbarTemplate = () => {
     return (
       <React.Fragment>
@@ -675,6 +749,31 @@ const SubscriptionPage = () => {
     );
   };
 
+  const mealOptionsTemplate = (option: MealItem) => {
+    console.log({ option });
+    let imageURL = config.serverURI + "/" + option?.image;
+    return (
+      <div className="flex align-items-center gap-2">
+        <img alt={option.name} src={imageURL} style={{ width: "18px" }} />
+        <div>{option.name}</div>
+      </div>
+    );
+  };
+
+  const selectedMealTemplate = (option: MealItem, props: any) => {
+    let imageURL = config.serverURI + "/" + option?.image;
+    if (option) {
+      return (
+        <div className=" flex gap-2  align-items-center">
+          <img alt={option.name} src={imageURL} style={{ width: "18px" }} />
+          <div>{option.name}</div>
+        </div>
+      );
+    }
+
+    return <span>{props.placeholder}</span>;
+  };
+
   const actionBodyTemplate = (rowData: Subscription) => {
     return (
       <>
@@ -703,6 +802,93 @@ const SubscriptionPage = () => {
     );
   };
 
+  interface MealOption {
+    label: string;
+    value: string;
+    image: string;
+  }
+
+  interface MealData {
+    day: string;
+    breakfast: string;
+    lunch: string;
+    dinner: string;
+  }
+
+  const daysOfWeek: string[] = [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+  ];
+
+  // const [data, setData] = useState<MealData[]>(
+  //   daysOfWeek.map((day) => ({
+  //     day: day,
+  //     breakfast: "",
+  //     lunch: "",
+  //     dinner: "",
+  //   }))
+  // );
+  // // console.log({ data });
+  // const mealOptions: MealOption[] = [
+  //   { label: "Meal 1", value: "meal1", image: "meal1.png" },
+  //   { label: "Meal 2", value: "meal2", image: "meal2.png" },
+  //   { label: "Meal 3", value: "meal3", image: "meal3.png" },
+  //   // Add more meal options here
+  // ];
+
+  const onMealChange = (
+    e: { value: string },
+    rowIndex: number,
+    columnName: string
+  ) => {
+    let _subscription: any = { ...subscription };
+    _subscription.subPlans[rowIndex][columnName] = e.value;
+    setSubscription(_subscription);
+  };
+
+  const renderMealDropdown = (
+    rowData: MealData,
+    rowIndex: any,
+    columnName: keyof MealData
+  ) => {
+    let optionType;
+    if (columnName === "breakfast") {
+      optionType = breakfastMeal;
+    } else if (columnName === "lunch") {
+      optionType = lunchMeal;
+    } else if (columnName === "dinner") {
+      optionType = dinnerMeal;
+    }
+
+    return (
+      <Dropdown
+        id="mealList"
+        value={subscription.subPlans[rowIndex?.rowIndex][columnName]}
+        options={optionType?.filter((opt) =>
+          opt.weekdays.includes(daysOfWeek[rowIndex?.rowIndex])
+        )}
+        optionLabel="name"
+        optionValue="id"
+        valueTemplate={selectedMealTemplate}
+        itemTemplate={mealOptionsTemplate}
+        placeholder="Select your meal"
+        filter
+        onChange={(e) => onMealChange(e, rowIndex?.rowIndex, columnName)}
+      >
+        <img
+          src={`path/to/images/${rowData[columnName]}.png`}
+          alt={rowData[columnName]}
+          style={{ width: "50px", height: "50px" }}
+        />
+      </Dropdown>
+    );
+  };
+
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
       <h5 className="m-0">Manage Subscriptions</h5>
@@ -727,6 +913,7 @@ const SubscriptionPage = () => {
       />
       <Button
         label="Save"
+        loading={loading}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveSubscription}
@@ -863,7 +1050,7 @@ const SubscriptionPage = () => {
 
           <Dialog
             visible={subscriptionDialog}
-            style={{ width: "450px" }}
+            style={{ width: "750px" }}
             header="Subscription Details"
             modal
             className="p-fluid"
@@ -927,98 +1114,31 @@ const SubscriptionPage = () => {
                 />
               </div>
             </div>
-            <div className="flex gap-2">
-              <div className="field ">
-                <label className="font-bold" htmlFor="status">
-                  Status
-                </label>
-                <Dropdown
-                  id="status"
-                  optionLabel="name"
-                  value={subscription.status}
-                  options={datastatuss}
-                  onChange={(e) => onInputChange(e, "status")}
-                />
-              </div>
 
-              <div className="field ">
-                <label className="font-bold" htmlFor="weekday">
-                  Weekday
-                </label>
-                <Dropdown
-                  id="day"
-                  optionLabel="name"
-                  value={subscription.day}
-                  options={dataWeekdays}
-                  onChange={(e) => onInputChange(e, "day")}
-                />
-              </div>
-            </div>
-            <div className="field">
-              <label className="font-bold" htmlFor="breakfast">
-                Breakfast
-              </label>
-              <Dropdown
-                id="breakfast"
-                optionLabel="name"
-                value={subscription.breakfast}
-                options={breakfastMeal}
-                onChange={(e) => onInputChange(e, "breakfast")}
+            <DataTable value={subscription.subPlans}>
+              <Column field="day" header="Weekday" />
+              <Column
+                field="breakfast"
+                header="Breakfast"
+                body={(rowData, rowIndex) =>
+                  renderMealDropdown(rowData, rowIndex, "breakfast")
+                }
               />
-              {/* <AutoComplete
-                field="name"
-                id="breakfast"
-                multiple
-                completeMethod={searchMealItem}
-                value={subscription.breakfast}
-                suggestions={sugmealItems}
-                onChange={(e) => onInputChange(e, "breakfast")}
-              /> */}
-            </div>
-
-            <div className="field">
-              <label className="font-bold" htmlFor="lunch">
-                Lunch
-              </label>
-              <Dropdown
-                id="breakfast"
-                optionLabel="name"
-                value={subscription.lunch}
-                options={lunchMeal}
-                onChange={(e) => onInputChange(e, "lunch")}
+              <Column
+                field="lunch"
+                header="Lunch"
+                body={(rowData, rowIndex) =>
+                  renderMealDropdown(rowData, rowIndex, "lunch")
+                }
               />
-              {/* <AutoComplete
-                field="name"
-                id="lunch"
-                multiple
-                completeMethod={searchMealItem}
-                value={subscription.lunch}
-                suggestions={sugmealItems}
-                onChange={(e) => onInputChange(e, "lunch")}
-              /> */}
-            </div>
-
-            <div className="field">
-              <label className="font-bold" htmlFor="dinner">
-                Dinner
-              </label>
-              <Dropdown
-                id="dinner"
-                optionLabel="name"
-                value={subscription.dinner}
-                options={dinnerMeal}
-                onChange={(e) => onInputChange(e, "dinner")}
+              <Column
+                field="dinner"
+                header="Dinner"
+                body={(rowData, rowIndex) =>
+                  renderMealDropdown(rowData, rowIndex, "dinner")
+                }
               />
-              {/* <AutoComplete
-                 field="name"
-                 id="dinner"
-                 multiple
-                 completeMethod={searchMealItem}
-                 value={subscription.dinner}
-                 suggestions={sugmealItems}
-                 onChange={(e) => onInputChange(e, "dinner")}
-               /> */}
-            </div>
+            </DataTable>
           </Dialog>
 
           <Dialog
