@@ -125,7 +125,6 @@ const SubscriptionPage = () => {
 
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
-  console.log({ startDate });
 
   const [filters1, setFilters1] = useState<DataTableFilterMeta | undefined>({});
   const clearFilter1 = () => {
@@ -193,7 +192,6 @@ const SubscriptionPage = () => {
     return weekdayDates;
   }
   const weekDayNames = getWeekdayNames(startDate, endDate);
-  console.log({ weekDayNames });
 
   const initFilters1 = () => {
     setFilters1({
@@ -389,7 +387,6 @@ const SubscriptionPage = () => {
     const allMealItem = await mealitemService.getMealItemAll({});
     allMealItem && setLoading(false);
     setAllMealItem(allMealItem?.data);
-    // console.log(allMealItem?.data);
 
     const breakFastMeal = allMealItem?.data.filter((meal) =>
       meal.mealType.includes("Breakfast")
@@ -406,10 +403,6 @@ const SubscriptionPage = () => {
     );
     setDinnerMeal(dinnerMeal);
 
-    // console.log({ breakFastMeal });
-    // console.log({ lunchMeal });
-    // console.log({ dinnerMeal });
-    // setAllMealItem();
     setSubscription(emptySubscription);
     setSubmitted(false);
     setSubscriptionDialog(true);
@@ -434,8 +427,6 @@ const SubscriptionPage = () => {
     if (validationErrors.length == 0) {
       let _subscriptions: Subscription[] = [...subscriptions];
       let _subscription: Subscription = { ...subscription };
-      console.log({ _subscription });
-      console.log("------------------");
       if (subscription.id) {
         let d = await subscriptionService.updateSubscription(_subscription);
         if (d.error == undefined) {
@@ -624,6 +615,7 @@ const SubscriptionPage = () => {
 
   const getNewData = async (e: any, type: number = 0) => {
     setLoading(true);
+    // let searchObj: any = {};
     let searchObj: SubscriptionQuery = {};
     for (const key in e.filters) {
       if (e.filters[key].constraints) {
@@ -750,7 +742,6 @@ const SubscriptionPage = () => {
   };
 
   const mealOptionsTemplate = (option: MealItem) => {
-    console.log({ option });
     let imageURL = config.serverURI + "/" + option?.image;
     return (
       <div className="flex align-items-center gap-2">
@@ -825,22 +816,6 @@ const SubscriptionPage = () => {
     "Friday",
   ];
 
-  // const [data, setData] = useState<MealData[]>(
-  //   daysOfWeek.map((day) => ({
-  //     day: day,
-  //     breakfast: "",
-  //     lunch: "",
-  //     dinner: "",
-  //   }))
-  // );
-  // // console.log({ data });
-  // const mealOptions: MealOption[] = [
-  //   { label: "Meal 1", value: "meal1", image: "meal1.png" },
-  //   { label: "Meal 2", value: "meal2", image: "meal2.png" },
-  //   { label: "Meal 3", value: "meal3", image: "meal3.png" },
-  //   // Add more meal options here
-  // ];
-
   const onMealChange = (
     e: { value: string },
     rowIndex: number,
@@ -865,10 +840,14 @@ const SubscriptionPage = () => {
       optionType = dinnerMeal;
     }
 
+    const optionValue = subscription.subPlans
+      ? subscription.subPlans[rowIndex?.rowIndex][columnName]
+      : "";
+
     return (
       <Dropdown
         id="mealList"
-        value={subscription.subPlans[rowIndex?.rowIndex][columnName]}
+        value={optionValue}
         options={optionType?.filter((opt) =>
           opt.weekdays.includes(daysOfWeek[rowIndex?.rowIndex])
         )}

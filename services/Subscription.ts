@@ -18,7 +18,7 @@ export type Subscription = {
   startDate?: Date | any;
   endDate?: Date | any;
   status: string | any;
-  subPlans: [
+  subPlans?: [
     { day: "saturday"; breakfast: ""; lunch: ""; dinner: "" },
     { day: "sunday"; breakfast: ""; lunch: ""; dinner: "" },
     { day: "monday"; breakfast: ""; lunch: ""; dinner: "" },
@@ -64,7 +64,7 @@ export type SubscriptionQuery = Omit<
   totalPages?: number;
   sortBy?: string;
   sortDirection?: number;
-  subPlans: any;
+  subPlans?: any;
 };
 export type SubscriptionKey = keyof Subscription;
 
