@@ -26,27 +26,7 @@ export type Subscription = {
   endDate?: Date | any;
   status: string | any;
   subPlans?: SubPlan[];
-  // subPlans?: [
-  //   { day: "saturday"; breakfast: ""; lunch: ""; dinner: "" },
-  //   { day: "sunday"; breakfast: ""; lunch: ""; dinner: "" },
-  //   { day: "monday"; breakfast: ""; lunch: ""; dinner: "" },
-  //   { day: "tuesday"; breakfast: ""; lunch: ""; dinner: "" },
-  //   { day: "wednesday"; breakfast: ""; lunch: ""; dinner: "" },
-  //   { day: "thursday"; breakfast: ""; lunch: ""; dinner: "" },
-  //   { day: "friday"; breakfast: ""; lunch: ""; dinner: "" }
-  // ];
   kitchen?: string | any;
-  // breakfast?: string[] | any;
-  // lunch?: string[] | any;
-  // dinner?: string[] | any;
-  // day?: string;
-  // saturday?: string[];
-  // sunday?: string[];
-  // monday?: string[];
-  // tuesday?: string[];
-  // wednesday?: string[];
-  // thursday?: string[];
-  // friday?: string[];
 };
 
 export type SubscriptionQuery = Omit<

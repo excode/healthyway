@@ -54,33 +54,7 @@ const SubscriptionPage = () => {
     endDate: new Date(),
     status: "",
     subPlans: [],
-    // subPlans: [
-    //   { day: "saturday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "sunday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "monday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "tuesday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "wednesday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "thursday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "friday", breakfast: "", lunch: "", dinner: "" },
-    // ],
-    // s: [
-    //   { weekday: Sunday, session: lunch, item: kabab, quantity: 1 },
-    //   { weekday: Momday, session: Dinner, item: Rice, quantity: 2 },
-    //   { weekday: Sunday, session: breakfat, item: kabab, quantity },
-    // ],
   };
-
-  // saturday: [],
-  // sunday: [],
-  // monday: [],
-  // tuesday: [],
-  // wednesday: [],
-  // thursday: [],
-  // friday: [],
-  // breakfast: [],
-  // lunch: [],
-  // dinner: [],
-  // day: "",
 
   const dataWeekdays = [
     { value: 0, name: "Saturday" },
@@ -90,16 +64,6 @@ const SubscriptionPage = () => {
     { value: 4, name: "Wednesday" },
     { value: 5, name: "Thursday" },
     { value: 6, name: "Friday" },
-  ];
-
-  const subPlansData = [
-    { day: "saturday", breakfast: "", lunch: "", dinner: "" },
-    { day: "sunday", breakfast: "", lunch: "", dinner: "" },
-    { day: "monday", breakfast: "", lunch: "", dinner: "" },
-    { day: "tuesday", breakfast: "", lunch: "", dinner: "" },
-    { day: "wednesday", breakfast: "", lunch: "", dinner: "" },
-    { day: "thursday", breakfast: "", lunch: "", dinner: "" },
-    { day: "friday", breakfast: "", lunch: "", dinner: "" },
   ];
 
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -176,7 +140,6 @@ const SubscriptionPage = () => {
     })();
     initFilters1();
   }, [refreshFlag]);
-
   function getWeekdayNames(startDate: Date, endDate: Date): WeekdayDate[] {
     const weekdays: string[] = [
       "Sunday",

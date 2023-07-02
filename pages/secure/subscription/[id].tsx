@@ -1,6 +1,7 @@
 import { Subscription, SubscriptionService } from "@services/Subscription";
 import moment from "moment";
 import { useRouter } from "next/router";
+import { Chip } from "primereact/chip";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import BlockViewer from "../../../components/BlockViewer";
@@ -14,19 +15,8 @@ const SubscriptionDetails = () => {
     endDate: "",
     status: "",
     subPlans: [],
-    // subPlans: [
-    //   { day: "saturday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "sunday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "monday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "tuesday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "wednesday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "thursday", breakfast: "", lunch: "", dinner: "" },
-    //   { day: "friday", breakfast: "", lunch: "", dinner: "" },
-    // ],
-    // breakfast: "",
-    // lunch: "",
-    // dinner: "",
   });
+  console.log({ subscription });
   const [loading, setLoading] = useState(false);
   const { id } = router.query;
   const toast = useRef<Toast>(null);
@@ -146,38 +136,46 @@ const SubscriptionDetails = () => {
                   </div>
                 </li>
 
-                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
                     Breakfast
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {subscription?.subPlans &&
-                      subscription?.subPlans?.map((t: any, k: any) => (
-                        <Chip key={k} label={t.breakfast}></Chip>
-                      ))}
+                    {subscription?.subPlans
+                      ? subscription?.subPlans
+                          ?.filter((t: any) => t.session === "breakfast")
+                          .map((j: any, i: number) => (
+                            <Chip key={i} label={j.item.name}></Chip>
+                          ))
+                      : "N/A"}
                   </div>
-                </li> */}
+                </li>
 
-                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Lunch</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {subscription?.subPlans &&
-                      subscription?.subPlans?.map((t: any, k: any) => (
-                        <Chip key={k} label={t}></Chip>
-                      ))}
-                    
+                    {subscription?.subPlans
+                      ? subscription?.subPlans
+                          ?.filter((t: any) => t.session === "lunch")
+                          .map((j: any, i: number) => (
+                            <Chip key={i} label={j.item.name}></Chip>
+                          ))
+                      : "N/A"}
                   </div>
-                </li> */}
+                </li>
 
-                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Dinner</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {subscription?.subPlans &&
-                      subscription?.subPlans?.map((t: any, k: any) => (
-                        <Chip key={k} label={t}></Chip>
-                      ))}
+                    {subscription?.subPlans
+                      ? subscription?.subPlans
+                          ?.filter((t: any) => t.session === "dinner")
+                          .map((j: any, i: number) => (
+                            <Chip key={i} label={j.item.name}></Chip>
+                          ))
+                      : "N/A"}
                   </div>
-                </li> */}
+                </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
