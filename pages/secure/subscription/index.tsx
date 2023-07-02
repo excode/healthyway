@@ -53,36 +53,53 @@ const SubscriptionPage = () => {
     startDate: new Date(),
     endDate: new Date(),
     status: "",
-    subPlans: [
-      { day: "saturday", breakfast: "", lunch: "", dinner: "" },
-      { day: "sunday", breakfast: "", lunch: "", dinner: "" },
-      { day: "monday", breakfast: "", lunch: "", dinner: "" },
-      { day: "tuesday", breakfast: "", lunch: "", dinner: "" },
-      { day: "wednesday", breakfast: "", lunch: "", dinner: "" },
-      { day: "thursday", breakfast: "", lunch: "", dinner: "" },
-      { day: "friday", breakfast: "", lunch: "", dinner: "" },
-    ],
-    // saturday: [],
-    // sunday: [],
-    // monday: [],
-    // tuesday: [],
-    // wednesday: [],
-    // thursday: [],
-    // friday: [],
-    // breakfast: [],
-    // lunch: [],
-    // dinner: [],
-    // day: "",
+    subPlans: [],
+    // subPlans: [
+    //   { day: "saturday", breakfast: "", lunch: "", dinner: "" },
+    //   { day: "sunday", breakfast: "", lunch: "", dinner: "" },
+    //   { day: "monday", breakfast: "", lunch: "", dinner: "" },
+    //   { day: "tuesday", breakfast: "", lunch: "", dinner: "" },
+    //   { day: "wednesday", breakfast: "", lunch: "", dinner: "" },
+    //   { day: "thursday", breakfast: "", lunch: "", dinner: "" },
+    //   { day: "friday", breakfast: "", lunch: "", dinner: "" },
+    // ],
+    // s: [
+    //   { weekday: Sunday, session: lunch, item: kabab, quantity: 1 },
+    //   { weekday: Momday, session: Dinner, item: Rice, quantity: 2 },
+    //   { weekday: Sunday, session: breakfat, item: kabab, quantity },
+    // ],
   };
 
+  // saturday: [],
+  // sunday: [],
+  // monday: [],
+  // tuesday: [],
+  // wednesday: [],
+  // thursday: [],
+  // friday: [],
+  // breakfast: [],
+  // lunch: [],
+  // dinner: [],
+  // day: "",
+
   const dataWeekdays = [
-    { value: "Sunday", name: "Sunday" },
-    { value: "Monday", name: "Monday" },
-    { value: "Tuesday", name: "Tuesday" },
-    { value: "Wednesday", name: "Wednesday" },
-    { value: "Thursday", name: "Thursday" },
-    { value: "Friday", name: "Friday" },
-    { value: "Saturday", name: "Saturday" },
+    { value: 0, name: "Saturday" },
+    { value: 1, name: "Sunday" },
+    { value: 2, name: "Monday" },
+    { value: 3, name: "Tuesday" },
+    { value: 4, name: "Wednesday" },
+    { value: 5, name: "Thursday" },
+    { value: 6, name: "Friday" },
+  ];
+
+  const subPlansData = [
+    { day: "saturday", breakfast: "", lunch: "", dinner: "" },
+    { day: "sunday", breakfast: "", lunch: "", dinner: "" },
+    { day: "monday", breakfast: "", lunch: "", dinner: "" },
+    { day: "tuesday", breakfast: "", lunch: "", dinner: "" },
+    { day: "wednesday", breakfast: "", lunch: "", dinner: "" },
+    { day: "thursday", breakfast: "", lunch: "", dinner: "" },
+    { day: "friday", breakfast: "", lunch: "", dinner: "" },
   ];
 
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -753,6 +770,7 @@ const SubscriptionPage = () => {
 
   const selectedMealTemplate = (option: MealItem, props: any) => {
     let imageURL = config.serverURI + "/" + option?.image;
+    // console.log({ props });
     if (option) {
       return (
         <div className=" flex gap-2  align-items-center">
@@ -817,12 +835,34 @@ const SubscriptionPage = () => {
   ];
 
   const onMealChange = (
-    e: { value: string },
+    e: { value: MealItem },
     rowIndex: number,
     columnName: string
   ) => {
-    let _subscription: any = { ...subscription };
-    _subscription.subPlans[rowIndex][columnName] = e.value;
+    // console.log(e, rowIndex, columnName);
+    // console.log({ e });
+    let _subscription: Subscription = { ...subscription };
+    const weekday = dataWeekdays[rowIndex].name;
+    const meal = {
+      weekday,
+      session: columnName,
+      item: e.value,
+      quantity: 1,
+    };
+    // const index = _subscription.subPlans?.filter((d) => d.weekday === weekday);
+    // console.log(index);
+    const index = _subscription.subPlans?.findIndex(
+      (d) => d.weekday === weekday && d.session === columnName
+    ) as number;
+
+    if (_subscription.subPlans && index !== -1) {
+      _subscription.subPlans[index] = meal;
+    } else {
+      _subscription.subPlans?.push(meal);
+    }
+    // console.log({ subscription });
+    // console.log({ _subscription });
+    // _subscription.subPlans[rowIndex][columnName] = e.value;
     setSubscription(_subscription);
   };
 
@@ -831,6 +871,7 @@ const SubscriptionPage = () => {
     rowIndex: any,
     columnName: keyof MealData
   ) => {
+    // console.log("data", rowData, rowIndex, columnName);
     let optionType;
     if (columnName === "breakfast") {
       optionType = breakfastMeal;
@@ -839,25 +880,27 @@ const SubscriptionPage = () => {
     } else if (columnName === "dinner") {
       optionType = dinnerMeal;
     }
-
-    const optionValue = subscription.subPlans
-      ? subscription.subPlans[rowIndex?.rowIndex][columnName]
-      : "";
+    const weekday = dataWeekdays[rowIndex.rowIndex].name;
+    const mealOptionValue = subscription.subPlans?.find(
+      (d) => d.weekday === weekday && d.session === columnName
+    )?.item;
+    // console.log({ mealOptionValue });
 
     return (
       <Dropdown
         id="mealList"
-        value={optionValue}
+        value={mealOptionValue}
         options={optionType?.filter((opt) =>
-          opt.weekdays.includes(daysOfWeek[rowIndex?.rowIndex])
+          opt.weekdays.includes(dataWeekdays[rowIndex.rowIndex].name)
         )}
+        // opt.weekdays.includes(daysOfWeek[rowIndex?.rowIndex])
         optionLabel="name"
-        optionValue="id"
+        // optionValue="id"
         valueTemplate={selectedMealTemplate}
         itemTemplate={mealOptionsTemplate}
         placeholder="Select your meal"
         filter
-        onChange={(e) => onMealChange(e, rowIndex?.rowIndex, columnName)}
+        onChange={(e) => onMealChange(e, rowIndex.rowIndex, columnName)}
       >
         <img
           src={`path/to/images/${rowData[columnName]}.png`}
@@ -1049,7 +1092,6 @@ const SubscriptionPage = () => {
                 onChange={(e) => onInputChange(e, "customerId")}
               />
             </div>
-
             <div className="flex gap-5">
               <div className="field">
                 <label className="font-bold" htmlFor="startDate">
@@ -1106,8 +1148,10 @@ const SubscriptionPage = () => {
               </div>
             </div>
 
-            <DataTable value={subscription.subPlans}>
-              <Column field="day" header="Weekday" />
+            {/* <DataTable value={subscription.subPlans}> */}
+            {/* <DataTable value={subPlansData}> */}
+            <DataTable value={dataWeekdays}>
+              <Column field="name" header="Weekday" />
               <Column
                 field="breakfast"
                 header="Breakfast"

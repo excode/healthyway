@@ -8,6 +8,13 @@ import {
   postData,
 } from "@lib/httpRequest";
 
+interface SubPlan {
+  weekday: string;
+  session: string;
+  item: any;
+  quantity: number;
+}
+
 export type Subscription = {
   id?: string | any;
   createBy?: string | any;
@@ -18,15 +25,16 @@ export type Subscription = {
   startDate?: Date | any;
   endDate?: Date | any;
   status: string | any;
-  subPlans?: [
-    { day: "saturday"; breakfast: ""; lunch: ""; dinner: "" },
-    { day: "sunday"; breakfast: ""; lunch: ""; dinner: "" },
-    { day: "monday"; breakfast: ""; lunch: ""; dinner: "" },
-    { day: "tuesday"; breakfast: ""; lunch: ""; dinner: "" },
-    { day: "wednesday"; breakfast: ""; lunch: ""; dinner: "" },
-    { day: "thursday"; breakfast: ""; lunch: ""; dinner: "" },
-    { day: "friday"; breakfast: ""; lunch: ""; dinner: "" }
-  ];
+  subPlans?: SubPlan[];
+  // subPlans?: [
+  //   { day: "saturday"; breakfast: ""; lunch: ""; dinner: "" },
+  //   { day: "sunday"; breakfast: ""; lunch: ""; dinner: "" },
+  //   { day: "monday"; breakfast: ""; lunch: ""; dinner: "" },
+  //   { day: "tuesday"; breakfast: ""; lunch: ""; dinner: "" },
+  //   { day: "wednesday"; breakfast: ""; lunch: ""; dinner: "" },
+  //   { day: "thursday"; breakfast: ""; lunch: ""; dinner: "" },
+  //   { day: "friday"; breakfast: ""; lunch: ""; dinner: "" }
+  // ];
   kitchen?: string | any;
   // breakfast?: string[] | any;
   // lunch?: string[] | any;
