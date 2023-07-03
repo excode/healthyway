@@ -7,8 +7,8 @@ type Config = {
 };
 
 export default {
-  // serverURI: "https://dev.ikra.my",
-  serverURI: "http://localhost:8082",
+  serverURI: "https://dev.ikra.my",
+  // serverURI: "http://localhost:8082",
   title: "Meal Delivery & Subscription",
   fixedLayout: false,
   hideLogoOnMobile: false,
