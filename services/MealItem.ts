@@ -15,7 +15,9 @@ export type MealItem = {
   updateBy?: string | any;
   updateAt?: Date | any;
   name: string | any;
+  nameInArabic?: string | any;
   description?: string | any;
+  descriptionInArabic?: string | any;
   price: number | any;
   image?: string | any;
   groupName: string | any;
@@ -31,6 +33,7 @@ export type MealItemQuery = Omit<
   "name" | "price" | "groupName" | "code" | "active" | "kitchen"
 > & {
   name?: string;
+  nameInArabic?: string | any;
   price?: number;
   groupName?: string;
   code?: string;
@@ -50,6 +53,7 @@ export type MealItemQuery = Omit<
   totalPages?: number;
   sortBy?: string;
   sortDirection?: number;
+  // descriptionInArabic?: string;
 };
 export type MealItemKey = keyof MealItem;
 
