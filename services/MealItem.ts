@@ -53,7 +53,6 @@ export type MealItemQuery = Omit<
   totalPages?: number;
   sortBy?: string;
   sortDirection?: number;
-  // descriptionInArabic?: string;
 };
 export type MealItemKey = keyof MealItem;
 

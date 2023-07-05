@@ -1,3 +1,4 @@
+import config from "@config/index";
 import { validate, validateForm } from "@lib/validation";
 import { SortType } from "@services/CommonTypes";
 import { Customer, CustomerService } from "@services/Customer";
@@ -7,6 +8,7 @@ import {
   MealOrderQuery,
   MealOrderService,
 } from "@services/MealOrder";
+import moment from "moment";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -24,6 +26,7 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
+import { Tag } from "primereact/tag";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
@@ -50,7 +53,7 @@ const MealOrderPage = () => {
     customerName: "",
     orderDate: new Date(),
     deliveryDate: new Date(),
-    deliveryAddress: "",
+    deliveryAddress: {},
     Instruction: "",
     location: "",
     orderType: "",
@@ -88,6 +91,7 @@ const MealOrderPage = () => {
     setLoading(true);
     (async () => {
       let d = await mealorderService.getMealOrder({ limit: row });
+      console.log(d);
       if (d.error == undefined) {
         setMealOrders(d.docs);
         setBackupMealOrders(d.docs);
@@ -197,14 +201,14 @@ const MealOrderPage = () => {
 
   const dataorderTypes = [
     { value: "Home Delivery", name: "Home Delivery" },
-    { value: " Dine-in", name: " Dine-in" },
-    { value: " Take-Away", name: " Take-Away" },
+    { value: "Dine-in", name: "Dine-in" },
+    { value: "Take-Away", name: "Take-Away" },
   ];
 
-  const datastatuss = [
-    { value: "Pending", name: "Pending" },
-    { value: " Completed", name: " Completed" },
-    { value: " Cancelled", name: " Cancelled" },
+  const dataStatus = [
+    { value: "pending", name: "pending" },
+    { value: "completed", name: "completed" },
+    { value: "cancelled", name: "cancelled" },
   ];
 
   const createAtFilterTemplate = (options: any) => {
@@ -287,7 +291,7 @@ const MealOrderPage = () => {
         <div className="mb-3 text-bold">Status Picker</div>
         <Dropdown
           value={options.value}
-          options={datastatuss}
+          options={dataStatus}
           onChange={(e) => options.filterCallback(e.value)}
           optionLabel="name"
           optionValue="value"
@@ -747,6 +751,70 @@ const MealOrderPage = () => {
     </>
   );
 
+  const headerTemplate = (data: MealOrder) => {
+    const date = moment(data.deliveryDate).format("dddd, DD MMMM");
+    return (
+      <div className="flex align-items-center gap-2 ">
+        <span className="font-bold capitalize text-lg">{data.session}:</span>
+        <span>{date}</span>
+        {/* <span>{data.deliveryDate}</span> */}
+      </div>
+    );
+  };
+
+  const calculateSessionMealTotal = (data: MealOrder) => {
+    return mealOrders.reduce((total, meal) => {
+      if (meal.session === data.session) {
+        if (meal.quantity) return total + meal.quantity;
+      }
+      return total;
+    }, 0);
+  };
+
+  const footerTemplate = (data: MealOrder) => {
+    return (
+      <React.Fragment>
+        <td colSpan={5}>
+          <div className="flex justify-content-end font-bold w-full">
+            Total {data.session}: {calculateSessionMealTotal(data)}
+          </div>
+        </td>
+      </React.Fragment>
+    );
+  };
+
+  const statusBodyTemplate = (data: MealOrder) => {
+    const getSeverity = (status: string) => {
+      switch (status) {
+        case "pending":
+          return "warning";
+
+        case "completed":
+          return "success";
+
+        case "cancelled":
+          return "danger";
+      }
+    };
+    return <Tag value={data.status} severity={getSeverity(data.status)} />;
+  };
+
+  const nameBodyTemplate = (data: MealOrder) => {
+    let imageURL = config.serverURI + "/" + data.item?.image;
+
+    return (
+      <div className="flex align-items-center gap-2">
+        <img
+          alt={data.item?.name}
+          src={imageURL}
+          className="rounded"
+          width="32"
+        />
+        <span className="capitalize font-bold">{data.item?.name}</span>
+      </div>
+    );
+  };
+
   return (
     <div className="grid crud-demo">
       <div className="col-12">
@@ -758,7 +826,7 @@ const MealOrderPage = () => {
             right={rightToolbarTemplate}
           ></Toolbar>
 
-          <DataTable
+          {/* <DataTable
             ref={dt}
             value={mealOrders}
             selection={selectedMealOrders}
@@ -848,16 +916,6 @@ const MealOrderPage = () => {
 
             <Column
               showAddButton={false}
-              field="deliveryAddress"
-              header="deliveryAddress"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by deliveryAddress"
-            ></Column>
-
-            <Column
-              showAddButton={false}
               field="status"
               header="status"
               sortable
@@ -913,6 +971,57 @@ const MealOrderPage = () => {
             <Column
               body={actionBodyTemplate}
               headerStyle={{ minWidth: "10rem" }}
+            ></Column>
+          </DataTable> */}
+
+          <DataTable
+            value={mealOrders}
+            rowGroupMode="subheader"
+            groupRowsBy="session"
+            sortMode="single"
+            sortField="session"
+            sortOrder={1}
+            scrollable
+            scrollHeight="500px"
+            rowGroupHeaderTemplate={headerTemplate}
+            rowGroupFooterTemplate={footerTemplate}
+            emptyMessage="No Data Found"
+            tableStyle={{ minWidth: "50rem" }}
+            selectionMode="single"
+          >
+            <Column
+              field="item.name"
+              header="Meal Name"
+              body={nameBodyTemplate}
+              style={{ minWidth: "200px" }}
+            ></Column>
+            {/* <Column
+              field="quantity"
+              header="Quantity"
+              className=""
+              // body={countryBodyTemplate}
+              style={{ minWidth: "200px" }}
+            ></Column> */}
+            <Column
+              field="Instruction"
+              header="Instruction"
+              style={{ minWidth: "200px" }}
+            ></Column>
+            <Column
+              field="status"
+              header="Status"
+              body={statusBodyTemplate}
+              style={{ minWidth: "100px" }}
+            ></Column>
+            <Column
+              field="invoiceNo"
+              header="Invoice No"
+              style={{ minWidth: "200px" }}
+            ></Column>
+            <Column
+              field="customerPhone"
+              header="Customer Phone"
+              style={{ minWidth: "200px" }}
             ></Column>
           </DataTable>
 

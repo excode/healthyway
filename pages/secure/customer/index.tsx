@@ -32,14 +32,14 @@ const CustomerPage = () => {
   const validation = [
     { id: "name", type: validate.text, max: 50, min: 0, required: true },
     { id: "email", type: validate.email, max: 0, min: 0, required: false },
-    { id: "Address", type: validate.text, max: 100, min: 0, required: true },
+    // { id: "address", type: validate., max: 100, min: 0, required: true },
     { id: "customerType", type: validate.text, required: false },
     { id: "GeoTag", type: validate.text, max: 50, min: 0, required: true },
     { id: "mobile", type: validate.phone, max: 0, min: 0, required: true },
   ];
   let emptyCustomer: Customer = {
     name: "",
-    Address: "",
+    address: {},
     GeoTag: "",
     mobile: "",
   };
@@ -754,13 +754,13 @@ const CustomerPage = () => {
               <label htmlFor="Address">Address</label>
               <InputTextarea
                 id="Address"
-                value={customer.Address}
-                onChange={(e) => onInputChange(e, "Address")}
+                value={customer.address?.addressPreference}
+                onChange={(e) => onInputChange(e, "address")}
                 rows={5}
                 cols={30}
                 required
                 className={classNames({
-                  "p-invalid": submitted && !customer.Address,
+                  "p-invalid": submitted && !customer.address,
                 })}
               />
             </div>

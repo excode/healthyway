@@ -13,6 +13,7 @@ interface SubPlan {
   session: string;
   item: any;
   quantity: number;
+  status: string;
 }
 
 export type Subscription = {

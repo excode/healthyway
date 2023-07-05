@@ -811,6 +811,7 @@ const SubscriptionPage = () => {
       session: columnName,
       item: e.value,
       quantity: 1,
+      status: "pending",
     };
     // const index = _subscription.subPlans?.filter((d) => d.weekday === weekday);
     // console.log(index);
