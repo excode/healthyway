@@ -860,11 +860,33 @@ const MealOrderPage = () => {
     return time;
   };
 
+  // const statusBodyTemplate = (data: MealOrder) => {
+  //   const getSeverity = (status: string) => {
+  //     switch (status) {
+  //       case "dispatched":
+  //         return "help";
+
+  //       case "prepared":
+  //         return "success";
+
+  //       default:
+  //         return "success";
+
+  //       // case "cancelled":
+  //       //   return "danger";
+
+  //       // case "cooking":
+  //       //   return "info";
+  //     }
+  //   };
+  //   return <Tag value={data.status} severity={getSeverity(data?.status)} />;
+  // };
+
   const statusBodyTemplate = (data: MealOrder) => {
     const getSeverity = (status: string) => {
       switch (status) {
-        case "dispatched":
-          return "help";
+        case "pending":
+          return "warning";
 
         case "prepared":
           return "success";
@@ -1083,23 +1105,24 @@ const MealOrderPage = () => {
               // body={countryBodyTemplate}
               style={{ minWidth: "200px" }}
             ></Column>
+
             <Column
               field="Instruction"
               header="Instruction"
               style={{ minWidth: "200px" }}
             ></Column>
             <Column
-              field=""
               header="Delivery Time"
               body={timeLeftBodyTemplate}
               style={{ minWidth: "200px" }}
             ></Column>
             <Column
-              field="status"
+              // field="status"
               header="Status"
               body={statusBodyTemplate}
               style={{ minWidth: "100px" }}
             ></Column>
+
             <Column
               field="invoiceNo"
               header="Invoice No"
