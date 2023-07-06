@@ -2,12 +2,17 @@ const menus = {
   label: "Chef Dashboard",
   items: [
     {
-      label: "MealOrder",
+      label: "Meal Order",
       icon: "pi pi-fw pi-cart-plus",
       to: "/secure/mealOrder",
     },
     {
-      label: "MealPrepare",
+      label: "Meal Ready To Delivered",
+      icon: "pi pi-fw pi-sync",
+      to: "/secure/mealReadyToDelivered",
+    },
+    {
+      label: "Meal Prepare",
       icon: "pi pi-fw pi-box",
       to: "/secure/mealPrepare",
     },

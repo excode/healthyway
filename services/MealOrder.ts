@@ -100,6 +100,7 @@ export class MealOrderService {
     return postData<MealOrder>("/mealorder", request);
   }
   updateMealOrder(request: MealOrder) {
+    console.log({ request });
     const { id, ...rest } = request;
     return patchData<MealOrder>("/mealOrder/" + id, rest);
   }
