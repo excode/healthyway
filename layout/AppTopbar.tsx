@@ -36,7 +36,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   }));
   useEffect(() => {
     const data: GetLoginResponse = cookies.user;
-    let token: string = data.accessToken || "";
+    let token: string = data?.accessToken || "";
     const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
     setUserData(decoded);
   }, []);

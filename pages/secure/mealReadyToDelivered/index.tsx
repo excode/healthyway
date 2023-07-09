@@ -10,7 +10,6 @@ import {
 } from "@services/MealOrder";
 import moment from "moment";
 import getConfig from "next/config";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { AutoComplete } from "primereact/autocomplete";
@@ -31,7 +30,6 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useEffect, useRef, useState } from "react";
-import cooking from "/public/layout/images/cooking.png";
 
 const MealOrderPage = () => {
   const { asPath } = useRouter();
@@ -95,8 +93,8 @@ const MealOrderPage = () => {
   useEffect(() => {
     setLoading(true);
     (async () => {
-      let d = await mealorderService.getMealOrder({});
-      console.log(d);
+      let d = await mealorderService.getMealOrder({ status: "prepared" });
+      // console.log(d);
       if (d.error == undefined) {
         setMealOrders(d.docs);
         setBackupMealOrders(d.docs);
@@ -379,8 +377,9 @@ const MealOrderPage = () => {
       let _mealOrder: MealOrder = { ...mealOrder };
       if (mealOrder.id) {
         let d = await mealorderService.updateMealOrder(_mealOrder);
-        if (d.error == undefined) {
+        if (d.error === undefined) {
           const index = _mealOrders.findIndex((c) => c.id === mealOrder.id);
+
           if (index !== -1) {
             _mealOrders[index] = { ..._mealOrder };
             // _mealOrders[index] = _mealOrder;
@@ -389,7 +388,7 @@ const MealOrderPage = () => {
           toast.current?.show({
             severity: "success",
             summary: "Loaded",
-            detail: "MealOrder Updated",
+            detail: `${_mealOrder.item?.name} dispatched to delivery man"`,
             life: 3000,
           });
         } else {
@@ -423,8 +422,10 @@ const MealOrderPage = () => {
           });
         }
       }
-
-      setMealOrders(_mealOrders);
+      const filteredMealOrders = _mealOrders.filter(
+        (m) => m.status !== "dispatched"
+      );
+      setMealOrders(filteredMealOrders);
       setBackupMealOrders(_mealOrders);
       setMealOrderDialog(false);
       setMealOrder(emptyMealOrder);
@@ -692,11 +693,13 @@ const MealOrderPage = () => {
       <div className="flex align-content-center gap-2">
         <Button
           name="completed"
-          icon="pi pi-check"
-          className="p-button-rounded p-button-success "
-          onClick={() => confirmMealOrderAction(rowData, dataStatus[2].value)}
-        ></Button>
-        <Button
+          icon="pi pi-arrow-right-arrow-left"
+          className="p-button-rounded p-button-success gap-3 "
+          onClick={() => confirmMealOrderAction(rowData, "dispatched")}
+        >
+          Dispatched
+        </Button>
+        {/* <Button
           name="cooking"
           className="p-button-rounded p-button-info "
           onClick={() => confirmMealOrderAction(rowData, dataStatus[1].value)}
@@ -704,19 +707,14 @@ const MealOrderPage = () => {
         >
           <Image src={cooking} alt="cooking" width={18} />
         </Button>
+      */}
 
-        {/* <Link
-          href={{
-            pathname: asPath + "/" + rowData.id,
-          }}
-        > */}
         <Button
           name="cancelled"
           icon="pi pi-times"
           className="p-button-rounded p-button-danger"
           onClick={() => confirmMealOrderAction(rowData, dataStatus[3].value)}
         />
-        {/* </Link> */}
       </div>
     );
   };
@@ -805,8 +803,10 @@ const MealOrderPage = () => {
     const date = moment(data.deliveryDate).format("dddd, DD MMMM");
     return (
       <div className="flex align-items-center gap-2 ">
-        <span className="font-bold capitalize text-lg">{data.session}:</span>
-        <span>{date}</span>
+        <span className="font-semibold capitalize text-lg">
+          Ready To Dispatched
+        </span>
+        {/* <span>{date}</span> */}
         {/* <span>{data.deliveryDate}</span> */}
       </div>
     );
@@ -814,7 +814,7 @@ const MealOrderPage = () => {
 
   const calculateSessionMealTotal = (data: MealOrder) => {
     return mealOrders.reduce((total, meal) => {
-      if (meal.session === data.session) {
+      if (meal.status === data.status) {
         if (meal.quantity) return total + meal.quantity;
       }
       return total;
@@ -826,7 +826,7 @@ const MealOrderPage = () => {
       <React.Fragment>
         <td colSpan={5}>
           <div className="flex justify-content-end font-bold w-full">
-            Total {data.session}: {calculateSessionMealTotal(data)}
+            Total {data.status}: {calculateSessionMealTotal(data)}
           </div>
         </td>
       </React.Fragment>
@@ -854,10 +854,33 @@ const MealOrderPage = () => {
   };
 
   const timeLeftBodyTemplate = (rowData: MealOrder) => {
-    const time = updateTimeDifference(rowData);
+    // const time = updateTimeDifference(rowData);
     // setInterval(updateTimeDifference, 1000);
+    const time = moment(rowData.deliveryDate).format("HH:mm");
     return time;
   };
+
+  // const statusBodyTemplate = (data: MealOrder) => {
+  //   const getSeverity = (status: string) => {
+  //     switch (status) {
+  //       case "dispatched":
+  //         return "help";
+
+  //       case "prepared":
+  //         return "success";
+
+  //       default:
+  //         return "success";
+
+  //       // case "cancelled":
+  //       //   return "danger";
+
+  //       // case "cooking":
+  //       //   return "info";
+  //     }
+  //   };
+  //   return <Tag value={data.status} severity={getSeverity(data?.status)} />;
+  // };
 
   const statusBodyTemplate = (data: MealOrder) => {
     const getSeverity = (status: string) => {
@@ -1056,7 +1079,7 @@ const MealOrderPage = () => {
           <DataTable
             value={mealOrders}
             rowGroupMode="subheader"
-            groupRowsBy="session"
+            groupRowsBy="status"
             sortMode="single"
             sortField="session"
             sortOrder={1}
@@ -1075,30 +1098,31 @@ const MealOrderPage = () => {
               body={nameBodyTemplate}
               style={{ minWidth: "200px" }}
             ></Column>
-            {/* <Column
-              field="quantity"
-              header="Quantity"
-              className=""
+            <Column
+              field="session"
+              header="Session"
+              className="capitalize"
               // body={countryBodyTemplate}
               style={{ minWidth: "200px" }}
-            ></Column> */}
+            ></Column>
+
             <Column
               field="Instruction"
               header="Instruction"
               style={{ minWidth: "200px" }}
             ></Column>
             <Column
-              // field={timeLeft}
-              header="Time Left"
+              header="Delivery Time"
               body={timeLeftBodyTemplate}
               style={{ minWidth: "200px" }}
             ></Column>
             <Column
-              field="status"
+              // field="status"
               header="Status"
               body={statusBodyTemplate}
               style={{ minWidth: "100px" }}
             ></Column>
+
             <Column
               field="invoiceNo"
               header="Invoice No"

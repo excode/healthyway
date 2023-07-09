@@ -1,3 +1,4 @@
+import config from "@config/index";
 import { validate, validateForm } from "@lib/validation";
 import { SortType } from "@services/CommonTypes";
 import { Customer, CustomerService } from "@services/Customer";
@@ -42,31 +43,34 @@ const SubscriptionPage = () => {
     { id: "day", type: validate.text, require: true },
   ];
 
+  interface WeekdayDate {
+    weekday: string;
+    date: Date;
+  }
+
   let emptySubscription: Subscription = {
     customerId: "",
     startDate: new Date(),
     endDate: new Date(),
     status: "",
-    breakfast: [],
-    lunch: [],
-    dinner: [],
-    day: "",
+    subPlans: [],
   };
 
   const dataWeekdays = [
-    { value: "Sunday", name: "Sunday" },
-    { value: "Monday", name: "Monday" },
-    { value: "Tuesday", name: "Tuesday" },
-    { value: "Wednesday", name: "Wednesday" },
-    { value: "Thursday", name: "Thursday" },
-    { value: "Friday", name: "Friday" },
-    { value: "Saturday", name: "Saturday" },
+    { value: 0, name: "Saturday" },
+    { value: 1, name: "Sunday" },
+    { value: 2, name: "Monday" },
+    { value: 3, name: "Tuesday" },
+    { value: 4, name: "Wednesday" },
+    { value: 5, name: "Thursday" },
+    { value: 6, name: "Friday" },
   ];
 
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [backupSubscriptions, setBackupSubscriptions] = useState<
     Subscription[]
   >([]);
+
   const [loading, setLoading] = useState(false);
   const [subscriptionDialog, setSubscriptionDialog] = useState(false);
   const [deleteSubscriptionDialog, setDeleteSubscriptionDialog] =
@@ -100,10 +104,14 @@ const SubscriptionPage = () => {
   const [lunchMeal, setLunchMeal] = useState<MealItem[]>([]);
   const [dinnerMeal, setDinnerMeal] = useState<MealItem[]>([]);
 
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
+
   const [filters1, setFilters1] = useState<DataTableFilterMeta | undefined>({});
   const clearFilter1 = () => {
     initFilters1();
   };
+
   useEffect(() => {
     setLoading(true);
     (async () => {
@@ -132,6 +140,39 @@ const SubscriptionPage = () => {
     })();
     initFilters1();
   }, [refreshFlag]);
+  function getWeekdayNames(startDate: Date, endDate: Date): WeekdayDate[] {
+    const weekdays: string[] = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const weekdayDates: WeekdayDate[] = [];
+
+    const currentDate: Date = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      if (weekdays.includes(weekdays[currentDate.getDay()])) {
+        const weekdayName: string = weekdays[currentDate.getDay()];
+        const weekdayDate: Date = new Date(currentDate);
+
+        const weekdayObject: WeekdayDate = {
+          weekday: weekdayName,
+          date: weekdayDate,
+        };
+
+        weekdayDates.push(weekdayObject);
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return weekdayDates;
+  }
+  const weekDayNames = getWeekdayNames(startDate, endDate);
+
   const initFilters1 = () => {
     setFilters1({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -326,7 +367,6 @@ const SubscriptionPage = () => {
     const allMealItem = await mealitemService.getMealItemAll({});
     allMealItem && setLoading(false);
     setAllMealItem(allMealItem?.data);
-    // console.log(allMealItem?.data);
 
     const breakFastMeal = allMealItem?.data.filter((meal) =>
       meal.mealType.includes("Breakfast")
@@ -343,10 +383,6 @@ const SubscriptionPage = () => {
     );
     setDinnerMeal(dinnerMeal);
 
-    // console.log({ breakFastMeal });
-    // console.log({ lunchMeal });
-    // console.log({ dinnerMeal });
-    // setAllMealItem();
     setSubscription(emptySubscription);
     setSubmitted(false);
     setSubscriptionDialog(true);
@@ -377,6 +413,7 @@ const SubscriptionPage = () => {
           const index = _subscriptions.findIndex(
             (c) => c.id === subscription.id
           );
+
           if (index !== -1) {
             _subscriptions[index] = {
               ..._subscription,
@@ -512,11 +549,17 @@ const SubscriptionPage = () => {
 
     setSubscription(_subscription);
   };
+
   const onInputChange = (e: any, name: SubscriptionKey) => {
     let val = (e.target && e.target.value) || undefined;
     const ctrlType = e.target.type;
     if (typeof val === "object") {
       if (val instanceof Date && isFinite(val.getTime())) {
+        if (name === "startDate") {
+          setStartDate(val);
+        } else if (name === "endDate") {
+          setEndDate(val);
+        }
         val = val;
       } else if ("value" in val) {
         let aVal = subscription[name];
@@ -549,8 +592,10 @@ const SubscriptionPage = () => {
 
     setSubscription(_subscription);
   };
+
   const getNewData = async (e: any, type: number = 0) => {
     setLoading(true);
+    // let searchObj: any = {};
     let searchObj: SubscriptionQuery = {};
     for (const key in e.filters) {
       if (e.filters[key].constraints) {
@@ -639,6 +684,7 @@ const SubscriptionPage = () => {
       setSubscriptions(backupSubscriptions);
     }
   };
+
   const leftToolbarTemplate = () => {
     return (
       <React.Fragment>
@@ -675,6 +721,31 @@ const SubscriptionPage = () => {
     );
   };
 
+  const mealOptionsTemplate = (option: MealItem) => {
+    let imageURL = config.serverURI + "/" + option?.image;
+    return (
+      <div className="flex align-items-center gap-2">
+        <img alt={option.name} src={imageURL} style={{ width: "18px" }} />
+        <div>{option.name}</div>
+      </div>
+    );
+  };
+
+  const selectedMealTemplate = (option: MealItem, props: any) => {
+    let imageURL = config.serverURI + "/" + option?.image;
+    // console.log({ props });
+    if (option) {
+      return (
+        <div className=" flex gap-2  align-items-center">
+          <img alt={option.name} src={imageURL} style={{ width: "18px" }} />
+          <div>{option.name}</div>
+        </div>
+      );
+    }
+
+    return <span>{props.placeholder}</span>;
+  };
+
   const actionBodyTemplate = (rowData: Subscription) => {
     return (
       <>
@@ -703,6 +774,107 @@ const SubscriptionPage = () => {
     );
   };
 
+  interface MealOption {
+    label: string;
+    value: string;
+    image: string;
+  }
+
+  interface MealData {
+    day: string;
+    breakfast: string;
+    lunch: string;
+    dinner: string;
+  }
+
+  const daysOfWeek: string[] = [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+  ];
+
+  const onMealChange = (
+    e: { value: MealItem },
+    rowIndex: number,
+    columnName: string
+  ) => {
+    // console.log(e, rowIndex, columnName);
+    // console.log({ e });
+    let _subscription: Subscription = { ...subscription };
+    const weekday = dataWeekdays[rowIndex].name;
+    const meal = {
+      weekday,
+      session: columnName,
+      item: e.value,
+      quantity: 1,
+      status: "pending",
+    };
+    // const index = _subscription.subPlans?.filter((d) => d.weekday === weekday);
+    // console.log(index);
+    const index = _subscription.subPlans?.findIndex(
+      (d) => d.weekday === weekday && d.session === columnName
+    ) as number;
+
+    if (_subscription.subPlans && index !== -1) {
+      _subscription.subPlans[index] = meal;
+    } else {
+      _subscription.subPlans?.push(meal);
+    }
+    // console.log({ subscription });
+    // console.log({ _subscription });
+    // _subscription.subPlans[rowIndex][columnName] = e.value;
+    setSubscription(_subscription);
+  };
+
+  const renderMealDropdown = (
+    rowData: MealData,
+    rowIndex: any,
+    columnName: keyof MealData
+  ) => {
+    // console.log("data", rowData, rowIndex, columnName);
+    let optionType;
+    if (columnName === "breakfast") {
+      optionType = breakfastMeal;
+    } else if (columnName === "lunch") {
+      optionType = lunchMeal;
+    } else if (columnName === "dinner") {
+      optionType = dinnerMeal;
+    }
+    const weekday = dataWeekdays[rowIndex.rowIndex].name;
+    const mealOptionValue = subscription.subPlans?.find(
+      (d) => d.weekday === weekday && d.session === columnName
+    )?.item;
+    // console.log({ mealOptionValue });
+
+    return (
+      <Dropdown
+        id="mealList"
+        value={mealOptionValue}
+        options={optionType?.filter((opt) =>
+          opt.weekdays.includes(dataWeekdays[rowIndex.rowIndex].name)
+        )}
+        // opt.weekdays.includes(daysOfWeek[rowIndex?.rowIndex])
+        optionLabel="name"
+        // optionValue="id"
+        valueTemplate={selectedMealTemplate}
+        itemTemplate={mealOptionsTemplate}
+        placeholder="Select your meal"
+        filter
+        onChange={(e) => onMealChange(e, rowIndex.rowIndex, columnName)}
+      >
+        <img
+          src={`path/to/images/${rowData[columnName]}.png`}
+          alt={rowData[columnName]}
+          style={{ width: "50px", height: "50px" }}
+        />
+      </Dropdown>
+    );
+  };
+
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
       <h5 className="m-0">Manage Subscriptions</h5>
@@ -727,6 +899,7 @@ const SubscriptionPage = () => {
       />
       <Button
         label="Save"
+        loading={loading}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveSubscription}
@@ -863,7 +1036,7 @@ const SubscriptionPage = () => {
 
           <Dialog
             visible={subscriptionDialog}
-            style={{ width: "450px" }}
+            style={{ width: "750px" }}
             header="Subscription Details"
             modal
             className="p-fluid"
@@ -883,7 +1056,6 @@ const SubscriptionPage = () => {
                 onChange={(e) => onInputChange(e, "customerId")}
               />
             </div>
-
             <div className="flex gap-5">
               <div className="field">
                 <label className="font-bold" htmlFor="startDate">
@@ -926,8 +1098,6 @@ const SubscriptionPage = () => {
                   })}
                 />
               </div>
-            </div>
-            <div className="flex gap-2">
               <div className="field ">
                 <label className="font-bold" htmlFor="status">
                   Status
@@ -940,85 +1110,34 @@ const SubscriptionPage = () => {
                   onChange={(e) => onInputChange(e, "status")}
                 />
               </div>
-
-              <div className="field ">
-                <label className="font-bold" htmlFor="weekday">
-                  Weekday
-                </label>
-                <Dropdown
-                  id="day"
-                  optionLabel="name"
-                  value={subscription.day}
-                  options={dataWeekdays}
-                  onChange={(e) => onInputChange(e, "day")}
-                />
-              </div>
-            </div>
-            <div className="field">
-              <label className="font-bold" htmlFor="breakfast">
-                Breakfast
-              </label>
-              <Dropdown
-                id="breakfast"
-                optionLabel="name"
-                value={subscription.breakfast}
-                options={breakfastMeal}
-                onChange={(e) => onInputChange(e, "breakfast")}
-              />
-              {/* <AutoComplete
-                field="name"
-                id="breakfast"
-                multiple
-                completeMethod={searchMealItem}
-                value={subscription.breakfast}
-                suggestions={sugmealItems}
-                onChange={(e) => onInputChange(e, "breakfast")}
-              /> */}
             </div>
 
-            <div className="field">
-              <label className="font-bold" htmlFor="lunch">
-                Lunch
-              </label>
-              <Dropdown
-                id="breakfast"
-                optionLabel="name"
-                value={subscription.lunch}
-                options={lunchMeal}
-                onChange={(e) => onInputChange(e, "lunch")}
+            {/* <DataTable value={subscription.subPlans}> */}
+            {/* <DataTable value={subPlansData}> */}
+            <DataTable value={dataWeekdays}>
+              <Column field="name" header="Weekday" />
+              <Column
+                field="breakfast"
+                header="Breakfast"
+                body={(rowData, rowIndex) =>
+                  renderMealDropdown(rowData, rowIndex, "breakfast")
+                }
               />
-              {/* <AutoComplete
-                field="name"
-                id="lunch"
-                multiple
-                completeMethod={searchMealItem}
-                value={subscription.lunch}
-                suggestions={sugmealItems}
-                onChange={(e) => onInputChange(e, "lunch")}
-              /> */}
-            </div>
-
-            <div className="field">
-              <label className="font-bold" htmlFor="dinner">
-                Dinner
-              </label>
-              <Dropdown
-                id="dinner"
-                optionLabel="name"
-                value={subscription.dinner}
-                options={dinnerMeal}
-                onChange={(e) => onInputChange(e, "dinner")}
+              <Column
+                field="lunch"
+                header="Lunch"
+                body={(rowData, rowIndex) =>
+                  renderMealDropdown(rowData, rowIndex, "lunch")
+                }
               />
-              {/* <AutoComplete
-                 field="name"
-                 id="dinner"
-                 multiple
-                 completeMethod={searchMealItem}
-                 value={subscription.dinner}
-                 suggestions={sugmealItems}
-                 onChange={(e) => onInputChange(e, "dinner")}
-               /> */}
-            </div>
+              <Column
+                field="dinner"
+                header="Dinner"
+                body={(rowData, rowIndex) =>
+                  renderMealDropdown(rowData, rowIndex, "dinner")
+                }
+              />
+            </DataTable>
           </Dialog>
 
           <Dialog

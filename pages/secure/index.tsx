@@ -129,7 +129,7 @@ const Dashboard = () => {
     } else {
       applyDarkTheme();
     }
-  }, [layoutConfig.colorScheme]);
+  }, [layoutConfig?.colorScheme]);
 
   useEffect(() => {
     // setLoading(true);

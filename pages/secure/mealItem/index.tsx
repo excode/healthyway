@@ -44,6 +44,7 @@ const MealItemPage = () => {
   const validation = [
     { id: "groupName", type: validate.text, required: true },
     { id: "name", type: validate.text, max: 20, min: 0, required: true },
+    { id: "nameInArabic", type: validate.text, max: 20, min: 2 },
     { id: "code", type: validate.text, max: 20, min: 2, required: true },
     { id: "weekdays", type: validate.array, required: true },
     { id: "mealType", type: validate.array, required: true },
@@ -54,11 +55,20 @@ const MealItemPage = () => {
       min: 0,
       required: true,
     },
+    {
+      id: "descriptionInArabic",
+      type: validate.text,
+      max: 200,
+      min: 0,
+    },
     { id: "price", type: validate.number, max: 5, min: 0, required: true },
     { id: "active", type: validate.boolean, required: true },
   ];
   let emptyMealItem: MealItem = {
     name: "",
+    nameInArabic: "",
+    description: "",
+    descriptionInArabic: "",
     price: 0,
     groupName: "",
     code: "",
@@ -192,6 +202,7 @@ const MealItemPage = () => {
   };
 
   const imageBodyTemplate = (rowData: MealItem) => {
+    console.log({ rowData });
     let imageURL = config.serverURI + "/" + rowData.image;
     let fileURL = "/file_icon.png";
     let fileNoURL = "/file_icon_na.png";
@@ -402,7 +413,7 @@ const MealItemPage = () => {
   const defaultImage = (e: any) => {
     e.target.src = "/photo_na.png";
   };
-  const openNew = () => {
+  const openNew = async () => {
     setMealItem(emptyMealItem);
     setSubmitted(false);
     setMealItemDialog(true);
@@ -982,6 +993,21 @@ const MealItemPage = () => {
                 })}
               />
             </div>
+            <div className="field">
+              <label className="font-bold" htmlFor="name">
+                Name in Arabic
+              </label>
+              <InputText
+                dir="rtl"
+                id="name"
+                value={mealItem.nameInArabic}
+                onChange={(e) => onInputChange(e, "nameInArabic")}
+                required
+                className={classNames({
+                  "p-invalid": submitted && !mealItem.name,
+                })}
+              />
+            </div>
 
             <div className="field">
               <label className="font-bold" htmlFor="code">
@@ -1065,6 +1091,23 @@ const MealItemPage = () => {
                 id="description"
                 value={mealItem.description}
                 onChange={(e) => onInputChange(e, "description")}
+                rows={5}
+                cols={30}
+                required
+                className={classNames({
+                  "p-invalid": submitted && !mealItem.description,
+                })}
+              />
+            </div>
+            <div className="field">
+              <label className="font-bold" htmlFor="description">
+                Description in Arabic
+              </label>
+              <InputTextarea
+                dir="rtl"
+                id="description"
+                value={mealItem.descriptionInArabic}
+                onChange={(e) => onInputChange(e, "descriptionInArabic")}
                 rows={5}
                 cols={30}
                 required

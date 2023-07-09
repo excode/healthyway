@@ -1,12 +1,14 @@
 import {
-  getDatas,
-  postData,
-  patchData,
   deleteData,
+  getData,
   getDataAll,
   getDataSuggestions,
-  getData,
+  getDatas,
+  patchData,
+  postData,
 } from "@lib/httpRequest";
+import { AddressType } from "./Customer";
+import { MealItem } from "./MealItem";
 
 export type MealOrder = {
   id?: string | any;
@@ -17,7 +19,7 @@ export type MealOrder = {
   customerName: string | any;
   orderDate?: Date | any;
   deliveryDate?: Date | any;
-  deliveryAddress: string | any;
+  deliveryAddress: AddressType;
   Instruction: string | any;
   location: string | any;
   orderType: string | any;
@@ -27,6 +29,10 @@ export type MealOrder = {
   customerEmail?: string | any;
   customerPhone?: string | any;
   kitchen?: string | any;
+  customerId?: string;
+  item?: MealItem;
+  session?: string;
+  quantity?: number;
 };
 
 export type MealOrderQuery = Omit<
@@ -45,7 +51,7 @@ export type MealOrderQuery = Omit<
   customerName?: string;
   orderDate?: Date;
   deliveryDate?: Date;
-  deliveryAddress?: string;
+  deliveryAddress?: AddressType;
   Instruction?: string;
   location?: string;
   orderType?: string;
@@ -94,6 +100,7 @@ export class MealOrderService {
     return postData<MealOrder>("/mealorder", request);
   }
   updateMealOrder(request: MealOrder) {
+    console.log({ request });
     const { id, ...rest } = request;
     return patchData<MealOrder>("/mealOrder/" + id, rest);
   }

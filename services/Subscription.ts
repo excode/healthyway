@@ -8,6 +8,14 @@ import {
   postData,
 } from "@lib/httpRequest";
 
+interface SubPlan {
+  weekday: string;
+  session: string;
+  item: any;
+  quantity: number;
+  status: string;
+}
+
 export type Subscription = {
   id?: string | any;
   createBy?: string | any;
@@ -18,11 +26,8 @@ export type Subscription = {
   startDate?: Date | any;
   endDate?: Date | any;
   status: string | any;
-  breakfast?: string[] | any;
-  lunch?: string[] | any;
-  dinner?: string[] | any;
+  subPlans?: SubPlan[];
   kitchen?: string | any;
-  day?: string;
 };
 
 export type SubscriptionQuery = Omit<
@@ -48,6 +53,7 @@ export type SubscriptionQuery = Omit<
   totalPages?: number;
   sortBy?: string;
   sortDirection?: number;
+  subPlans?: any;
 };
 export type SubscriptionKey = keyof Subscription;
 

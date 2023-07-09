@@ -158,6 +158,7 @@ async function patchData<T>(
     // const data = JSON.parse( currentUser )
     // const token = data.accessToken
     header = { ...header, Authorization: "Bearer " + token };
+    console.log({ header });
   }
   try {
     const { data } = await axios.patch<GetSaveResponse>(url, postdata, {
