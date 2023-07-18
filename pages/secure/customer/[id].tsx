@@ -1,21 +1,29 @@
-import { Customer, CustomerService } from "@services/Customer";
+import { Users, UsersService } from "@services/Users";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import BlockViewer from "../../../components/BlockViewer";
 
-const CustomerDetails = () => {
+const UsersDetails = () => {
   const router = useRouter();
-  const customerService = new CustomerService();
-  const [customer, setCustomer] = useState<Customer>({
-    name: "",
-    address: {},
-    GeoTag: "",
-    mobile: "",
-  });
+  const usersService = new UsersService();
+  const [users, setUsers] = useState<Users>({} as Users);
+  //   const [users, setUsers] = useState<Users>({
+  //     firstName: "",
+  //     email: "",
+  //     lastName: "",
+  //     kitchen: "",
+  //   });
   const [loading, setLoading] = useState(false);
   const { id } = router.query;
   const toast = useRef<Toast>(null);
+
+  const dataUserTypes = [
+    { value: 0, name: "Admin" },
+    { value: 1, name: "Kitchen" },
+    { value: 2, name: "Chef" },
+    { value: 3, name: "Customer" },
+  ];
 
   const defaultImage = (e: any) => {
     e.target.src = "/photo_na.png";
@@ -25,9 +33,9 @@ const CustomerDetails = () => {
     setLoading(true);
     (async () => {
       let idVal: string = id?.toString() || "";
-      let d = await customerService.getCustomerDetails(idVal);
+      let d = await usersService.getUsersDetails(idVal);
       if (d.error == undefined) {
-        setCustomer(d.data);
+        setUsers(d.data);
         setLoading(false);
         toast.current?.show({
           severity: "success",
@@ -50,7 +58,7 @@ const CustomerDetails = () => {
   return (
     <>
       <BlockViewer
-        header="Customer details"
+        header="Customer Details"
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast ref={toast} />
@@ -64,83 +72,98 @@ const CustomerDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created By
+                    First Name
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.createBy}
+                    {users.firstName}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created At
+                    Last Name
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.createAt}
-                  </div>
-                </li>
-
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">
-                    Update By
-                  </div>
-                  <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.updateBy}
-                  </div>
-                </li>
-
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">
-                    Update At
-                  </div>
-                  <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.updateAt}
-                  </div>
-                </li>
-
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Name</div>
-                  <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.name}
+                    {users.lastName}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Email</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.email}
-                  </div>
-                </li>
-
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Address</div>
-                  <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.address?.addressPreference}
-                  </div>
-                </li>
-
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">GeoTag</div>
-                  <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.GeoTag}
+                    {users.email}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Mobile</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.mobile}
+                    {users.mobile}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">
-                    Customer Type
-                  </div>
+                  <div className="text-500 w-6 md:w-2 font-medium">Country</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {customer.customerType}
+                    {users.country}
                   </div>
                 </li>
+
+                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                  <div className="text-500 w-6 md:w-2 font-medium">Address</div>
+                  <li>
+                    {users.address ? (
+                      users.address.map((a) => (
+                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 mt-1">
+                          <span className="underline font-bold">
+                            {a.addressPreference}:
+                          </span>
+                          <div className="mt-1">
+                            <span className="">Zone: </span>
+                            {a.zone},<span className=""> Building: </span>
+                            {a.building},<span className=""> Unite: </span>
+                            {a.unit},<span className=""> Street: </span>
+                            {a.streetName}
+                          </div>
+                          <div>
+                            <span className="">Latitude: </span>
+                            {a.geoTag.coordinates[0]},
+                            <span className=""> Longitude: </span>
+                            {a.geoTag.coordinates[1]}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div>No address available</div>
+                    )}{" "}
+                  </li>
+                </li>
+
+                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    User Types
+                  </div>
+                  <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                    <p>
+                      {users.userType >= 0 ? (
+                        dataUserTypes[users.userType].name
+                      ) : (
+                        <span>User type not set yet!</span>
+                      )}
+                    </p>
+                  </div>
+                </li>
+
+                {users.kitchen !== 3 || (
+                  <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                    <div className="text-500 w-6 md:w-2 font-medium">
+                      Kitchen
+                    </div>
+                    <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                      {users.kitchen}
+                    </div>
+                  </li>
+                )}
               </ul>
             </>
           )}
@@ -150,7 +173,7 @@ const CustomerDetails = () => {
   );
 };
 
-CustomerDetails.getInitialProps = (ctx: any) => {
+UsersDetails.getInitialProps = (ctx: any) => {
   const { id } = ctx.query;
 
   return {
@@ -158,4 +181,4 @@ CustomerDetails.getInitialProps = (ctx: any) => {
   };
 };
 
-export default CustomerDetails;
+export default UsersDetails;

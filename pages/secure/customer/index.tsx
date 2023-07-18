@@ -1,11 +1,10 @@
+import { GetLoginResponse } from "@lib/httpRequest";
 import { validate, validateForm } from "@lib/validation";
 import { SortType } from "@services/CommonTypes";
-import {
-  Customer,
-  CustomerKey,
-  CustomerQuery,
-  CustomerService,
-} from "@services/Customer";
+import { Kitchen, KitchenService } from "@services/Kitchen";
+import { UserData } from "@services/Login";
+import { Users, UsersKey, UsersQuery, UsersService } from "@services/Users";
+import jwt_decode, { JwtPayload } from "jwt-decode";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -21,60 +20,81 @@ import {
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
+import { Password } from "primereact/password";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useEffect, useRef, useState } from "react";
+import { useCookies } from "react-cookie";
+import countryData from "../../utilities/countryData.json";
 
 const CustomerPage = () => {
   const { asPath } = useRouter();
+  const [userData, setUserData] = useState<UserData>({ email: "" });
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+
   const validation = [
-    { id: "name", type: validate.text, max: 50, min: 0, required: true },
-    { id: "email", type: validate.email, max: 0, min: 0, required: false },
-    // { id: "address", type: validate., max: 100, min: 0, required: true },
-    { id: "customerType", type: validate.text, required: false },
-    { id: "GeoTag", type: validate.text, max: 50, min: 0, required: true },
-    { id: "mobile", type: validate.phone, max: 0, min: 0, required: true },
+    { id: "firstName", type: validate.text, max: 50, min: 2, required: true },
+    {
+      id: "password",
+      type: validate.password,
+      max: 20,
+      min: 6,
+      required: true,
+    },
+    { id: "email", type: validate.email, max: 150, min: 0, required: true },
+    { id: "mobile", type: validate.text, max: 20, min: 8, required: false },
+    { id: "country", type: validate.text, required: false },
+    { id: "userType", type: validate.int, required: false },
+    { id: "lastName", type: validate.text, max: 20, min: 2, required: true },
+    { id: "kitchen", type: validate.text, required: true },
   ];
-  let emptyCustomer: Customer = {
-    name: "",
-    address: {},
-    GeoTag: "",
-    mobile: "",
-  };
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [backupCustomers, setBackupCustomers] = useState<Customer[]>([]);
+  // let emptyUsers: Users = {
+  //   firstName: "",
+  //   email: "",
+  //   lastName: "",
+  // };
+
+  const [userss, setUserss] = useState<Users[]>([]);
+  const [backupUserss, setBackupUserss] = useState<Users[]>([]);
   const [loading, setLoading] = useState(false);
-  const [customerDialog, setCustomerDialog] = useState(false);
-  const [deleteCustomerDialog, setDeleteCustomerDialog] = useState(false);
-  const [deleteCustomersDialog, setDeleteCustomersDialog] = useState(false);
-  const [customer, setCustomer] = useState<Customer>(emptyCustomer);
-  const [selectedCustomers, setSelectedCustomers] = useState<Customer[]>([]);
+  const [usersDialog, setUsersDialog] = useState(false);
+  const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
+  const [deleteUserssDialog, setDeleteUserssDialog] = useState(false);
+  const [users, setUsers] = useState<Users>({} as Users);
+  // const [users, setUsers] = useState<Users>(emptyUsers);
+  const [selectedUserss, setSelectedUserss] = useState<Users[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [sortOrders, setSortOrders] = useState<SortType>({});
   const [globalFilter, setGlobalFilter] = useState("");
   const [row, setRow] = useState<number>(10);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Customer[]>>(null);
+  const dt = useRef<DataTable<Users[]>>(null);
   const contextPath = getConfig().publicRuntimeConfig.contextPath;
-  const customerService = new CustomerService();
+  const usersService = new UsersService();
   const [refreshFlag, setRefreshFlag] = useState<number>(Date.now());
+
+  const kitchenService = new KitchenService();
+  const [dataKitchens, setDataKitchens] = useState<Kitchen[]>([]);
 
   const [filters1, setFilters1] = useState<DataTableFilterMeta | undefined>({});
   const clearFilter1 = () => {
     initFilters1();
   };
+
   useEffect(() => {
     setLoading(true);
     (async () => {
-      let d = await customerService.getCustomer({ limit: row });
+      let d = await usersService.getUsers({ limit: row });
       if (d.error == undefined) {
-        setCustomers(d.docs);
-        setBackupCustomers(d.docs);
+        const customerFilter = d.docs.filter((c) => c.userType === 3);
+        setUserss(customerFilter);
+        setBackupUserss(d.docs);
         setLoading(false);
         setTotalRecords(d.count);
+        let dataKitchens_ = await kitchenService.getKitchenAll({});
+        setDataKitchens(dataKitchens_.data);
 
         toast.current?.show({
           severity: "success",
@@ -94,10 +114,18 @@ const CustomerPage = () => {
     })();
     initFilters1();
   }, [refreshFlag]);
+
+  useEffect(() => {
+    const data: GetLoginResponse = cookies.user;
+    let token: string = data.accessToken || "";
+    const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
+    setUserData(decoded);
+  }, []);
+
   const initFilters1 = () => {
     setFilters1({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      name: {
+      firstName: {
         operator: FilterOperator.AND,
         constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
       },
@@ -105,79 +133,104 @@ const CustomerPage = () => {
         operator: FilterOperator.AND,
         constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
       },
-      Address: {
-        operator: FilterOperator.AND,
-        constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-      },
       mobile: {
         operator: FilterOperator.AND,
         constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
       },
-      GeoTag: {
+      country: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+      },
+      userType: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+      },
+      lastName: {
         operator: FilterOperator.AND,
         constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
       },
-      createBy: {
-        operator: FilterOperator.AND,
-        constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-      },
-      createAt: {
-        operator: FilterOperator.AND,
-        constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
-      },
-      updateBy: {
-        operator: FilterOperator.AND,
-        constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-      },
-      updateAt: {
-        operator: FilterOperator.AND,
-        constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
-      },
-      customerType: {
+      kitchen: {
         operator: FilterOperator.AND,
         constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
       },
     });
   };
 
-  const datacustomerTypes = [
-    { value: "Regular", name: "Regular" },
-    { value: "VIP", name: "VIP" },
-    { value: "VVIP", name: "VVIP" },
+  const datacountrys = countryData;
+
+  const datauserTypes = [
+    { value: 0, name: "Admin" },
+    { value: 1, name: "Kitchen" },
+    { value: 2, name: "Chef" },
+    { value: 3, name: "Customer" },
   ];
 
-  const createAtFilterTemplate = (options: any) => {
-    return (
-      <Calendar
-        value={options.value}
-        onChange={(e) => options.filterCallback(e.value, options.index)}
-        showTime
-        hourFormat="12"
-      />
-    );
-  };
-
-  const updateAtFilterTemplate = (options: any) => {
-    return (
-      <Calendar
-        value={options.value}
-        onChange={(e) => options.filterCallback(e.value, options.index)}
-        showTime
-        hourFormat="12"
-      />
-    );
-  };
-
-  const customerTypeFilterTemplate = (options: any) => {
+  const countryFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">CustomerType Picker</div>
+        <div className="mb-3 text-bold">Country Picker</div>
         <Dropdown
           value={options.value}
-          options={datacustomerTypes}
+          options={datacountrys}
           onChange={(e) => options.filterCallback(e.value)}
           optionLabel="name"
           optionValue="value"
+          placeholder="Any"
+          className="p-column-filter"
+        />
+      </>
+    );
+  };
+  const userTypeFilterTemplate = (options: any) => {
+    return (
+      <>
+        <div className="mb-3 text-bold">UserType Picker</div>
+        <Dropdown
+          value={options.value}
+          options={datauserTypes.filter(
+            (e) => e.value > userData!.permissionLevel!
+          )}
+          onChange={(e) => options.filterCallback(e.value)}
+          optionLabel="name"
+          optionValue="value"
+          placeholder="Any"
+          className="p-column-filter"
+        />
+      </>
+    );
+  };
+  const emailOTPExpiresFilterTemplate = (options: any) => {
+    return (
+      <Calendar
+        value={options.value}
+        onChange={(e) => options.filterCallback(e.value, options.index)}
+        showTime
+        hourFormat="12"
+      />
+    );
+  };
+
+  const mobileOTPExpiresFilterTemplate = (options: any) => {
+    return (
+      <Calendar
+        value={options.value}
+        onChange={(e) => options.filterCallback(e.value, options.index)}
+        showTime
+        hourFormat="12"
+      />
+    );
+  };
+
+  const kitchenFilterTemplate = (options: any) => {
+    return (
+      <>
+        <div className="mb-3 text-bold">Kitchen Picker</div>
+        <Dropdown
+          value={options.value}
+          options={dataKitchens}
+          onChange={(e) => options.filterCallback(e.value)}
+          optionLabel="kitchenName"
+          optionValue="id"
           placeholder="Any"
           className="p-column-filter"
         />
@@ -188,43 +241,45 @@ const CustomerPage = () => {
     e.target.src = "/photo_na.png";
   };
   const openNew = () => {
-    setCustomer(emptyCustomer);
+    setUsers({} as Users);
+    // setUsers(emptyUsers);
     setSubmitted(false);
-    setCustomerDialog(true);
+    setUsersDialog(true);
   };
 
   const hideDialog = () => {
     setSubmitted(false);
-    setCustomerDialog(false);
+    setUsersDialog(false);
   };
 
-  const hideDeleteCustomerDialog = () => {
-    setDeleteCustomerDialog(false);
+  const hideDeleteUsersDialog = () => {
+    setDeleteUsersDialog(false);
   };
 
-  const hideDeleteCustomersDialog = () => {
-    setDeleteCustomersDialog(false);
+  const hideDeleteUserssDialog = () => {
+    setDeleteUserssDialog(false);
   };
 
-  const saveCustomer = async () => {
+  const saveUsers = async () => {
     setSubmitted(true);
-    const validationErrors: string[] = validateForm(customer, validation);
+    const validationErrors: string[] = validateForm(users, validation);
     if (validationErrors.length == 0) {
-      let _customers: Customer[] = [...customers];
-      let _customer: Customer = { ...customer };
-      if (customer.id) {
-        let d = await customerService.updateCustomer(_customer);
+      let _userss: Users[] = [...userss];
+      let _users: Users = { ...users };
+
+      if (users.id) {
+        let d = await usersService.updateUsers(_users);
         if (d.error == undefined) {
-          const index = _customers.findIndex((c) => c.id === customer.id);
+          const index = _userss.findIndex((c) => c.id === users.id);
           if (index !== -1) {
-            _customers[index] = { ..._customer };
-            // _customers[index] = _customer;
-            //_customers.splice(index, 1, {..._customer,id:id});
+            _userss[index] = { ..._users };
+            // _userss[index] = _users;
+            //_userss.splice(index, 1, {..._users,id:id});
           }
           toast.current?.show({
             severity: "success",
             summary: "Loaded",
-            detail: "Customer Updated",
+            detail: "Users Updated",
             life: 3000,
           });
         } else {
@@ -236,15 +291,16 @@ const CustomerPage = () => {
           });
         }
       } else {
-        let d = await customerService.addCustomer(_customer);
+        console.log({ _users });
+        let d = await usersService.addUsers(_users);
         if (d.error == undefined) {
           var newID = d.id;
-          // _customers.unshift({..._customer,id:newID})
+          // _userss.unshift({..._users,id:newID})
 
           toast.current?.show({
             severity: "success",
             summary: "Loaded",
-            detail: "Customer Updated",
+            detail: "Users Updated",
             life: 3000,
           });
           // TRIGGER REFRESH
@@ -259,10 +315,11 @@ const CustomerPage = () => {
         }
       }
 
-      setCustomers(_customers);
-      setBackupCustomers(_customers);
-      setCustomerDialog(false);
-      setCustomer(emptyCustomer);
+      setUserss(_userss);
+      setBackupUserss(_userss);
+      setUsersDialog(false);
+      setUsers({} as Users);
+      // setUsers(emptyUsers);
     } else {
       toast.current?.show({
         severity: "error",
@@ -273,28 +330,29 @@ const CustomerPage = () => {
     }
   };
 
-  const editCustomer = (customer: Customer) => {
-    setCustomer({ ...customer });
-    setCustomerDialog(true);
+  const editUsers = (users: Users) => {
+    setUsers({ ...users });
+    setUsersDialog(true);
   };
 
-  const confirmDeleteCustomer = (customer: Customer) => {
-    setCustomer(customer);
-    setDeleteCustomerDialog(true);
+  const confirmDeleteUsers = (users: Users) => {
+    setUsers(users);
+    setDeleteUsersDialog(true);
   };
 
-  const deleteCustomer = async () => {
-    let d = await customerService.deleteCustomer(customer.id ?? "");
+  const deleteUsers = async () => {
+    let d = await usersService.deleteUsers(users.id ?? "");
     if (d.error == undefined) {
-      let _customers = customers.filter((val) => val.id !== customer.id);
-      setCustomers(_customers);
-      setBackupCustomers(_customers);
-      setDeleteCustomerDialog(false);
-      setCustomer(emptyCustomer);
+      let _userss = userss.filter((val) => val.id !== users.id);
+      setUserss(_userss);
+      setBackupUserss(_userss);
+      setDeleteUsersDialog(false);
+      setUsers({} as Users);
+      // setUsers(emptyUsers);
       toast.current?.show({
         severity: "warn",
         summary: "Deleted",
-        detail: "Customer Deleted",
+        detail: "Users Deleted",
         life: 3000,
       });
     } else {
@@ -306,7 +364,7 @@ const CustomerPage = () => {
       });
     }
 
-    //toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer Deleted', life: 3000 });
+    //toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Users Deleted', life: 3000 });
   };
 
   const exportCSV = () => {
@@ -314,45 +372,43 @@ const CustomerPage = () => {
   };
 
   const confirmDeleteSelected = () => {
-    setDeleteCustomersDialog(true);
+    setDeleteUserssDialog(true);
   };
 
-  const deleteSelectedCustomers = () => {
-    let _customers = customers.filter(
-      (val) => !selectedCustomers.includes(val)
-    );
-    setCustomers(_customers);
-    setDeleteCustomersDialog(false);
-    setSelectedCustomers([]);
+  const deleteSelectedUserss = () => {
+    let _userss = userss.filter((val) => !selectedUserss.includes(val));
+    setUserss(_userss);
+    setDeleteUserssDialog(false);
+    setSelectedUserss([]);
     toast.current?.show({
       severity: "success",
       summary: "Successful",
-      detail: "Customers Deleted",
+      detail: "Userss Deleted",
       life: 3000,
     });
   };
 
-  const onCategoryChange = (e: any, name: CustomerKey) => {
+  const onCategoryChange = (e: any, name: UsersKey) => {
     let val = (e.target && e.target.value) || "";
-    let _customer: Customer = { ...customer };
-    _customer[name] = val;
-    setCustomer(_customer);
+    let _users: Users = { ...users };
+    _users[name] = val;
+    setUsers(_users);
   };
-  const onInputBooleanChange = (e: any, name: CustomerKey) => {
+  const onInputBooleanChange = (e: any, name: UsersKey) => {
     let val = e.target.value;
-    let _customer: Customer = { ...customer };
-    _customer[name] = val;
+    let _users: Users = { ...users };
+    _users[name] = val;
 
-    setCustomer(_customer);
+    setUsers(_users);
   };
-  const onInputChange = (e: any, name: CustomerKey) => {
+  const onInputChange = (e: any, name: UsersKey) => {
     let val = (e.target && e.target.value) || undefined;
     const ctrlType = e.target.type;
     if (typeof val === "object") {
       if (val instanceof Date && isFinite(val.getTime())) {
         val = val;
       } else if ("value" in val) {
-        let aVal = customer[name];
+        let aVal = users[name];
 
         if (ctrlType == "radio") {
           aVal = val.value;
@@ -369,22 +425,22 @@ const CustomerPage = () => {
       }
     }
 
-    let _customer: Customer = { ...customer };
-    _customer[name] = val;
+    let _users: Users = { ...users };
+    _users[name] = val;
 
-    setCustomer(_customer);
+    setUsers(_users);
   };
 
-  const onInputNumberChange = (e: any, name: CustomerKey) => {
+  const onInputNumberChange = (e: any, name: UsersKey) => {
     let val = e.value || 0;
-    let _customer = { ...customer };
-    _customer[name] = val;
+    let _users = { ...users };
+    _users[name] = val;
 
-    setCustomer(_customer);
+    setUsers(_users);
   };
   const getNewData = async (e: any, type: number = 0) => {
     setLoading(true);
-    let searchObj: CustomerQuery = {};
+    let searchObj: UsersQuery = {};
     for (const key in e.filters) {
       if (e.filters[key].constraints) {
         if (e.filters[key].constraints[0].value) {
@@ -427,10 +483,10 @@ const CustomerPage = () => {
       searchObj = { ...searchObj, page: 0, limit: e.rows };
     }
 
-    let d = await customerService.getCustomer(searchObj);
+    let d = await usersService.getUsers(searchObj);
     if (d.error == undefined) {
-      setCustomers(d.docs);
-      setBackupCustomers(d.docs);
+      setUserss(d.docs);
+      setBackupUserss(d.docs);
       setLoading(false);
       setTotalRecords(d.count);
       toast.current?.show({
@@ -461,15 +517,15 @@ const CustomerPage = () => {
 
   const localFilter = (val: string) => {
     if (val.length > 1) {
-      let _customers = [...customers];
-      let filtered = _customers.filter(
+      let _userss = [...userss];
+      let filtered = _userss.filter(
         (data) =>
           JSON.stringify(data).toLowerCase().indexOf(val.toLowerCase()) !== -1
       );
-      setCustomers(filtered);
+      setUserss(filtered);
     } else if (val.length == 0) {
       // RETRIVE FROM BACKUP
-      setCustomers(backupCustomers);
+      setUserss(backupUserss);
     }
   };
   const leftToolbarTemplate = () => {
@@ -487,7 +543,7 @@ const CustomerPage = () => {
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
-            disabled={!selectedCustomers || !selectedCustomers.length}
+            disabled={!selectedUserss || !selectedUserss.length}
           />
         </div>
       </React.Fragment>
@@ -507,18 +563,18 @@ const CustomerPage = () => {
     );
   };
 
-  const actionBodyTemplate = (rowData: Customer) => {
+  const actionBodyTemplate = (rowData: Users) => {
     return (
       <>
         <Button
           icon="pi pi-pencil"
-          className="p-button-rounded p-button-success mr-2"
-          onClick={() => editCustomer(rowData)}
+          className="p-button-rounded p-button-success "
+          onClick={() => editUsers(rowData)}
         />
         <Button
           icon="pi pi-trash"
-          className="p-button-rounded p-button-warning"
-          onClick={() => confirmDeleteCustomer(rowData)}
+          className="p-button-rounded p-button-warning mx-2"
+          onClick={() => confirmDeleteUsers(rowData)}
         />
 
         <Link
@@ -537,7 +593,7 @@ const CustomerPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Customers</h5>
+      <h5 className="m-0">Customer Table</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -549,7 +605,7 @@ const CustomerPage = () => {
     </div>
   );
 
-  const customerDialogFooter = (
+  const usersDialogFooter = (
     <>
       <Button
         label="Cancel"
@@ -561,39 +617,39 @@ const CustomerPage = () => {
         label="Save"
         icon="pi pi-check"
         className="p-button-text"
-        onClick={saveCustomer}
+        onClick={saveUsers}
       />
     </>
   );
-  const deleteCustomerDialogFooter = (
+  const deleteUsersDialogFooter = (
     <>
       <Button
         label="No"
         icon="pi pi-times"
         className="p-button-text"
-        onClick={hideDeleteCustomerDialog}
+        onClick={hideDeleteUsersDialog}
       />
       <Button
         label="Yes"
         icon="pi pi-check"
         className="p-button-text"
-        onClick={deleteCustomer}
+        onClick={deleteUsers}
       />
     </>
   );
-  const deleteCustomersDialogFooter = (
+  const deleteUserssDialogFooter = (
     <>
       <Button
         label="No"
         icon="pi pi-times"
         className="p-button-text"
-        onClick={hideDeleteCustomersDialog}
+        onClick={hideDeleteUserssDialog}
       />
       <Button
         label="Yes"
         icon="pi pi-check"
         className="p-button-text"
-        onClick={deleteSelectedCustomers}
+        onClick={deleteSelectedUserss}
       />
     </>
   );
@@ -611,11 +667,9 @@ const CustomerPage = () => {
 
           <DataTable
             ref={dt}
-            value={customers}
-            selection={selectedCustomers}
-            onSelectionChange={(e) =>
-              setSelectedCustomers(e.value as Customer[])
-            }
+            value={userss}
+            selection={selectedUserss}
+            onSelectionChange={(e) => setSelectedUserss(e.value as Users[])}
             dataKey="id"
             loading={loading}
             filters={filters1}
@@ -631,8 +685,8 @@ const CustomerPage = () => {
             rowsPerPageOptions={[1, 5, 10, 25, 50]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Customers"
-            emptyMessage="No Customers found."
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Userss"
+            emptyMessage="No Userss found."
             header={header}
             responsiveLayout="scroll"
           >
@@ -643,12 +697,22 @@ const CustomerPage = () => {
 
             <Column
               showAddButton={false}
-              field="name"
-              header="Name"
+              field="firstName"
+              header="First Name"
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
-              filterPlaceholder="Search by name"
+              filterPlaceholder="Search by firstName"
+            ></Column>
+
+            <Column
+              showAddButton={false}
+              field="lastName"
+              header="Last Name"
+              sortable
+              headerStyle={{ minWidth: "10rem" }}
+              filter
+              filterPlaceholder="Search by lastName"
             ></Column>
 
             <Column
@@ -663,16 +727,6 @@ const CustomerPage = () => {
 
             <Column
               showAddButton={false}
-              field="Address"
-              header="Address"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by Address"
-            ></Column>
-
-            <Column
-              showAddButton={false}
               field="mobile"
               header="Mobile"
               sortable
@@ -681,37 +735,38 @@ const CustomerPage = () => {
               filterPlaceholder="Search by mobile"
             ></Column>
 
-            <Column
+            {/* <Column
               showAddButton={false}
-              field="GeoTag"
-              header="GeoTag"
+              field="country"
+              header="Country"
               sortable
               headerStyle={{ minWidth: "10rem" }}
+              filterField="country"
               filter
-              filterPlaceholder="Search by GeoTag"
-            ></Column>
+              filterElement={countryFilterTemplate}
+            ></Column> */}
 
-            <Column
+            {/* <Column
               showAddButton={false}
-              field="createBy"
-              header="Created By"
+              field="userType"
+              header="User Types"
               sortable
               headerStyle={{ minWidth: "10rem" }}
+              filterField="userType"
               filter
-              filterPlaceholder="Search by createBy"
-            ></Column>
+              filterElement={userTypeFilterTemplate}
+            ></Column> */}
 
-            <Column
+            {/* <Column
               showAddButton={false}
-              field="createAt"
-              header="Created At"
+              field="kitchen"
+              header="Kitchen"
               sortable
               headerStyle={{ minWidth: "10rem" }}
-              filterField="createAt"
-              dataType="date"
+              filterField="kitchen"
               filter
-              filterElement={createAtFilterTemplate}
-            ></Column>
+              filterElement={kitchenFilterTemplate}
+            ></Column> */}
 
             <Column
               body={actionBodyTemplate}
@@ -720,71 +775,54 @@ const CustomerPage = () => {
           </DataTable>
 
           <Dialog
-            visible={customerDialog}
+            visible={usersDialog}
             style={{ width: "450px" }}
-            header="Customer Details"
+            header="Users Details"
             modal
             className="p-fluid"
-            footer={customerDialogFooter}
+            footer={usersDialogFooter}
             onHide={hideDialog}
           >
-            <div className="field">
-              <label htmlFor="name">Name</label>
-              <InputText
-                id="name"
-                value={customer.name}
-                onChange={(e) => onInputChange(e, "name")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !customer.name,
-                })}
-              />
+            <div className="grid ">
+              <div className="field col-6">
+                <label htmlFor="firstName">First Name</label>
+                <InputText
+                  id="firstName"
+                  placeholder="First Name"
+                  value={users.firstName}
+                  onChange={(e) => onInputChange(e, "firstName")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !users.firstName,
+                  })}
+                />
+              </div>
+
+              <div className="field col-6">
+                <label htmlFor="lastName">Last Name</label>
+                <InputText
+                  id="lastName"
+                  placeholder="Last Name"
+                  value={users.lastName}
+                  onChange={(e) => onInputChange(e, "lastName")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !users.lastName,
+                  })}
+                />
+              </div>
             </div>
 
             <div className="field">
               <label htmlFor="email">Email</label>
               <InputText
                 id="email"
-                value={customer.email}
+                placeholder="Email"
+                value={users.email}
                 onChange={(e) => onInputChange(e, "email")}
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="Address">Address</label>
-              <InputTextarea
-                id="Address"
-                value={customer.address?.addressPreference}
-                onChange={(e) => onInputChange(e, "address")}
-                rows={5}
-                cols={30}
                 required
                 className={classNames({
-                  "p-invalid": submitted && !customer.address,
-                })}
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="customerType">Customer Type</label>
-              <Dropdown
-                id="customerType"
-                optionLabel="name"
-                value={customer.customerType}
-                options={datacustomerTypes}
-                onChange={(e) => onInputChange(e, "customerType")}
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="GeoTag">GeoTag</label>
-              <InputText
-                id="GeoTag"
-                value={customer.GeoTag}
-                onChange={(e) => onInputChange(e, "GeoTag")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !customer.GeoTag,
+                  "p-invalid": submitted && !users.email,
                 })}
               />
             </div>
@@ -793,54 +831,105 @@ const CustomerPage = () => {
               <label htmlFor="mobile">Mobile</label>
               <InputText
                 id="mobile"
-                value={customer.mobile}
+                placeholder="Mobile number"
+                value={users.mobile}
                 onChange={(e) => onInputChange(e, "mobile")}
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="password">Password</label>
+              <Password
+                id="password"
+                value={users.password}
+                onChange={(e) => onInputChange(e, "password")}
+                toggleMask
                 required
                 className={classNames({
-                  "p-invalid": submitted && !customer.mobile,
+                  "p-invalid": submitted && !users.password,
                 })}
               />
             </div>
+
+            <div className="grid">
+              <div className="field col-6">
+                <label htmlFor="country">Country</label>
+                <Dropdown
+                  id="country"
+                  placeholder=""
+                  optionLabel="name"
+                  value={users.country}
+                  options={datacountrys}
+                  onChange={(e) => onInputChange(e, "country")}
+                />
+              </div>
+              <div className="field col-6">
+                <label htmlFor="userType">User Types</label>
+                <Dropdown
+                  id="userType"
+                  optionLabel="name"
+                  value={users.userType}
+                  options={datauserTypes.filter(
+                    (e) => e.value > userData!.permissionLevel!
+                  )}
+                  onChange={(e) => onInputChange(e, "userType")}
+                />
+              </div>
+            </div>
+
+            {userData.permissionLevel == 0 ? (
+              <div className="field">
+                <label htmlFor="kitchen">Kitchen</label>
+                <Dropdown
+                  id="kitchen"
+                  optionLabel="kitchenName"
+                  optionValue="id"
+                  value={users.kitchen}
+                  options={dataKitchens}
+                  onChange={(e) => onInputChange(e, "kitchen")}
+                />
+              </div>
+            ) : (
+              <p></p>
+            )}
           </Dialog>
 
           <Dialog
-            visible={deleteCustomerDialog}
+            visible={deleteUsersDialog}
             style={{ width: "450px" }}
             header="Confirm"
             modal
-            footer={deleteCustomerDialogFooter}
-            onHide={hideDeleteCustomerDialog}
+            footer={deleteUsersDialogFooter}
+            onHide={hideDeleteUsersDialog}
           >
             <div className="flex align-items-center justify-content-center">
               <i
                 className="pi pi-exclamation-triangle mr-3"
                 style={{ fontSize: "2rem" }}
               />
-              {customer && (
+              {users && (
                 <span>
-                  Are you sure you want to delete <b>Customer record</b>?
+                  Are you sure you want to delete <b>Users record</b>?
                 </span>
               )}
             </div>
           </Dialog>
 
           <Dialog
-            visible={deleteCustomersDialog}
+            visible={deleteUserssDialog}
             style={{ width: "450px" }}
             header="Confirm"
             modal
-            footer={deleteCustomersDialogFooter}
-            onHide={hideDeleteCustomersDialog}
+            footer={deleteUserssDialogFooter}
+            onHide={hideDeleteUserssDialog}
           >
             <div className="flex align-items-center justify-content-center">
               <i
                 className="pi pi-exclamation-triangle mr-3"
                 style={{ fontSize: "2rem" }}
               />
-              {customer && (
-                <span>
-                  Are you sure you want to delete the selected Customer?
-                </span>
+              {users && (
+                <span>Are you sure you want to delete the selected Users?</span>
               )}
             </div>
           </Dialog>

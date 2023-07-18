@@ -47,11 +47,11 @@ const UsersPage = () => {
     { id: "lastName", type: validate.text, max: 20, min: 2, required: true },
     { id: "kitchen", type: validate.text, required: true },
   ];
-  let emptyUsers: Users = {
-    firstName: "",
-    email: "",
-    lastName: "",
-  };
+  // let emptyUsers: Users = {
+  //   firstName: "",
+  //   email: "",
+  //   lastName: "",
+  // };
 
   const [userss, setUserss] = useState<Users[]>([]);
   const [backupUserss, setBackupUserss] = useState<Users[]>([]);
@@ -59,7 +59,8 @@ const UsersPage = () => {
   const [usersDialog, setUsersDialog] = useState(false);
   const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
   const [deleteUserssDialog, setDeleteUserssDialog] = useState(false);
-  const [users, setUsers] = useState<Users>(emptyUsers);
+  const [users, setUsers] = useState<Users>({} as Users);
+  // const [users, setUsers] = useState<Users>(emptyUsers);
   const [selectedUserss, setSelectedUserss] = useState<Users[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [sortOrders, setSortOrders] = useState<SortType>({});
@@ -152,7 +153,7 @@ const UsersPage = () => {
 
   const datacountrys = countryData;
 
-  const datauserTypes = [
+  const dataUserTypes = [
     { value: 0, name: "Admin" },
     { value: 1, name: "Kitchen" },
     { value: 2, name: "Chef" },
@@ -181,7 +182,7 @@ const UsersPage = () => {
         <div className="mb-3 text-bold">UserType Picker</div>
         <Dropdown
           value={options.value}
-          options={datauserTypes.filter(
+          options={dataUserTypes.filter(
             (e) => e.value > userData!.permissionLevel!
           )}
           onChange={(e) => options.filterCallback(e.value)}
@@ -235,7 +236,8 @@ const UsersPage = () => {
     e.target.src = "/photo_na.png";
   };
   const openNew = () => {
-    setUsers(emptyUsers);
+    setUsers({} as Users);
+    // setUsers(emptyUsers);
     setSubmitted(false);
     setUsersDialog(true);
   };
@@ -311,7 +313,8 @@ const UsersPage = () => {
       setUserss(_userss);
       setBackupUserss(_userss);
       setUsersDialog(false);
-      setUsers(emptyUsers);
+      setUsers({} as Users);
+      // setUsers(emptyUsers);
     } else {
       toast.current?.show({
         severity: "error",
@@ -339,7 +342,8 @@ const UsersPage = () => {
       setUserss(_userss);
       setBackupUserss(_userss);
       setDeleteUsersDialog(false);
-      setUsers(emptyUsers);
+      setUsers({} as Users);
+      // setUsers(emptyUsers);
       toast.current?.show({
         severity: "warn",
         summary: "Deleted",
@@ -582,6 +586,12 @@ const UsersPage = () => {
     );
   };
 
+  const userTypeBodyTamplate = (rowData: Users) => {
+    return rowData.userType > -1
+      ? dataUserTypes[rowData.userType]?.name
+      : "N/A";
+  };
+
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
       <h5 className="m-0">Manage Userss</h5>
@@ -741,6 +751,7 @@ const UsersPage = () => {
               showAddButton={false}
               field="userType"
               header="User Types"
+              body={userTypeBodyTamplate}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="userType"
@@ -860,7 +871,7 @@ const UsersPage = () => {
                   id="userType"
                   optionLabel="name"
                   value={users.userType}
-                  options={datauserTypes.filter(
+                  options={dataUserTypes.filter(
                     (e) => e.value > userData!.permissionLevel!
                   )}
                   onChange={(e) => onInputChange(e, "userType")}
