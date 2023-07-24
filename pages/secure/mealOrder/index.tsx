@@ -8,6 +8,7 @@ import {
   MealOrderQuery,
   MealOrderService,
 } from "@services/MealOrder";
+import { LangContext } from "hooks/lan";
 import moment from "moment";
 import getConfig from "next/config";
 import Image from "next/image";
@@ -30,7 +31,7 @@ import { Tag } from "primereact/tag";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import cooking from "/public/layout/images/cooking.png";
 
 const MealOrderPage = () => {
@@ -83,6 +84,7 @@ const MealOrderPage = () => {
   const contextPath = getConfig().publicRuntimeConfig.contextPath;
   const mealorderService = new MealOrderService();
   const [refreshFlag, setRefreshFlag] = useState<number>(Date.now());
+  const { textFormat } = useContext(LangContext);
 
   const customerService = new CustomerService();
   const [sugcustomers, setSugCustomers] = useState<Customer[]>([]);
@@ -898,7 +900,10 @@ const MealOrderPage = () => {
     <div className="grid crud-demo">
       <div className="col-12">
         <div className="card">
-          <Toast ref={toast} />
+          <Toast
+            position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+            ref={toast}
+          />
           <Toolbar
             className="mb-4"
             start={leftToolbarTemplate}
@@ -1126,90 +1131,92 @@ const MealOrderPage = () => {
             footer={mealOrderDialogFooter}
             onHide={hideDialog}
           >
-            <div className="field">
-              <label htmlFor="invoiceNo">Invoice No</label>
-              <InputText
-                id="invoiceNo"
-                value={mealOrder.invoiceNo}
-                onChange={(e) => onInputChange(e, "invoiceNo")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !mealOrder.invoiceNo,
-                })}
-              />
-            </div>
+            <div dir={textFormat}>
+              <div className="field">
+                <label htmlFor="invoiceNo">Invoice No</label>
+                <InputText
+                  id="invoiceNo"
+                  value={mealOrder.invoiceNo}
+                  onChange={(e) => onInputChange(e, "invoiceNo")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !mealOrder.invoiceNo,
+                  })}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="customerName">Customer Name</label>
-              <AutoComplete
-                field="name"
-                id="customerName"
-                completeMethod={searchCustomer}
-                value={mealOrder.customerName}
-                suggestions={sugcustomers}
-                onChange={(e) => onInputChange(e, "customerName")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="customerName">Customer Name</label>
+                <AutoComplete
+                  field="name"
+                  id="customerName"
+                  completeMethod={searchCustomer}
+                  value={mealOrder.customerName}
+                  suggestions={sugcustomers}
+                  onChange={(e) => onInputChange(e, "customerName")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="customerEmail">Email</label>
-              <AutoComplete
-                field="email"
-                id="customerEmail"
-                completeMethod={searchCustomer}
-                value={mealOrder.customerEmail}
-                suggestions={sugcustomers}
-                onChange={(e) => onInputChange(e, "customerEmail")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="customerEmail">Email</label>
+                <AutoComplete
+                  field="email"
+                  id="customerEmail"
+                  completeMethod={searchCustomer}
+                  value={mealOrder.customerEmail}
+                  suggestions={sugcustomers}
+                  onChange={(e) => onInputChange(e, "customerEmail")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="customerPhone">Phone</label>
-              <AutoComplete
-                field="mobile"
-                id="customerPhone"
-                completeMethod={searchCustomer}
-                value={mealOrder.customerPhone}
-                suggestions={sugcustomers}
-                onChange={(e) => onInputChange(e, "customerPhone")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="customerPhone">Phone</label>
+                <AutoComplete
+                  field="mobile"
+                  id="customerPhone"
+                  completeMethod={searchCustomer}
+                  value={mealOrder.customerPhone}
+                  suggestions={sugcustomers}
+                  onChange={(e) => onInputChange(e, "customerPhone")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="Instruction">Instruction</label>
-              <InputText
-                id="Instruction"
-                value={mealOrder.Instruction}
-                onChange={(e) => onInputChange(e, "Instruction")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !mealOrder.Instruction,
-                })}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="Instruction">Instruction</label>
+                <InputText
+                  id="Instruction"
+                  value={mealOrder.Instruction}
+                  onChange={(e) => onInputChange(e, "Instruction")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !mealOrder.Instruction,
+                  })}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="orderType">Order Type</label>
-              <Dropdown
-                id="orderType"
-                optionLabel="name"
-                value={mealOrder.orderType}
-                options={dataorderTypes}
-                onChange={(e) => onInputChange(e, "orderType")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="orderType">Order Type</label>
+                <Dropdown
+                  id="orderType"
+                  optionLabel="name"
+                  value={mealOrder.orderType}
+                  options={dataorderTypes}
+                  onChange={(e) => onInputChange(e, "orderType")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="location">Location</label>
-              <InputText
-                id="location"
-                value={mealOrder.location}
-                onChange={(e) => onInputChange(e, "location")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !mealOrder.location,
-                })}
-              />
+              <div className="field">
+                <label htmlFor="location">Location</label>
+                <InputText
+                  id="location"
+                  value={mealOrder.location}
+                  onChange={(e) => onInputChange(e, "location")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !mealOrder.location,
+                  })}
+                />
+              </div>
             </div>
           </Dialog>
 

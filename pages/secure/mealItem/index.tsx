@@ -30,7 +30,7 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { TriStateCheckbox } from "primereact/tristatecheckbox";
 import { classNames } from "primereact/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
@@ -38,6 +38,7 @@ import { Image } from "primereact/image";
 
 import { Kitchen, KitchenService } from "@services/Kitchen";
 import { MealGroup, MealGroupService } from "@services/MealGroup";
+import { LangContext } from "hooks/lan";
 
 const MealItemPage = () => {
   const { asPath } = useRouter();
@@ -95,6 +96,7 @@ const MealItemPage = () => {
   const contextPath = getConfig().publicRuntimeConfig.contextPath;
   const mealitemService = new MealItemService();
   const [refreshFlag, setRefreshFlag] = useState<number>(Date.now());
+  const { textFormat } = useContext(LangContext);
 
   const [uploadDialog, setUploadDialog] = useState(false);
   const [uploadInfo, setUploadInfo] = useState<UploadInfo>({});
@@ -828,7 +830,10 @@ const MealItemPage = () => {
     <div className="grid crud-demo">
       <div className="col-12">
         <div className="card">
-          <Toast ref={toast} />
+          <Toast
+            position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+            ref={toast}
+          />
           <Toolbar
             className="mb-4"
             left={leftToolbarTemplate}
@@ -965,179 +970,184 @@ const MealItemPage = () => {
             footer={mealItemDialogFooter}
             onHide={hideDialog}
           >
-            <div className="field">
-              <label className="font-bold" htmlFor="groupName">
-                Group Name
-              </label>
-              <Dropdown
-                id="groupName"
-                optionLabel="name"
-                optionValue="name"
-                value={mealItem.groupName}
-                options={datamealGroups}
-                onChange={(e) => onInputChange(e, "groupName")}
-              />
-            </div>
+            <div dir={textFormat}>
+              <div className="field">
+                <label className="font-bold" htmlFor="groupName">
+                  Group Name
+                </label>
+                <Dropdown
+                  id="groupName"
+                  optionLabel="name"
+                  optionValue="name"
+                  value={mealItem.groupName}
+                  options={datamealGroups}
+                  onChange={(e) => onInputChange(e, "groupName")}
+                />
+              </div>
 
-            <div className="field">
-              <label className="font-bold" htmlFor="name">
-                Name
-              </label>
-              <InputText
-                id="name"
-                value={mealItem.name}
-                onChange={(e) => onInputChange(e, "name")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !mealItem.name,
-                })}
-              />
-            </div>
-            <div className="field">
-              <label className="font-bold" htmlFor="name">
-                Name in Arabic
-              </label>
-              <InputText
-                dir="rtl"
-                id="name"
-                value={mealItem.nameInArabic}
-                onChange={(e) => onInputChange(e, "nameInArabic")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !mealItem.name,
-                })}
-              />
-            </div>
+              <div className="field">
+                <label className="font-bold" htmlFor="name">
+                  Name
+                </label>
+                <InputText
+                  id="name"
+                  value={mealItem.name}
+                  onChange={(e) => onInputChange(e, "name")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !mealItem.name,
+                  })}
+                />
+              </div>
+              <div className="field">
+                <label className="font-bold" htmlFor="name">
+                  Name in Arabic
+                </label>
+                <InputText
+                  dir="rtl"
+                  id="name"
+                  value={mealItem.nameInArabic}
+                  onChange={(e) => onInputChange(e, "nameInArabic")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !mealItem.name,
+                  })}
+                />
+              </div>
 
-            <div className="field">
-              <label className="font-bold" htmlFor="code">
-                Code
-              </label>
-              <InputText
-                id="code"
-                value={mealItem.code}
-                onChange={(e) => onInputChange(e, "code")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !mealItem.code,
-                })}
-              />
-            </div>
+              <div className="field">
+                <label className="font-bold" htmlFor="code">
+                  Code
+                </label>
+                <InputText
+                  id="code"
+                  value={mealItem.code}
+                  onChange={(e) => onInputChange(e, "code")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !mealItem.code,
+                  })}
+                />
+              </div>
 
-            <div className="field">
-              <label className="font-bold" htmlFor="weekdays">
-                Week Days
-              </label>
-              <div className="">
-                <div className="grid gap-3 mt-3">
-                  {dataweekdayss.map((item) => {
-                    return (
-                      <div key={item.value} className="flex align-items-center">
-                        <div className="flex align-items-center">
-                          <Checkbox
-                            inputId={item.value}
-                            name="weekdays"
-                            value={item}
-                            onChange={(e) => onInputChange(e, "weekdays")}
-                            checked={mealItem.weekdays.some(
-                              (i: any) => i === item.value
-                            )}
-                          />
-                          <label htmlFor={item.value} className="ml-2">
-                            {item.name}
-                          </label>
+              <div className="field">
+                <label className="font-bold" htmlFor="weekdays">
+                  Week Days
+                </label>
+                <div className="">
+                  <div className="grid gap-3 mt-3">
+                    {dataweekdayss.map((item) => {
+                      return (
+                        <div
+                          key={item.value}
+                          className="flex align-items-center"
+                        >
+                          <div className="flex align-items-center">
+                            <Checkbox
+                              inputId={item.value}
+                              name="weekdays"
+                              value={item}
+                              onChange={(e) => onInputChange(e, "weekdays")}
+                              checked={mealItem.weekdays.some(
+                                (i: any) => i === item.value
+                              )}
+                            />
+                            <label htmlFor={item.value} className="ml-2">
+                              {item.name}
+                            </label>
+                          </div>
                         </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <div className="field">
+                <label className="font-bold" htmlFor="mealType ">
+                  Meal type
+                </label>
+                <div className="flex gap-3 mt-2">
+                  {datamealTypes.map((item) => {
+                    return (
+                      <div
+                        key={item.value}
+                        className="flex gap-1 mb-1 align-items-center"
+                      >
+                        <Checkbox
+                          inputId={item.value}
+                          name="mealType"
+                          value={item}
+                          onChange={(e) => onInputChange(e, "mealType")}
+                          checked={mealItem.mealType.some(
+                            (i: any) => i === item.value
+                          )}
+                        />
+                        <label htmlFor={item.value} className="ml-0">
+                          {item.name}
+                        </label>
                       </div>
                     );
                   })}
                 </div>
               </div>
-            </div>
 
-            <div className="field">
-              <label className="font-bold" htmlFor="mealType ">
-                Meal type
-              </label>
-              <div className="flex gap-3 mt-2">
-                {datamealTypes.map((item) => {
-                  return (
-                    <div
-                      key={item.value}
-                      className="flex gap-1 mb-1 align-items-center"
-                    >
-                      <Checkbox
-                        inputId={item.value}
-                        name="mealType"
-                        value={item}
-                        onChange={(e) => onInputChange(e, "mealType")}
-                        checked={mealItem.mealType.some(
-                          (i: any) => i === item.value
-                        )}
-                      />
-                      <label htmlFor={item.value} className="ml-0">
-                        {item.name}
-                      </label>
-                    </div>
-                  );
-                })}
+              <div className="field">
+                <label className="font-bold" htmlFor="description">
+                  Description
+                </label>
+                <InputTextarea
+                  id="description"
+                  value={mealItem.description}
+                  onChange={(e) => onInputChange(e, "description")}
+                  rows={5}
+                  cols={30}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !mealItem.description,
+                  })}
+                />
               </div>
-            </div>
+              <div className="field">
+                <label className="font-bold" htmlFor="description">
+                  Description in Arabic
+                </label>
+                <InputTextarea
+                  dir="rtl"
+                  id="description"
+                  value={mealItem.descriptionInArabic}
+                  onChange={(e) => onInputChange(e, "descriptionInArabic")}
+                  rows={5}
+                  cols={30}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !mealItem.description,
+                  })}
+                />
+              </div>
 
-            <div className="field">
-              <label className="font-bold" htmlFor="description">
-                Description
-              </label>
-              <InputTextarea
-                id="description"
-                value={mealItem.description}
-                onChange={(e) => onInputChange(e, "description")}
-                rows={5}
-                cols={30}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !mealItem.description,
-                })}
-              />
-            </div>
-            <div className="field">
-              <label className="font-bold" htmlFor="description">
-                Description in Arabic
-              </label>
-              <InputTextarea
-                dir="rtl"
-                id="description"
-                value={mealItem.descriptionInArabic}
-                onChange={(e) => onInputChange(e, "descriptionInArabic")}
-                rows={5}
-                cols={30}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !mealItem.description,
-                })}
-              />
-            </div>
+              <div className="field">
+                <label className="font-bold" htmlFor="price">
+                  Price
+                </label>
+                <InputNumber
+                  id="price"
+                  value={mealItem.price}
+                  onValueChange={(e) => onInputNumberChange(e, "price")}
+                />
+              </div>
 
-            <div className="field">
-              <label className="font-bold" htmlFor="price">
-                Price
-              </label>
-              <InputNumber
-                id="price"
-                value={mealItem.price}
-                onValueChange={(e) => onInputNumberChange(e, "price")}
-              />
-            </div>
-
-            <div className="field">
-              <label className="font-bold" htmlFor="active">
-                Active
-              </label>
-              <TriStateCheckbox
-                name="active"
-                id="active"
-                value={mealItem.active}
-                onChange={(e) => onInputBooleanChange(e, "active")}
-              />
+              <div className="field">
+                <label className="font-bold" htmlFor="active">
+                  Active
+                </label>
+                <TriStateCheckbox
+                  name="active"
+                  id="active"
+                  value={mealItem.active}
+                  onChange={(e) => onInputBooleanChange(e, "active")}
+                />
+              </div>
             </div>
           </Dialog>
 

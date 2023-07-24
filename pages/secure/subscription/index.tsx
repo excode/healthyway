@@ -9,6 +9,7 @@ import {
   SubscriptionQuery,
   SubscriptionService,
 } from "@services/Subscription";
+import { LangContext } from "hooks/lan";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -28,10 +29,11 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 const SubscriptionPage = () => {
   const { asPath } = useRouter();
+  const { textFormat } = useContext(LangContext);
   const validation = [
     { id: "customerId", type: validate.text, required: true },
     { id: "startDate", type: validate.date, max: 0, min: 0, required: true },
@@ -890,7 +892,7 @@ const SubscriptionPage = () => {
   );
 
   const subscriptionDialogFooter = (
-    <>
+    <div dir={textFormat} className="flex justify-content-end">
       <Button
         label="Cancel"
         icon="pi pi-times"
@@ -904,7 +906,7 @@ const SubscriptionPage = () => {
         className="p-button-text"
         onClick={saveSubscription}
       />
-    </>
+    </div>
   );
   const deleteSubscriptionDialogFooter = (
     <>
@@ -943,7 +945,10 @@ const SubscriptionPage = () => {
     <div className="grid crud-demo">
       <div className="col-12">
         <div className="card">
-          <Toast ref={toast} />
+          <Toast
+            position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+            ref={toast}
+          />
           <Toolbar
             className="mb-4"
             left={leftToolbarTemplate}
@@ -1042,8 +1047,9 @@ const SubscriptionPage = () => {
             className="p-fluid"
             footer={subscriptionDialogFooter}
             onHide={hideDialog}
+            rtl={true}
           >
-            <div className="field">
+            <div dir={textFormat} className="field">
               <label className="font-bold" htmlFor="customerId">
                 Customer Id
               </label>
@@ -1056,7 +1062,7 @@ const SubscriptionPage = () => {
                 onChange={(e) => onInputChange(e, "customerId")}
               />
             </div>
-            <div className="flex gap-5">
+            <div dir={textFormat} className="flex gap-5">
               <div className="field">
                 <label className="font-bold" htmlFor="startDate">
                   Start Date
@@ -1114,7 +1120,7 @@ const SubscriptionPage = () => {
 
             {/* <DataTable value={subscription.subPlans}> */}
             {/* <DataTable value={subPlansData}> */}
-            <DataTable value={dataWeekdays}>
+            <DataTable dir={textFormat} value={dataWeekdays}>
               <Column field="name" header="Weekday" />
               <Column
                 field="breakfast"

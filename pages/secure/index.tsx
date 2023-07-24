@@ -257,7 +257,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="col-12 xl:col-6">
+      <div dir="rtl" className=" col-12 xl:col-6">
         <div className="card">
           <h5>Recent Sales</h5>
           <DataTable

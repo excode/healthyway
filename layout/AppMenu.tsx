@@ -25,6 +25,12 @@ const AppMenu = () => {
     ...[menus],
   ];
 
+  const [textFormat, setTextFormat] = useState<string>("ar");
+  // useEffect(() => {
+  //   // setCookie("lang", selectedLang);
+  //   cookies.lang?.name === "ar" ? setTextFormat("rtl") : setTextFormat("ltr");
+  // }, []);
+
   useEffect(() => {
     const data: GetLoginResponse = cookies.user;
     let token: string = data.accessToken || "";
@@ -40,7 +46,7 @@ const AppMenu = () => {
 
   return (
     <MenuProvider>
-      <ul className="layout-menu">
+      <ul dir={textFormat} className="layout-menu ">
         {model.map((item, i) => {
           return !item.seperator ? (
             <AppMenuitem item={item} root={true} index={i} key={item.label} />

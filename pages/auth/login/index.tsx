@@ -45,8 +45,6 @@ const LoginPage: Page = () => {
             setCookie("user", res);
 
             setLoading(false);
-            console.log(cookies.user);
-
             router.push("/secure");
           } else {
             setLoading(false);

@@ -1,9 +1,6 @@
 const menus = {
   label: "Admin Dashboard",
   items: [
-
-    
-    
     { label: "Feedback", icon: "pi pi-fw pi-comments", to: "/secure/feedback" },
     {
       label: "Notification",
@@ -38,7 +35,7 @@ const menus = {
       icon: " pi pi-fw pi-images",
       to: "/secure/mealItem/dataview",
     },
-    
+
     {
       label: "Ingredient",
       icon: "pi pi-fw pi-align-center",
@@ -59,7 +56,7 @@ const menus = {
       icon: "pi pi-fw pi-images",
       to: "/secure/mealGroup/dataview",
     },
-    
+
     { label: "User Table", icon: "pi pi-fw pi-users", to: "/secure/users" },
   ],
 };

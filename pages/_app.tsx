@@ -1,5 +1,6 @@
 // import "@fortawesome/fontawesome-free/css/all.min.css";
 // import "font-awesome/css/font-awesome.css";
+import { LangProvider } from "hooks/lan";
 import type { AppProps } from "next/app";
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
@@ -27,9 +28,11 @@ export default function MyApp({ Component, pageProps }: Props) {
     return (
       <CookiesProvider>
         <LayoutProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <LangProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </LangProvider>
         </LayoutProvider>
       </CookiesProvider>
     );

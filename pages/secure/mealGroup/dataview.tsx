@@ -1,23 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useEffect, useRef } from "react";
-import {
-  DataView,
-  DataViewLayoutOptions,
-  DataViewPageEvent,
-} from "primereact/dataview";
-import { Button } from "primereact/button";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import { Rating } from "primereact/rating";
 import config from "@config/index";
-import { InputText } from "primereact/inputtext";
-import { Toast } from "primereact/toast";
+import { SortType } from "@services/CommonTypes";
 import {
   MealGroup,
   MealGroupQuery,
   MealGroupService,
 } from "@services/MealGroup";
+import {
+  DataView,
+  DataViewLayoutOptions,
+  DataViewPageEvent,
+} from "primereact/dataview";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import React, { useEffect, useRef, useState } from "react";
 import { LayoutType, SortOrderType } from "../../../types/types";
-import { SortType } from "@services/CommonTypes";
 
 const MealGroupDataview = () => {
   const [globalFilterValue, setGlobalFilterValue] = useState("");
