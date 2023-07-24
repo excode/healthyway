@@ -4,6 +4,7 @@ import { SortType } from "@services/CommonTypes";
 import { Kitchen, KitchenService } from "@services/Kitchen";
 import { UserData } from "@services/Login";
 import { Users, UsersKey, UsersQuery, UsersService } from "@services/Users";
+import { LangContext } from "hooks/lan";
 import jwt_decode, { JwtPayload } from "jwt-decode";
 import getConfig from "next/config";
 import Link from "next/link";
@@ -24,7 +25,7 @@ import { Password } from "primereact/password";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import countryData from "../../utilities/countryData.json";
 const UsersPage = () => {
@@ -72,6 +73,7 @@ const UsersPage = () => {
   const contextPath = getConfig().publicRuntimeConfig.contextPath;
   const usersService = new UsersService();
   const [refreshFlag, setRefreshFlag] = useState<number>(Date.now());
+  const { textFormat } = useContext(LangContext);
 
   const kitchenService = new KitchenService();
   const [datakitchens, setDataKitchens] = useState<Kitchen[]>([]);
@@ -654,7 +656,10 @@ const UsersPage = () => {
     <div className="grid crud-demo">
       <div className="col-12">
         <div className="card">
-          <Toast ref={toast} />
+          <Toast
+            position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+            ref={toast}
+          />
           <Toolbar
             className="mb-4"
             left={leftToolbarTemplate}
@@ -779,115 +784,117 @@ const UsersPage = () => {
             footer={usersDialogFooter}
             onHide={hideDialog}
           >
-            <div className="grid ">
-              <div className="field col-6">
-                <label htmlFor="firstName">First Name</label>
-                <InputText
-                  id="firstName"
-                  placeholder="First Name"
-                  value={users.firstName}
-                  onChange={(e) => onInputChange(e, "firstName")}
-                  required
-                  className={classNames({
-                    "p-invalid": submitted && !users.firstName,
-                  })}
-                />
+            <div dir={textFormat}>
+              <div className="grid ">
+                <div className="field col-6">
+                  <label htmlFor="firstName">First Name</label>
+                  <InputText
+                    id="firstName"
+                    placeholder="First Name"
+                    value={users.firstName}
+                    onChange={(e) => onInputChange(e, "firstName")}
+                    required
+                    className={classNames({
+                      "p-invalid": submitted && !users.firstName,
+                    })}
+                  />
+                </div>
+
+                <div className="field col-6">
+                  <label htmlFor="lastName">Last Name</label>
+                  <InputText
+                    id="lastName"
+                    placeholder="Last Name"
+                    value={users.lastName}
+                    onChange={(e) => onInputChange(e, "lastName")}
+                    required
+                    className={classNames({
+                      "p-invalid": submitted && !users.lastName,
+                    })}
+                  />
+                </div>
               </div>
 
-              <div className="field col-6">
-                <label htmlFor="lastName">Last Name</label>
-                <InputText
-                  id="lastName"
-                  placeholder="Last Name"
-                  value={users.lastName}
-                  onChange={(e) => onInputChange(e, "lastName")}
-                  required
-                  className={classNames({
-                    "p-invalid": submitted && !users.lastName,
-                  })}
-                />
-              </div>
-            </div>
-
-            <div className="field">
-              <label htmlFor="email">Email</label>
-              <InputText
-                id="email"
-                placeholder="Email"
-                value={users.email}
-                onChange={(e) => onInputChange(e, "email")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !users.email,
-                })}
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="mobile">Mobile</label>
-              <InputText
-                id="mobile"
-                placeholder="Mobile number"
-                value={users.mobile}
-                onChange={(e) => onInputChange(e, "mobile")}
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="password">Password</label>
-              <Password
-                id="password"
-                value={users.password}
-                onChange={(e) => onInputChange(e, "password")}
-                toggleMask
-                required
-                className={classNames({
-                  "p-invalid": submitted && !users.password,
-                })}
-              />
-            </div>
-
-            <div className="grid">
-              <div className="field col-6">
-                <label htmlFor="country">Country</label>
-                <Dropdown
-                  id="country"
-                  placeholder=""
-                  optionLabel="name"
-                  value={users.country}
-                  options={datacountrys}
-                  onChange={(e) => onInputChange(e, "country")}
-                />
-              </div>
-              <div className="field col-6">
-                <label htmlFor="userType">User Types</label>
-                <Dropdown
-                  id="userType"
-                  optionLabel="name"
-                  value={users.userType}
-                  options={datauserTypes.filter(
-                    (e) => e.value > userData!.permissionLevel!
-                  )}
-                  onChange={(e) => onInputChange(e, "userType")}
-                />
-              </div>
-            </div>
-
-            {userData.permissionLevel == 0 ? (
               <div className="field">
-                <label htmlFor="kitchen">Kitchen</label>
-                <Dropdown
-                  id="kitchen"
-                  optionLabel="kitchenName"
-                  optionValue="id"
-                  value={users.kitchen}
-                  options={datakitchens}
-                  onChange={(e) => onInputChange(e, "kitchen")}
+                <label htmlFor="email">Email</label>
+                <InputText
+                  id="email"
+                  placeholder="Email"
+                  value={users.email}
+                  onChange={(e) => onInputChange(e, "email")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !users.email,
+                  })}
                 />
               </div>
-            ) : (
-              <p></p>
-            )}
+
+              <div className="field">
+                <label htmlFor="mobile">Mobile</label>
+                <InputText
+                  id="mobile"
+                  placeholder="Mobile number"
+                  value={users.mobile}
+                  onChange={(e) => onInputChange(e, "mobile")}
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="password">Password</label>
+                <Password
+                  id="password"
+                  value={users.password}
+                  onChange={(e) => onInputChange(e, "password")}
+                  toggleMask
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !users.password,
+                  })}
+                />
+              </div>
+
+              <div className="grid">
+                <div className="field col-6">
+                  <label htmlFor="country">Country</label>
+                  <Dropdown
+                    id="country"
+                    placeholder=""
+                    optionLabel="name"
+                    value={users.country}
+                    options={datacountrys}
+                    onChange={(e) => onInputChange(e, "country")}
+                  />
+                </div>
+                <div className="field col-6">
+                  <label htmlFor="userType">User Types</label>
+                  <Dropdown
+                    id="userType"
+                    optionLabel="name"
+                    value={users.userType}
+                    options={datauserTypes.filter(
+                      (e) => e.value > userData!.permissionLevel!
+                    )}
+                    onChange={(e) => onInputChange(e, "userType")}
+                  />
+                </div>
+              </div>
+
+              {userData.permissionLevel == 0 ? (
+                <div className="field">
+                  <label htmlFor="kitchen">Kitchen</label>
+                  <Dropdown
+                    id="kitchen"
+                    optionLabel="kitchenName"
+                    optionValue="id"
+                    value={users.kitchen}
+                    options={datakitchens}
+                    onChange={(e) => onInputChange(e, "kitchen")}
+                  />
+                </div>
+              ) : (
+                <p></p>
+              )}
+            </div>
           </Dialog>
 
           <Dialog

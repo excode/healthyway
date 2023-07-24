@@ -21,10 +21,11 @@ import { MultiSelect } from "primereact/multiselect";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
+import { LangContext } from "hooks/lan";
 import { Image } from "primereact/image";
 
 const ChefPage = () => {
@@ -65,6 +66,7 @@ const ChefPage = () => {
   const [uploadDialog, setUploadDialog] = useState(false);
   const [uploadInfo, setUploadInfo] = useState<UploadInfo>({});
   const [currentImage, setCurrentImage] = useState("");
+  const { textFormat } = useContext(LangContext);
 
   const [filters1, setFilters1] = useState<DataTableFilterMeta | undefined>({});
   const clearFilter1 = () => {
@@ -687,7 +689,10 @@ const ChefPage = () => {
     <div className="grid crud-demo">
       <div className="col-12">
         <div className="card">
-          <Toast ref={toast} />
+          <Toast
+            position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+            ref={toast}
+          />
           <Toolbar
             className="mb-4"
             left={leftToolbarTemplate}
@@ -803,6 +808,7 @@ const ChefPage = () => {
           </DataTable>
 
           <Dialog
+            rtl={true}
             visible={chefDialog}
             style={{ width: "450px" }}
             header="Chef Details"
@@ -811,58 +817,62 @@ const ChefPage = () => {
             footer={chefDialogFooter}
             onHide={hideDialog}
           >
-            <div className="field">
-              <label htmlFor="name">name</label>
-              <InputText
-                id="name"
-                value={chef.name}
-                onChange={(e) => onInputChange(e, "name")}
-                required
-                className={classNames({ "p-invalid": submitted && !chef.name })}
-              />
-            </div>
+            <div dir={textFormat}>
+              <div className="field">
+                <label htmlFor="name">name</label>
+                <InputText
+                  id="name"
+                  value={chef.name}
+                  onChange={(e) => onInputChange(e, "name")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !chef.name,
+                  })}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="email">email</label>
-              <InputText
-                id="email"
-                value={chef.email}
-                onChange={(e) => onInputChange(e, "email")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !chef.email,
-                })}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="email">email</label>
+                <InputText
+                  id="email"
+                  value={chef.email}
+                  onChange={(e) => onInputChange(e, "email")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !chef.email,
+                  })}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="expertise">Expertise</label>
-              <MultiSelect
-                id="expertise"
-                optionLabel="name"
-                optionValue="name"
-                value={chef.expertise}
-                options={datamealItems}
-                onChange={(e) => onInputChange(e, "expertise")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="expertise">Expertise</label>
+                <MultiSelect
+                  id="expertise"
+                  optionLabel="name"
+                  optionValue="name"
+                  value={chef.expertise}
+                  options={datamealItems}
+                  onChange={(e) => onInputChange(e, "expertise")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="address">address</label>
-              <InputText
-                id="address"
-                value={chef.address}
-                onChange={(e) => onInputChange(e, "address")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="address">address</label>
+                <InputText
+                  id="address"
+                  value={chef.address}
+                  onChange={(e) => onInputChange(e, "address")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="phoneNumber">phoneNumber</label>
-              <InputText
-                id="phoneNumber"
-                value={chef.phoneNumber}
-                onChange={(e) => onInputChange(e, "phoneNumber")}
-              />
+              <div className="field">
+                <label htmlFor="phoneNumber">phoneNumber</label>
+                <InputText
+                  id="phoneNumber"
+                  value={chef.phoneNumber}
+                  onChange={(e) => onInputChange(e, "phoneNumber")}
+                />
+              </div>
             </div>
           </Dialog>
 

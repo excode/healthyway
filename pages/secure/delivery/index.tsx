@@ -8,6 +8,7 @@ import {
   DeliveryService,
 } from "@services/Delivery";
 import { MealOrder, MealOrderService } from "@services/MealOrder";
+import { LangContext } from "hooks/lan";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -27,7 +28,7 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 const DeliveryPage = () => {
   const { asPath } = useRouter();
@@ -78,6 +79,7 @@ const DeliveryPage = () => {
 
   const mealorderService = new MealOrderService();
   const [sugmealOrders, setSugMealOrders] = useState<MealOrder[]>([]);
+  const { textFormat } = useContext(LangContext);
 
   const chefService = new ChefService();
   const [sugchefs, setSugChefs] = useState<Chef[]>([]);
@@ -677,7 +679,10 @@ const DeliveryPage = () => {
     <div className="grid crud-demo">
       <div className="col-12">
         <div className="card">
-          <Toast ref={toast} />
+          <Toast
+            position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+            ref={toast}
+          />
           <Toolbar
             className="mb-4"
             left={leftToolbarTemplate}
@@ -840,69 +845,71 @@ const DeliveryPage = () => {
             footer={deliveryDialogFooter}
             onHide={hideDialog}
           >
-            <div className="field">
-              <label htmlFor="orderId">orderId</label>
-              <AutoComplete
-                field="invoiceNo"
-                id="orderId"
-                completeMethod={searchMealOrder}
-                value={delivery.orderId}
-                suggestions={sugmealOrders}
-                onChange={(e) => onInputChange(e, "orderId")}
-              />
-            </div>
+            <div dir={textFormat}>
+              <div className="field">
+                <label htmlFor="orderId">orderId</label>
+                <AutoComplete
+                  field="invoiceNo"
+                  id="orderId"
+                  completeMethod={searchMealOrder}
+                  value={delivery.orderId}
+                  suggestions={sugmealOrders}
+                  onChange={(e) => onInputChange(e, "orderId")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="chefId">chefId</label>
-              <AutoComplete
-                field="name"
-                id="chefId"
-                completeMethod={searchChef}
-                value={delivery.chefId}
-                suggestions={sugchefs}
-                onChange={(e) => onInputChange(e, "chefId")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="chefId">chefId</label>
+                <AutoComplete
+                  field="name"
+                  id="chefId"
+                  completeMethod={searchChef}
+                  value={delivery.chefId}
+                  suggestions={sugchefs}
+                  onChange={(e) => onInputChange(e, "chefId")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="deliveryPersonId">Delivery Person</label>
-              <InputText
-                id="deliveryPersonId"
-                value={delivery.deliveryPersonId}
-                onChange={(e) => onInputChange(e, "deliveryPersonId")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !delivery.deliveryPersonId,
-                })}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="deliveryPersonId">Delivery Person</label>
+                <InputText
+                  id="deliveryPersonId"
+                  value={delivery.deliveryPersonId}
+                  onChange={(e) => onInputChange(e, "deliveryPersonId")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !delivery.deliveryPersonId,
+                  })}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="deliveryStatus">deliveryStatus</label>
-              <Dropdown
-                id="deliveryStatus"
-                optionLabel="name"
-                value={delivery.deliveryStatus}
-                options={datadeliveryStatuss}
-                onChange={(e) => onInputChange(e, "deliveryStatus")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="deliveryStatus">deliveryStatus</label>
+                <Dropdown
+                  id="deliveryStatus"
+                  optionLabel="name"
+                  value={delivery.deliveryStatus}
+                  options={datadeliveryStatuss}
+                  onChange={(e) => onInputChange(e, "deliveryStatus")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="deliverdate">Delivery date</label>
-              <Calendar
-                id="deliverdate"
-                value={
-                  delivery.deliverdate ? new Date(delivery.deliverdate) : null
-                }
-                onChange={(e) => onInputChange(e, "deliverdate")}
-                showTime
-                hourFormat="12"
-                required
-                className={classNames({
-                  "p-invalid": submitted && !delivery.deliverdate,
-                })}
-              />
+              <div className="field">
+                <label htmlFor="deliverdate">Delivery date</label>
+                <Calendar
+                  id="deliverdate"
+                  value={
+                    delivery.deliverdate ? new Date(delivery.deliverdate) : null
+                  }
+                  onChange={(e) => onInputChange(e, "deliverdate")}
+                  showTime
+                  hourFormat="12"
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !delivery.deliverdate,
+                  })}
+                />
+              </div>
             </div>
           </Dialog>
 

@@ -1,9 +1,10 @@
 import { Subscription, SubscriptionService } from "@services/Subscription";
+import { LangContext } from "hooks/lan";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { Chip } from "primereact/chip";
 import { Toast } from "primereact/toast";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import BlockViewer from "../../../components/BlockViewer";
 
 const SubscriptionDetails = () => {
@@ -19,6 +20,7 @@ const SubscriptionDetails = () => {
   console.log({ subscription });
   const [loading, setLoading] = useState(false);
   const { id } = router.query;
+  const { textFormat } = useContext(LangContext);
   const toast = useRef<Toast>(null);
 
   const defaultImage = (e: any) => {
@@ -57,7 +59,10 @@ const SubscriptionDetails = () => {
         header="Subscription details"
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
-        <Toast ref={toast} />
+        <Toast
+          position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+          ref={toast}
+        />
         <div className="surface-section">
           {loading ? (
             <div className="flex justify-content-center flex-wrap">

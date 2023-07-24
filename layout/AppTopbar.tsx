@@ -3,9 +3,11 @@
 import config from "@config/index";
 import { GetLoginResponse } from "@lib/httpRequest";
 import { UserData } from "@services/Login";
+import { LangContext } from "hooks/lan";
 import jwt_decode, { JwtPayload } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Dropdown } from "primereact/dropdown";
 import { classNames } from "primereact/utils";
 import {
   forwardRef,
@@ -28,12 +30,23 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [userData, setUserData] = useState<UserData>({ email: "" });
+  const [selectedLang, setSelectedLang] = useState("Ar");
+  const { textFormat, setTextFormat } = useContext(LangContext);
+  // const [textFormat, setTextFormat] = useState<string>("");
+  // const lang = [{ name: "en" }, { name: "ar" }];
+  const lang = ["Ar", "En"];
 
   useImperativeHandle(ref, () => ({
     menubutton: menubuttonRef.current,
     topbarmenu: topbarmenuRef.current,
     topbarmenubutton: topbarmenubuttonRef.current,
   }));
+
+  selectedLang === "Ar" ? setTextFormat("rtl") : setTextFormat("ltr");
+  // useEffect(() => {
+  //   setCookie("lang", selectedLang);
+  // }, []);
+
   useEffect(() => {
     const data: GetLoginResponse = cookies.user;
     let token: string = data?.accessToken || "";
@@ -45,32 +58,38 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     router.push("/auth/login");
   };
 
-  console.log(userData);
+  // console.log(userData);
   return (
-    <div className="layout-topbar">
-      <Link href="/" className="layout-topbar-logo">
-        <img
-          src={`/layout/images/logo.png`}
-          //   src={`/layout/images/logo-${
-          //     layoutConfig.colorScheme !== "light" ? "white" : "dark"
-          //   }.svg`}
-          width="50px"
-          height={"50px"}
-          alt="logo"
-        />
-        <span>{config.title}</span>
-      </Link>
+    // <div dir={textFormat} className="layout-topbar flex align-items-center ">
+    <div className="layout-topbar flex align-items-center ">
+      <div className="flex">
+        <Link href="/" className="layout-topbar-logo">
+          <img
+            src={`/layout/images/logo.png`}
+            //   src={`/layout/images/logo-${
+            //     layoutConfig.colorScheme !== "light" ? "white" : "dark"
+            //   }.svg`}
+            width="50px"
+            height={"50px"}
+            alt="logo"
+          />
+          <span>{config.title}</span>
+        </Link>
+
+        <button
+          dir="p-rtl"
+          // dir={textFormat}
+          ref={menubuttonRef}
+          type="button"
+          className="p-link layout-menu-button layout-topbar-button"
+          onClick={onMenuToggle}
+        >
+          <i className="pi pi-bars" />
+        </button>
+      </div>
 
       <button
-        ref={menubuttonRef}
-        type="button"
-        className="p-link layout-menu-button layout-topbar-button"
-        onClick={onMenuToggle}
-      >
-        <i className="pi pi-bars" />
-      </button>
-
-      <button
+        dir={textFormat}
         ref={topbarmenubuttonRef}
         type="button"
         className="p-link layout-topbar-menu-button layout-topbar-button"
@@ -80,8 +99,9 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
       </button>
 
       <div
+        dir={textFormat}
         ref={topbarmenuRef}
-        className={classNames("layout-topbar-menu", {
+        className={classNames("layout-topbar-menu ", {
           "layout-topbar-menu-mobile-active": layoutState.profileSidebarVisible,
         })}
       >
@@ -97,18 +117,30 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
           )}
           {userData.firstName} {userData.lastName}
         </span>
+
         <button
           type="button"
           onClick={onPress}
-          className="p-link layout-topbar-button"
+          className="p-link layout-topbar-button "
         >
           <i className="pi pi-sign-out"></i>
           <span>Sign out</span>
         </button>
-        <button type="button" className="p-link layout-topbar-button">
+        {/* <button type="button" className="p-link layout-topbar-button">
           <i className="pi pi-user"></i>
           <span>Profile</span>
-        </button>
+        </button> */}
+        <Dropdown
+          value={selectedLang}
+          onChange={(e) => setSelectedLang(e.value)}
+          options={lang}
+          // optionLabel="name"
+          placeholder="Select a Country"
+          // valueTemplate={selectedCountryTemplate}
+          // itemTemplate={countryOptionTemplate}
+          className="w-full md:w-7rem"
+          // panelFooterTemplate={panelFooterTemplate}
+        />
         <Link href="/documentation">
           <button type="button" className="p-link layout-topbar-button">
             <i className="pi pi-cog"></i>

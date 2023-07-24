@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import config from "@config/index";
+import { LangContext } from "hooks/lan";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import PrimeReact from "primereact/api";
@@ -20,6 +21,7 @@ import { LayoutContext } from "./context/layoutcontext";
 const Layout = ({ children }: ChildContainerProps) => {
   const { layoutConfig, layoutState, setLayoutState } =
     useContext(LayoutContext);
+  const { textFormat } = useContext(LangContext);
   const topbarRef = useRef<AppTopbarRef>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -175,15 +177,19 @@ const Layout = ({ children }: ChildContainerProps) => {
         <link rel="icon" href={`/favicon.ico`} type="image/x-icon"></link>
       </Head>
 
-      <div className={containerClass}>
+      {/* <div className={containerClass}> */}
+      <div dir={textFormat} className={containerClass}>
         <AppTopbar ref={topbarRef} />
-        <div ref={sidebarRef} className="layout-sidebar">
-          <AppSidebar />
-        </div>
+        {/* <div dir={textFormat} className=""> */}
+        {/* <div className=""> */}
         <div className="layout-main-container">
           <div className="layout-main">{children}</div>
           <AppFooter />
         </div>
+        <div ref={sidebarRef} className="layout-sidebar ">
+          <AppSidebar />
+        </div>
+        {/* </div> */}
         <AppConfig />
         <div className="layout-mask"></div>
       </div>

@@ -5,12 +5,13 @@ import { Button } from "primereact/button";
 import { Chip } from "primereact/chip";
 import { Image } from "primereact/image";
 import { Toast } from "primereact/toast";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import BlockViewer from "../../../components/BlockViewer";
 
 import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
 import { Dialog } from "primereact/dialog";
+import { LangContext } from "hooks/lan";
 
 const MealItemDetails = () => {
   const router = useRouter();
@@ -31,6 +32,7 @@ const MealItemDetails = () => {
   const toast = useRef<Toast>(null);
 
   const [uploadDialog, setUploadDialog] = useState(false);
+  const { textFormat } = useContext(LangContext);
   const [uploadInfo, setUploadInfo] = useState<UploadInfo>({});
   const [currentImage, setCurrentImage] = useState("");
 
@@ -152,7 +154,10 @@ const MealItemDetails = () => {
         header="MealItem details"
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
-        <Toast ref={toast} />
+        <Toast
+          position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+          ref={toast}
+        />
         <div className="surface-section">
           {loading ? (
             <div className="flex justify-content-center flex-wrap">

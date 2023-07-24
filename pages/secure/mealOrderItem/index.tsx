@@ -8,6 +8,7 @@ import {
   MealOrderItemQuery,
   MealOrderItemService,
 } from "@services/MealOrderItem";
+import { LangContext } from "hooks/lan";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -26,7 +27,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 const MealOrderItemPage = () => {
   const { asPath } = useRouter();
@@ -71,6 +72,7 @@ const MealOrderItemPage = () => {
 
   const mealitemService = new MealItemService();
   const [sugmealItems, setSugMealItems] = useState<MealItem[]>([]);
+  const { textFormat } = useContext(LangContext);
 
   const [filters1, setFilters1] = useState<DataTableFilterMeta | undefined>({});
   const clearFilter1 = () => {
@@ -663,7 +665,10 @@ const MealOrderItemPage = () => {
     <div className="grid crud-demo">
       <div className="col-12">
         <div className="card">
-          <Toast ref={toast} />
+          <Toast
+            position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+            ref={toast}
+          />
           <Toolbar
             className="mb-4"
             left={leftToolbarTemplate}
@@ -835,22 +840,24 @@ const MealOrderItemPage = () => {
             footer={mealOrderItemDialogFooter}
             onHide={hideDialog}
           >
-            <div className="field">
-              <label htmlFor="quantity">quantity</label>
-              <InputNumber
-                id="quantity"
-                value={mealOrderItem.quantity}
-                onValueChange={(e) => onInputNumberChange(e, "quantity")}
-              />
-            </div>
+            <div dir={textFormat}>
+              <div className="field">
+                <label htmlFor="quantity">quantity</label>
+                <InputNumber
+                  id="quantity"
+                  value={mealOrderItem.quantity}
+                  onValueChange={(e) => onInputNumberChange(e, "quantity")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="note">Special Note</label>
-              <InputText
-                id="note"
-                value={mealOrderItem.note}
-                onChange={(e) => onInputChange(e, "note")}
-              />
+              <div className="field">
+                <label htmlFor="note">Special Note</label>
+                <InputText
+                  id="note"
+                  value={mealOrderItem.note}
+                  onChange={(e) => onInputChange(e, "note")}
+                />
+              </div>
             </div>
           </Dialog>
 

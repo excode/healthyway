@@ -1,7 +1,8 @@
 import { Users, UsersService } from "@services/Users";
+import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import BlockViewer from "../../../components/BlockViewer";
 
 const UsersDetails = () => {
@@ -15,6 +16,7 @@ const UsersDetails = () => {
   //     kitchen: "",
   //   });
   const [loading, setLoading] = useState(false);
+  const { textFormat } = useContext(LangContext);
   const { id } = router.query;
   const toast = useRef<Toast>(null);
 
@@ -61,7 +63,10 @@ const UsersDetails = () => {
         header="Customer Details"
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
-        <Toast ref={toast} />
+        <Toast
+          position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+          ref={toast}
+        />
         <div className="surface-section">
           {loading ? (
             <div className="flex justify-content-center flex-wrap">

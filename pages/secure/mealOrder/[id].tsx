@@ -1,11 +1,13 @@
 import { MealOrder, MealOrderService } from "@services/MealOrder";
+import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import BlockViewer from "../../../components/BlockViewer";
 
 const MealOrderDetails = () => {
   const router = useRouter();
+  const { textFormat } = useContext(LangContext);
   const mealorderService = new MealOrderService();
   const [mealOrder, setMealOrder] = useState<MealOrder>({
     customerName: "",
@@ -59,7 +61,10 @@ const MealOrderDetails = () => {
         header="MealOrder details"
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
-        <Toast ref={toast} />
+        <Toast
+          position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+          ref={toast}
+        />
         <div className="surface-section">
           {loading ? (
             <div className="flex justify-content-center flex-wrap">

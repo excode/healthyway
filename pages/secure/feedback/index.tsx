@@ -9,6 +9,7 @@ import {
   FeedbackService,
 } from "@services/Feedback";
 import { MealOrder, MealOrderService } from "@services/MealOrder";
+import { LangContext } from "hooks/lan";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -29,7 +30,7 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 const FeedbackPage = () => {
   const { asPath } = useRouter();
@@ -66,6 +67,7 @@ const FeedbackPage = () => {
   const [refreshFlag, setRefreshFlag] = useState<number>(Date.now());
 
   const customerService = new CustomerService();
+  const { textFormat } = useContext(LangContext);
   const [datacustomers, setDataCustomers] = useState<Customer[]>([]);
   const chefService = new ChefService();
   const [sugchefs, setSugChefs] = useState<Chef[]>([]);
@@ -662,7 +664,10 @@ const FeedbackPage = () => {
     <div className="grid crud-demo">
       <div className="col-12">
         <div className="card">
-          <Toast ref={toast} />
+          <Toast
+            position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+            ref={toast}
+          />
           <Toolbar
             className="mb-4"
             left={leftToolbarTemplate}
@@ -824,62 +829,64 @@ const FeedbackPage = () => {
             footer={feedbackDialogFooter}
             onHide={hideDialog}
           >
-            <div className="field">
-              <label htmlFor="customerId">customerId</label>
-              <Dropdown
-                id="customerId"
-                optionLabel="name"
-                optionValue="email"
-                value={feedback.customerId}
-                options={datacustomers}
-                onChange={(e) => onInputChange(e, "customerId")}
-              />
-            </div>
+            <div dir={textFormat}>
+              <div className="field">
+                <label htmlFor="customerId">customerId</label>
+                <Dropdown
+                  id="customerId"
+                  optionLabel="name"
+                  optionValue="email"
+                  value={feedback.customerId}
+                  options={datacustomers}
+                  onChange={(e) => onInputChange(e, "customerId")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="chefId">chefId</label>
-              <AutoComplete
-                field="name"
-                id="chefId"
-                completeMethod={searchChef}
-                value={feedback.chefId}
-                suggestions={sugchefs}
-                onChange={(e) => onInputChange(e, "chefId")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="chefId">chefId</label>
+                <AutoComplete
+                  field="name"
+                  id="chefId"
+                  completeMethod={searchChef}
+                  value={feedback.chefId}
+                  suggestions={sugchefs}
+                  onChange={(e) => onInputChange(e, "chefId")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="orderId">orderId</label>
-              <AutoComplete
-                field="invoiceNo"
-                id="orderId"
-                completeMethod={searchMealOrder}
-                value={feedback.orderId}
-                suggestions={sugmealOrders}
-                onChange={(e) => onInputChange(e, "orderId")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="orderId">orderId</label>
+                <AutoComplete
+                  field="invoiceNo"
+                  id="orderId"
+                  completeMethod={searchMealOrder}
+                  value={feedback.orderId}
+                  suggestions={sugmealOrders}
+                  onChange={(e) => onInputChange(e, "orderId")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="rating">rating</label>
-              <InputNumber
-                id="rating"
-                value={feedback.rating}
-                onValueChange={(e) => onInputNumberChange(e, "rating")}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="rating">rating</label>
+                <InputNumber
+                  id="rating"
+                  value={feedback.rating}
+                  onValueChange={(e) => onInputNumberChange(e, "rating")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="comment">comment</label>
-              <InputText
-                id="comment"
-                value={feedback.comment}
-                onChange={(e) => onInputChange(e, "comment")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !feedback.comment,
-                })}
-              />
+              <div className="field">
+                <label htmlFor="comment">comment</label>
+                <InputText
+                  id="comment"
+                  value={feedback.comment}
+                  onChange={(e) => onInputChange(e, "comment")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !feedback.comment,
+                  })}
+                />
+              </div>
             </div>
           </Dialog>
 

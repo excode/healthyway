@@ -7,6 +7,7 @@ import {
   NotificationQuery,
   NotificationService,
 } from "@services/Notification";
+import { LangContext } from "hooks/lan";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -26,7 +27,7 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 const NotificationPage = () => {
   const { asPath } = useRouter();
@@ -65,6 +66,7 @@ const NotificationPage = () => {
   const contextPath = getConfig().publicRuntimeConfig.contextPath;
   const notificationService = new NotificationService();
   const [refreshFlag, setRefreshFlag] = useState<number>(Date.now());
+  const { textFormat } = useContext(LangContext);
 
   const chefService = new ChefService();
   const [sugchefs, setSugChefs] = useState<Chef[]>([]);
@@ -626,7 +628,10 @@ const NotificationPage = () => {
     <div className="grid crud-demo">
       <div className="col-12">
         <div className="card">
-          <Toast ref={toast} />
+          <Toast
+            position={`${textFormat === "rtl" ? "top-left" : "top-right"}`}
+            ref={toast}
+          />
           <Toolbar
             className="mb-4"
             left={leftToolbarTemplate}
@@ -734,40 +739,42 @@ const NotificationPage = () => {
             footer={notificationDialogFooter}
             onHide={hideDialog}
           >
-            <div className="field">
-              <label htmlFor="chefId">chefId</label>
-              <AutoComplete
-                field="name"
-                id="chefId"
-                completeMethod={searchChef}
-                value={notification.chefId}
-                suggestions={sugchefs}
-                onChange={(e) => onInputChange(e, "chefId")}
-              />
-            </div>
+            <div dir={textFormat}>
+              <div className="field">
+                <label htmlFor="chefId">chefId</label>
+                <AutoComplete
+                  field="name"
+                  id="chefId"
+                  completeMethod={searchChef}
+                  value={notification.chefId}
+                  suggestions={sugchefs}
+                  onChange={(e) => onInputChange(e, "chefId")}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="message">message</label>
-              <InputText
-                id="message"
-                value={notification.message}
-                onChange={(e) => onInputChange(e, "message")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !notification.message,
-                })}
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="message">message</label>
+                <InputText
+                  id="message"
+                  value={notification.message}
+                  onChange={(e) => onInputChange(e, "message")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !notification.message,
+                  })}
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="status">Status</label>
-              <Dropdown
-                id="status"
-                optionLabel="name"
-                value={notification.status}
-                options={datastatuss}
-                onChange={(e) => onInputChange(e, "status")}
-              />
+              <div className="field">
+                <label htmlFor="status">Status</label>
+                <Dropdown
+                  id="status"
+                  optionLabel="name"
+                  value={notification.status}
+                  options={datastatuss}
+                  onChange={(e) => onInputChange(e, "status")}
+                />
+              </div>
             </div>
           </Dialog>
 
