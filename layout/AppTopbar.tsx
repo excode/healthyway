@@ -69,11 +69,11 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             //   src={`/layout/images/logo-${
             //     layoutConfig.colorScheme !== "light" ? "white" : "dark"
             //   }.svg`}
-            width="50px"
-            height={"50px"}
+            width={110}
+            height="50px"
             alt="logo"
           />
-          <span>{config.title}</span>
+          {/* <span>{config.title}</span> */}
         </Link>
 
         <button

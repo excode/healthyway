@@ -26,17 +26,18 @@ const LandingPage: Page = () => {
         <div className="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static">
           <Link href="/" className="flex align-items-center">
             <img
-              src={`/layout/images/${
-                layoutConfig.colorScheme === "light"
-                  ? "logo-dark"
-                  : "logo-white"
-              }.svg`}
+              // src={`/layout/images/${
+              //   layoutConfig.colorScheme === "light"
+              //     ? "logo-dark"
+              //     : "logo-white"
+              // }.svg`}
+              src={`/layout/images/logo.png`}
               alt="Sakai Logo"
               height="50"
               className="mr-0 lg:mr-2"
             />
             <span className="text-900 font-medium text-2xl line-height-3 mr-8">
-              {config.title}
+              {/* {config.title} */}
             </span>
           </Link>
           <StyleClass
@@ -713,6 +714,17 @@ const LandingPage: Page = () => {
                 className="flex flex-wrap align-items-center justify-content-center md:justify-content-start md:mb-0 mb-3 cursor-pointer"
               >
                 <img
+                  // src={`/layout/images/${
+                  //   layoutConfig.colorScheme === "light"
+                  //     ? "logo-dark"
+                  //     : "logo-white"
+                  // }.svg`}
+                  src={`/layout/images/logo.png`}
+                  alt="Sakai Logo"
+                  height="50"
+                  className="mr-0 lg:mr-2"
+                />
+                {/* <img
                   src={`/layout/images/${
                     layoutConfig.colorScheme === "light"
                       ? "logo-dark"
@@ -722,8 +734,7 @@ const LandingPage: Page = () => {
                   width="50"
                   height="50"
                   className="mr-2"
-                />
-                <span className="font-medium text-3xl text-900">SAKAI</span>
+                /> */}
               </Link>
             </div>
 
