@@ -594,19 +594,6 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-// export const getStaticProps: GetStaticProps = async (context) => {
-//   // Extract the locale identifier from the URL using context.locale
-//   // const { locale } = context;
-//   const locale = context.locale ?? "ar";
-//   console.log({ locale });
-
-//   return {
-//     props: {
-//       // Pass the translation props to the page component using serverSideTranslations
-//       ...(await serverSideTranslations(locale)),
-//     },
-//   };
-// };
 export async function getStaticProps(context: any) {
   // extract the locale identifier from the URL
   const { locale } = context;

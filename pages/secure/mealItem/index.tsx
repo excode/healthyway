@@ -39,8 +39,11 @@ import { Image } from "primereact/image";
 import { Kitchen, KitchenService } from "@services/Kitchen";
 import { MealGroup, MealGroupService } from "@services/MealGroup";
 import { LangContext } from "hooks/lan";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const MealItemPage = () => {
+  const { t } = useTranslation();
   const { asPath } = useRouter();
   const validation = [
     { id: "groupName", type: validate.text, required: true },
@@ -255,19 +258,19 @@ const MealItemPage = () => {
   };
 
   const dataweekdayss = [
-    { value: "Sunday", name: "Sunday" },
-    { value: "Monday", name: "Monday" },
-    { value: "Tuesday", name: "Tuesday" },
-    { value: "Wednesday", name: "Wednesday" },
-    { value: "Thursday", name: "Thursday" },
-    { value: "Friday", name: "Friday" },
-    { value: "Saturday", name: "Saturday" },
+    { value: "Sunday", name: `${t("SATURDAY")}` },
+    { value: "Monday", name: `${t("MONDAY")}` },
+    { value: "Tuesday", name: `${t("TUESDAY")}` },
+    { value: "Wednesday", name: `${t("WEDNESDAY")}` },
+    { value: "Thursday", name: `${t("THURSDAY")}` },
+    { value: "Friday", name: `${t("FRIDAY")}` },
+    { value: "Saturday", name: `${t("SATURDAY")}` },
   ];
 
   const datamealTypes = [
-    { value: "Lunch", name: "Lunch" },
-    { value: "Dinner", name: "Dinner" },
-    { value: "Breakfast", name: "Breakfast" },
+    { value: "Lunch", name: `${t("LUNCH")}` },
+    { value: "Dinner", name: `${t("DINNER")}` },
+    { value: "Breakfast", name: `${t("BREAKFAST")}` },
   ];
 
   const downloadFile = (data: MealItem, dbColName: MealItemKey) => {
@@ -765,7 +768,7 @@ const MealItemPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage MealItems</h5>
+      <h5 className="m-0">{t("MANAGE_MEAL_ITEMS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -875,7 +878,7 @@ const MealItemPage = () => {
             <Column
               showAddButton={false}
               field="image"
-              header="image"
+              header={t("IMAGE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               body={imageBodyTemplate}
@@ -884,7 +887,7 @@ const MealItemPage = () => {
             <Column
               showAddButton={false}
               field="groupName"
-              header="Group Name"
+              header={t("GROUP_NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="groupName"
@@ -895,7 +898,7 @@ const MealItemPage = () => {
             <Column
               showAddButton={false}
               field="name"
-              header="name"
+              header={t("NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -905,7 +908,7 @@ const MealItemPage = () => {
             <Column
               showAddButton={false}
               field="description"
-              header="description"
+              header={t("DESCRIPTION")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -915,7 +918,7 @@ const MealItemPage = () => {
             <Column
               showAddButton={false}
               field="price"
-              header="price"
+              header={t("PRICE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               dataType="numeric"
@@ -926,7 +929,7 @@ const MealItemPage = () => {
             <Column
               showAddButton={false}
               field="code"
-              header="Code"
+              header={t("CODE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -936,7 +939,7 @@ const MealItemPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -946,7 +949,7 @@ const MealItemPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -964,7 +967,7 @@ const MealItemPage = () => {
           <Dialog
             visible={mealItemDialog}
             style={{ width: "450px" }}
-            header="MealItem Details"
+            header={t("MEAL_ITEM_DETAILS")}
             modal
             className="p-fluid"
             footer={mealItemDialogFooter}
@@ -973,7 +976,7 @@ const MealItemPage = () => {
             <div dir={textFormat}>
               <div className="field">
                 <label className="font-bold" htmlFor="groupName">
-                  Group Name
+                  {t("GROUP_NAME")}
                 </label>
                 <Dropdown
                   id="groupName"
@@ -987,7 +990,7 @@ const MealItemPage = () => {
 
               <div className="field">
                 <label className="font-bold" htmlFor="name">
-                  Name
+                  {t("NAME")}
                 </label>
                 <InputText
                   id="name"
@@ -1001,7 +1004,7 @@ const MealItemPage = () => {
               </div>
               <div className="field">
                 <label className="font-bold" htmlFor="name">
-                  Name in Arabic
+                  {t("NAME_IN_ARABIC")}
                 </label>
                 <InputText
                   dir="rtl"
@@ -1017,7 +1020,7 @@ const MealItemPage = () => {
 
               <div className="field">
                 <label className="font-bold" htmlFor="code">
-                  Code
+                  {t("CODE")}
                 </label>
                 <InputText
                   id="code"
@@ -1032,7 +1035,7 @@ const MealItemPage = () => {
 
               <div className="field">
                 <label className="font-bold" htmlFor="weekdays">
-                  Week Days
+                  {t("WEEK_DAYS")}
                 </label>
                 <div className="">
                   <div className="grid gap-3 mt-3">
@@ -1065,7 +1068,7 @@ const MealItemPage = () => {
 
               <div className="field">
                 <label className="font-bold" htmlFor="mealType ">
-                  Meal type
+                  {t("MEAL_TYPE")}
                 </label>
                 <div className="flex gap-3 mt-2">
                   {datamealTypes.map((item) => {
@@ -1094,7 +1097,7 @@ const MealItemPage = () => {
 
               <div className="field">
                 <label className="font-bold" htmlFor="description">
-                  Description
+                  {t("DESCRIPTION")}
                 </label>
                 <InputTextarea
                   id="description"
@@ -1110,7 +1113,7 @@ const MealItemPage = () => {
               </div>
               <div className="field">
                 <label className="font-bold" htmlFor="description">
-                  Description in Arabic
+                  {t("DESCRIPTION_IN_ARABIC")}
                 </label>
                 <InputTextarea
                   dir="rtl"
@@ -1128,7 +1131,7 @@ const MealItemPage = () => {
 
               <div className="field">
                 <label className="font-bold" htmlFor="price">
-                  Price
+                  {t("PRICE")}
                 </label>
                 <InputNumber
                   id="price"
@@ -1139,7 +1142,7 @@ const MealItemPage = () => {
 
               <div className="field">
                 <label className="font-bold" htmlFor="active">
-                  Active
+                  {t("ACTIVE")}
                 </label>
                 <TriStateCheckbox
                   name="active"
@@ -1185,11 +1188,7 @@ const MealItemPage = () => {
                 className="pi pi-exclamation-triangle mr-3"
                 style={{ fontSize: "2rem" }}
               />
-              {mealItem && (
-                <span>
-                  Are you sure you want to delete the selected MealItem?
-                </span>
-              )}
+              {mealItem && <span>{t("DELETE_SELECTED_CONFIRMATION")}</span>}
             </div>
           </Dialog>
 
@@ -1222,3 +1221,15 @@ const MealItemPage = () => {
 };
 
 export default MealItemPage;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}

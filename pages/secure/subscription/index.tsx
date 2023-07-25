@@ -11,6 +11,8 @@ import {
 } from "@services/Subscription";
 import { Users, UsersService } from "@services/Users";
 import { LangContext } from "hooks/lan";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -31,8 +33,8 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
-
 const SubscriptionPage = () => {
+  const { t } = useTranslation();
   const { asPath } = useRouter();
   const { textFormat } = useContext(LangContext);
   const validation = [
@@ -1204,3 +1206,15 @@ const SubscriptionPage = () => {
 };
 
 export default SubscriptionPage;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
