@@ -63,17 +63,17 @@ const LoginPage: Page = () => {
     <div className={containerClassName}>
       <Toast ref={toast} />
       <div className="flex flex-column align-items-center justify-content-center">
-        <img
+        {/* <img
           src={`/layout/images/logo.png`}
           // src={"/logo.png"}
           //   src={`/layout/images/logo-${
           //     layoutConfig?.colorScheme === "light" ? "dark" : "white"
           //   }.svg`}
-          width={100}
-          height={100}
+          width={180}
+          height={80}
           alt="logo"
           className="mb-5 flex-shrink-0"
-        />
+        /> */}
         <div
           style={{
             borderRadius: "56px",
@@ -87,6 +87,17 @@ const LoginPage: Page = () => {
             style={{ borderRadius: "53px" }}
           >
             <div className="text-center mb-5">
+              <img
+                src={`/layout/images/logo.png`}
+                // src={"/logo.png"}
+                //   src={`/layout/images/logo-${
+                //     layoutConfig?.colorScheme === "light" ? "dark" : "white"
+                //   }.svg`}
+                width={150}
+                height={70}
+                alt="logo"
+                className="mb-5 flex-shrink-0"
+              />
               {/* <img
                 src="/demo/images/login/avatar.png"
                 alt="Image"
@@ -94,7 +105,7 @@ const LoginPage: Page = () => {
                 className="mb-3"
               /> */}
               <div className="text-900 text-3xl font-medium mb-3">
-                Welcome To Healthy Way!
+                Welcome To My Healthy Way!
               </div>
               <span className="text-600 font-medium">Sign in to continue</span>
             </div>

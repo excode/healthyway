@@ -1,6 +1,7 @@
 // import "@fortawesome/fontawesome-free/css/all.min.css";
 // import "font-awesome/css/font-awesome.css";
 import { LangProvider } from "hooks/lan";
+import { appWithTranslation } from "next-i18next";
 import type { AppProps } from "next/app";
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
@@ -15,7 +16,7 @@ type Props = AppProps & {
   Component: Page;
 };
 
-export default function MyApp({ Component, pageProps }: Props) {
+function MyApp({ Component, pageProps }: Props) {
   if (Component.getLayout) {
     return (
       <CookiesProvider>
@@ -38,3 +39,4 @@ export default function MyApp({ Component, pageProps }: Props) {
     );
   }
 }
+export default appWithTranslation(MyApp);

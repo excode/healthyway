@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 
-import config from "@config/index";
 import { GetLoginResponse } from "@lib/httpRequest";
 import { UserData } from "@services/Login";
 import { LangContext } from "hooks/lan";
@@ -18,10 +17,12 @@ import {
   useState,
 } from "react";
 import { useCookies } from "react-cookie";
+import { useTranslation } from "react-i18next";
 import { AppTopbarRef } from "../types/types";
 import { LayoutContext } from "./context/layoutcontext";
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
+  const { i18n } = useTranslation();
   const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } =
     useContext(LayoutContext);
   const menubuttonRef = useRef(null);
@@ -30,11 +31,24 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [userData, setUserData] = useState<UserData>({ email: "" });
-  const [selectedLang, setSelectedLang] = useState("Ar");
+  const [selectedLang, setSelectedLang] = useState(i18n.language);
   const { textFormat, setTextFormat } = useContext(LangContext);
   // const [textFormat, setTextFormat] = useState<string>("");
   // const lang = [{ name: "en" }, { name: "ar" }];
-  const lang = ["Ar", "En"];
+  const lang = ["ar", "en"];
+  const changeLocale = (newLocale: string) => {
+    // i18n?.changeLanguage(newLocale);
+
+    // (router as any)?.push(router.pathname, router.asPath, {
+    //   locale: newLocale,
+    // });
+    router?.push(router.pathname, router.asPath, {
+      locale: newLocale,
+    });
+
+    console.log(i18n?.language);
+    setSelectedLang(newLocale);
+  };
 
   useImperativeHandle(ref, () => ({
     menubutton: menubuttonRef.current,
@@ -42,7 +56,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     topbarmenubutton: topbarmenubuttonRef.current,
   }));
 
-  selectedLang === "Ar" ? setTextFormat("rtl") : setTextFormat("ltr");
+  selectedLang === "ar" ? setTextFormat("rtl") : setTextFormat("ltr");
   // useEffect(() => {
   //   setCookie("lang", selectedLang);
   // }, []);
@@ -56,6 +70,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   const onPress = () => {
     removeCookie("user");
     router.push("/auth/login");
+    // (router as any).push("/auth/login");
   };
 
   // console.log(userData);
@@ -69,11 +84,11 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             //   src={`/layout/images/logo-${
             //     layoutConfig.colorScheme !== "light" ? "white" : "dark"
             //   }.svg`}
-            width="50px"
-            height={"50px"}
+            width={110}
+            height="50px"
             alt="logo"
           />
-          <span>{config.title}</span>
+          {/* <span>{config.title}</span> */}
         </Link>
 
         <button
@@ -132,7 +147,8 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         </button> */}
         <Dropdown
           value={selectedLang}
-          onChange={(e) => setSelectedLang(e.value)}
+          // onChange={(e) => setSelectedLang(e.value) }
+          onChange={(e) => changeLocale(e.value)}
           options={lang}
           // optionLabel="name"
           placeholder="Select a Country"

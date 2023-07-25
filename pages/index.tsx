@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import config from "@config/index";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Button } from "primereact/button";
@@ -12,6 +13,7 @@ import AppConfig from "../layout/AppConfig";
 import { LayoutContext } from "../layout/context/layoutcontext";
 import { NodeRef, Page } from "../types/types";
 const LandingPage: Page = () => {
+  const { t } = useTranslation();
   const [isHidden, setIsHidden] = useState(false);
   const { layoutConfig } = useContext(LayoutContext);
   const menuRef = useRef<HTMLElement | null>(null);
@@ -26,17 +28,18 @@ const LandingPage: Page = () => {
         <div className="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static">
           <Link href="/" className="flex align-items-center">
             <img
-              src={`/layout/images/${
-                layoutConfig.colorScheme === "light"
-                  ? "logo-dark"
-                  : "logo-white"
-              }.svg`}
+              // src={`/layout/images/${
+              //   layoutConfig.colorScheme === "light"
+              //     ? "logo-dark"
+              //     : "logo-white"
+              // }.svg`}
+              src={`/layout/images/logo.png`}
               alt="Sakai Logo"
               height="50"
               className="mr-0 lg:mr-2"
             />
             <span className="text-900 font-medium text-2xl line-height-3 mr-8">
-              {config.title}
+              {/* {config.title} */}
             </span>
           </Link>
           <StyleClass
@@ -713,6 +716,17 @@ const LandingPage: Page = () => {
                 className="flex flex-wrap align-items-center justify-content-center md:justify-content-start md:mb-0 mb-3 cursor-pointer"
               >
                 <img
+                  // src={`/layout/images/${
+                  //   layoutConfig.colorScheme === "light"
+                  //     ? "logo-dark"
+                  //     : "logo-white"
+                  // }.svg`}
+                  src={`/layout/images/logo.png`}
+                  alt="Sakai Logo"
+                  height="50"
+                  className="mr-0 lg:mr-2"
+                />
+                {/* <img
                   src={`/layout/images/${
                     layoutConfig.colorScheme === "light"
                       ? "logo-dark"
@@ -722,8 +736,7 @@ const LandingPage: Page = () => {
                   width="50"
                   height="50"
                   className="mr-2"
-                />
-                <span className="font-medium text-3xl text-900">SAKAI</span>
+                /> */}
               </Link>
             </div>
 
@@ -821,3 +834,15 @@ LandingPage.getLayout = function getLayout(page) {
 };
 
 export default LandingPage;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}

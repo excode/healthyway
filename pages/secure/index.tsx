@@ -6,6 +6,8 @@ import { FeedbackService } from "@services/Feedback";
 import { MealItem, MealItemService } from "@services/MealItem";
 import { MealOrderItem, MealOrderItemService } from "@services/MealOrderItem";
 import { ChartData, ChartOptions } from "chart.js";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Button } from "primereact/button";
 import { Chart } from "primereact/chart";
 import { Column } from "primereact/column";
@@ -39,6 +41,11 @@ const lineData: ChartData = {
 };
 
 const Dashboard = () => {
+  // const { locale, locales, asPath } = useRouter();
+  // console.log("locale", locale, "locales", locales, "asPath", asPath);
+  const { t } = useTranslation();
+
+  // i18n.changeLanguage("en");
   const [products, setProducts] = useState<Demo.Product[]>([]);
   const menu1 = useRef<Menu>(null);
   const menu2 = useRef<Menu>(null);
@@ -176,7 +183,9 @@ const Dashboard = () => {
         <div className="card mb-0">
           <div className="flex justify-content-between mb-3">
             <div>
-              <span className="block text-500 font-medium mb-3">Orders</span>
+              <span className="block text-500 font-medium mb-3">
+                {t("ORDER")}
+              </span>
               <div className="text-900 font-medium text-xl">
                 {totalMealOrderRecords}
               </div>
@@ -189,16 +198,18 @@ const Dashboard = () => {
             </div>
           </div>
           <span className="text-green-500 font-medium">
-            {totalMealOrderRecords} new{" "}
+            {totalMealOrderRecords} {t("NEW")}
           </span>
-          <span className="text-500">since last visit</span>
+          <span className="text-500">{t("SINCE_LAST_VISIT")}</span>
         </div>
       </div>
       <div className="col-12 lg:col-6 xl:col-3">
         <div className="card mb-0">
           <div className="flex justify-content-between mb-3">
             <div>
-              <span className="block text-500 font-medium mb-3">Revenue</span>
+              <span className="block text-500 font-medium mb-3">
+                {t("REVENUE")}
+              </span>
               <div className="text-900 font-medium text-xl">$2.100</div>
             </div>
             <div
@@ -209,14 +220,16 @@ const Dashboard = () => {
             </div>
           </div>
           <span className="text-green-500 font-medium">%52+ </span>
-          <span className="text-500">since last week</span>
+          <span className="text-500">{t("SINCE_LAST_WEEK")}</span>
         </div>
       </div>
       <div className="col-12 lg:col-6 xl:col-3">
         <div className="card mb-0">
           <div className="flex justify-content-between mb-3">
             <div>
-              <span className="block text-500 font-medium mb-3">Customers</span>
+              <span className="block text-500 font-medium mb-3">
+                {t("CUSTOMERS")}
+              </span>
               <div className="text-900 font-medium text-xl">
                 {totalCustomerRecords}
               </div>
@@ -231,16 +244,18 @@ const Dashboard = () => {
           <span className="text-green-500 font-medium">
             {totalCustomerRecords}
           </span>
-          <span className="text-500"> newly registered</span>
+          <span className="text-500"> {t("NEWLY_REGISTERED")}</span>
         </div>
       </div>
       <div className="col-12 lg:col-6 xl:col-3">
         <div className="card mb-0">
           <div className="flex justify-content-between mb-3">
             <div>
-              <span className="block text-500 font-medium mb-3">Comments</span>
+              <span className="block text-500 font-medium mb-3">
+                {t("COMMENTS")}
+              </span>
               <div className="text-900 font-medium text-xl">
-                {totalFeedbackRecords} Unread
+                {totalFeedbackRecords} {t("UNREAD")}
               </div>
             </div>
             <div
@@ -253,13 +268,13 @@ const Dashboard = () => {
           <span className="text-green-500 font-medium">
             {totalFeedbackRecords}{" "}
           </span>
-          <span className="text-500">responded</span>
+          <span className="text-500">{t("RESPONDED")}</span>
         </div>
       </div>
 
       <div dir="rtl" className=" col-12 xl:col-6">
         <div className="card">
-          <h5>Recent Sales</h5>
+          <h5>{t("RECENT_SALES")}</h5>
           <DataTable
             value={mealItems}
             rows={5}
@@ -267,7 +282,7 @@ const Dashboard = () => {
             responsiveLayout="scroll"
           >
             <Column
-              header="Image"
+              header={t("IMAGE")}
               body={(data) => (
                 <img
                   className="shadow-2"
@@ -281,19 +296,19 @@ const Dashboard = () => {
 
             <Column
               field="name"
-              header="Name"
+              header={t("NAME")}
               sortable
               style={{ width: "35%" }}
             />
             <Column
               field="price"
-              header="Price"
+              header={t("PRICE")}
               sortable
               style={{ width: "35%" }}
               body={(data) => formatCurrency(data.price)}
             />
             <Column
-              header="View"
+              header={t("VIEW")}
               style={{ width: "15%" }}
               body={() => (
                 <>
@@ -305,7 +320,7 @@ const Dashboard = () => {
         </div>
         <div className="card">
           <div className="flex justify-content-between align-items-center mb-5">
-            <h5>Best Selling Items</h5>
+            <h5>{t("BEST_SELLING_ITEMS")}</h5>
             <div>
               <Button
                 type="button"
@@ -317,8 +332,8 @@ const Dashboard = () => {
                 ref={menu1}
                 popup
                 model={[
-                  { label: "Add New", icon: "pi pi-fw pi-plus" },
-                  { label: "Remove", icon: "pi pi-fw pi-minus" },
+                  { label: `${t("ADD_NEW")}`, icon: "pi pi-fw pi-plus" },
+                  { label: `${t("Remove")}`, icon: "pi pi-fw pi-minus" },
                 ]}
               />
             </div>
@@ -470,13 +485,13 @@ const Dashboard = () => {
 
       <div className="col-12 xl:col-6">
         <div className="card">
-          <h5>Sales Overview</h5>
+          <h5>{t("SALES_OVERVIEW")}</h5>
           <Chart type="line" data={lineData} options={lineOptions} />
         </div>
 
         <div className="card">
           <div className="flex align-items-center justify-content-between mb-4">
-            <h5>Notifications</h5>
+            <h5>{t("NOTIFICATIONS")}</h5>
             <div>
               <Button
                 type="button"
@@ -488,14 +503,14 @@ const Dashboard = () => {
                 ref={menu2}
                 popup
                 model={[
-                  { label: "Add New", icon: "pi pi-fw pi-plus" },
-                  { label: "Remove", icon: "pi pi-fw pi-minus" },
+                  { label: `${t("ADD_NEW")}`, icon: "pi pi-fw pi-plus" },
+                  { label: `${t("REMOVE")}`, icon: "pi pi-fw pi-minus" },
                 ]}
               />
             </div>
           </div>
 
-          <span className="block text-600 font-medium mb-3">TODAY</span>
+          <span className="block text-600 font-medium mb-3">{t("TODAY")}</span>
           <ul className="p-0 mx-0 mt-0 mb-4 list-none">
             <li className="flex align-items-center py-2 border-bottom-1 surface-border">
               <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
@@ -578,3 +593,28 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+// export const getStaticProps: GetStaticProps = async (context) => {
+//   // Extract the locale identifier from the URL using context.locale
+//   // const { locale } = context;
+//   const locale = context.locale ?? "ar";
+//   console.log({ locale });
+
+//   return {
+//     props: {
+//       // Pass the translation props to the page component using serverSideTranslations
+//       ...(await serverSideTranslations(locale)),
+//     },
+//   };
+// };
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
