@@ -9,6 +9,7 @@ import {
   SubscriptionQuery,
   SubscriptionService,
 } from "@services/Subscription";
+import { Users, UsersService } from "@services/Users";
 import { LangContext } from "hooks/lan";
 import getConfig from "next/config";
 import Link from "next/link";
@@ -97,6 +98,8 @@ const SubscriptionPage = () => {
 
   const customerService = new CustomerService();
   const [sugcustomers, setSugCustomers] = useState<Customer[]>([]);
+  const userService = new UsersService();
+  const [sugUsers, setSugUsers] = useState<Users[]>([]);
 
   const mealitemService = new MealItemService();
   const [sugmealItems, setSugMealItems] = useState<MealItem[]>([]);
@@ -219,10 +222,12 @@ const SubscriptionPage = () => {
 
   const searchCustomer = async (e: any) => {
     if (e.query.trim().length > 1) {
-      let dataCustomer_ = await customerService.getCustomerSuggestions(
-        e.query.trim()
-      );
-      setSugCustomers(dataCustomer_.data);
+      let dataCustomer_ = await userService.getUsersSuggestions(e.query.trim());
+      // let dataCustomer_ = await customerService.getCustomerSuggestions(
+      //   e.query.trim()
+      // );
+      setSugUsers(dataCustomer_.data);
+      // setSugCustomers(dataCustomer_.data);
     }
   };
 
@@ -265,10 +270,13 @@ const SubscriptionPage = () => {
   const customerIdFilterTemplate = (options: any) => {
     return (
       <AutoComplete
-        field="name"
+        field="firstName"
+        // field="name"
         value={options.value}
         completeMethod={searchCustomer}
-        suggestions={sugcustomers}
+        // completeMethod={searchCustomer}
+        suggestions={sugUsers}
+        // suggestions={sugcustomers}
         onChange={(e) => options.filterCallback(e.value, options.index)}
         placeholder="Select a customerId"
         className="p-column-filter"
@@ -1054,14 +1062,16 @@ const SubscriptionPage = () => {
                 Customer Id
               </label>
               <AutoComplete
-                field="name"
+                field="firstName"
                 id="customerId"
                 completeMethod={searchCustomer}
                 value={subscription.customerId}
-                suggestions={sugcustomers}
+                suggestions={sugUsers}
+                // suggestions={sugcustomers}
                 onChange={(e) => onInputChange(e, "customerId")}
               />
             </div>
+
             <div dir={textFormat} className="flex gap-5">
               <div className="field">
                 <label className="font-bold" htmlFor="startDate">
