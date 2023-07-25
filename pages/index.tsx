@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import config from "@config/index";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Button } from "primereact/button";
@@ -12,6 +13,7 @@ import AppConfig from "../layout/AppConfig";
 import { LayoutContext } from "../layout/context/layoutcontext";
 import { NodeRef, Page } from "../types/types";
 const LandingPage: Page = () => {
+  const { t } = useTranslation();
   const [isHidden, setIsHidden] = useState(false);
   const { layoutConfig } = useContext(LayoutContext);
   const menuRef = useRef<HTMLElement | null>(null);
@@ -832,3 +834,15 @@ LandingPage.getLayout = function getLayout(page) {
 };
 
 export default LandingPage;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}

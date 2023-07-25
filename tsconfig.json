@@ -16,33 +16,17 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@components/*": [
-          "components/*"
-      ],
-      "@config/*": [
-          "config/*"
-      ],
-      "@layout/*": [
-          "layout/*"
-      ],
-      "@services/*": [
-          "services/*"
-      ],
-      "@lib/*": [
-          "lib/*"
-      ],
-      "@utils/*": [
-          "utils/*"
-      ],
-  
-      "@public/*": [
-          "public/*"
-      ],
-      "@styles/*": [
-          "styles/*"
-      ],
+      "@components/*": ["components/*"],
+      "@config/*": ["config/*"],
+      "@layout/*": ["layout/*"],
+      "@services/*": ["services/*"],
+      "@lib/*": ["lib/*"],
+      "@utils/*": ["utils/*"],
+
+      "@public/*": ["public/*"],
+      "@styles/*": ["styles/*"]
+    }
   },
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-i18next.config.js"],
   "exclude": ["node_modules"]
 }
