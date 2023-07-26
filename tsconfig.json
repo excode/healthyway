@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     "next-i18next.config.js",
-    "layout/menuItems.js"
+    "layout/menuItemsEN.js"
   ],
   "exclude": ["node_modules"]
 }

@@ -27,15 +27,15 @@ function MyApp({ Component, pageProps }: Props) {
     );
   } else {
     return (
-      <CookiesProvider>
-        <LayoutProvider>
-          <LangProvider>
+      <LangProvider>
+        <CookiesProvider>
+          <LayoutProvider>
             <Layout>
               <Component {...pageProps} />
             </Layout>
-          </LangProvider>
-        </LayoutProvider>
-      </CookiesProvider>
+          </LayoutProvider>
+        </CookiesProvider>
+      </LangProvider>
     );
   }
 }
