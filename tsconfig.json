@@ -27,6 +27,12 @@
       "@styles/*": ["styles/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-i18next.config.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "next-i18next.config.js",
+    "layout/menuItems.js"
+  ],
   "exclude": ["node_modules"]
 }

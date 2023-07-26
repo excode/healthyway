@@ -1,3 +1,4 @@
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Ripple } from "primereact/ripple";
@@ -14,6 +15,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
   const key = props.parentKey
     ? props.parentKey + "-" + props.index
     : String(props.index);
+  // console.log("item:", item, "key:", key);
   const isActiveRoute = item!.to && router.pathname === item!.to;
   const active = activeMenu === key || activeMenu.startsWith(key + "-");
 

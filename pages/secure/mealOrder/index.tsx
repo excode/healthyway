@@ -33,6 +33,7 @@ import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import cooking from "/public/layout/images/cooking.png";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const MealOrderPage = () => {
   const { asPath } = useRouter();
@@ -1300,3 +1301,15 @@ const MealOrderPage = () => {
 };
 
 export default MealOrderPage;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}

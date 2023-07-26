@@ -46,7 +46,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
       locale: newLocale,
     });
 
-    console.log(i18n?.language);
+    // console.log(i18n?.language);
     setSelectedLang(newLocale);
   };
 
@@ -67,6 +67,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
     setUserData(decoded);
   }, []);
+
   const onPress = () => {
     removeCookie("user");
     router.push("/auth/login");
@@ -92,7 +93,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         </Link>
 
         <button
-          dir="p-rtl"
+          dir={textFormat}
           // dir={textFormat}
           ref={menubuttonRef}
           type="button"

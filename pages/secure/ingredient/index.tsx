@@ -30,6 +30,7 @@ import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
 import { LangContext } from "hooks/lan";
 import { Image } from "primereact/image";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const IngredientPage = () => {
   const { asPath } = useRouter();
@@ -925,3 +926,15 @@ const IngredientPage = () => {
 };
 
 export default IngredientPage;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}

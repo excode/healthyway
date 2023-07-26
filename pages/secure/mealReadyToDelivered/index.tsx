@@ -10,6 +10,7 @@ import {
 } from "@services/MealOrder";
 import { LangContext } from "hooks/lan";
 import moment from "moment";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import getConfig from "next/config";
 import { useRouter } from "next/router";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
@@ -1324,3 +1325,15 @@ const MealOrderPage = () => {
 };
 
 export default MealOrderPage;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}

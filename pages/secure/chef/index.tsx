@@ -27,6 +27,7 @@ import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
 import { LangContext } from "hooks/lan";
 import { Image } from "primereact/image";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const ChefPage = () => {
   const { asPath } = useRouter();
@@ -945,3 +946,15 @@ const ChefPage = () => {
 };
 
 export default ChefPage;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
