@@ -25,7 +25,7 @@ const AppMenu = () => {
   const homeMenu =
     textFormat === "rtl"
       ? {
-          label: "Home",
+          label: "بيت",
           items: [
             { label: "لوحة معلومات", icon: "pi pi-fw pi-home", to: "/secure" },
           ],

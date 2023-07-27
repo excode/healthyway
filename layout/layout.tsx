@@ -18,6 +18,7 @@ import AppFooter from "./AppFooter";
 import AppSidebar from "./AppSidebar";
 import AppTopbar from "./AppTopbar";
 import { LayoutContext } from "./context/layoutcontext";
+
 const Layout = ({ children }: ChildContainerProps) => {
   const { layoutConfig, layoutState, setLayoutState } =
     useContext(LayoutContext);
@@ -181,15 +182,15 @@ const Layout = ({ children }: ChildContainerProps) => {
       <div dir={textFormat} className={containerClass}>
         <AppTopbar ref={topbarRef} />
         {/* <div dir={textFormat} className=""> */}
-        {/* <div className=""> */}
-        <div className="layout-main-container">
-          <div className="layout-main">{children}</div>
-          <AppFooter />
+        <div className="">
+          <div className="layout-main-container">
+            <div className="layout-main">{children}</div>
+            <AppFooter />
+          </div>
+          <div ref={sidebarRef} className="layout-sidebar">
+            <AppSidebar />
+          </div>
         </div>
-        <div ref={sidebarRef} className="layout-sidebar ">
-          <AppSidebar />
-        </div>
-        {/* </div> */}
         <AppConfig />
         <div className="layout-mask"></div>
       </div>

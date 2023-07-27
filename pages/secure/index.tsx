@@ -6,8 +6,11 @@ import { FeedbackService } from "@services/Feedback";
 import { MealItem, MealItemService } from "@services/MealItem";
 import { MealOrderItem, MealOrderItemService } from "@services/MealOrderItem";
 import { ChartData, ChartOptions } from "chart.js";
+import { LangContext } from "hooks/lan";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { Noto_Naskh_Arabic } from "next/font/google";
+import { useRouter } from "next/router";
 import { Button } from "primereact/button";
 import { Chart } from "primereact/chart";
 import { Column } from "primereact/column";
@@ -17,6 +20,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { ProductService } from "../../demo/service/ProductService";
 import { LayoutContext } from "../../layout/context/layoutcontext";
 import { Demo } from "../../types/types";
+const noto = Noto_Naskh_Arabic({ subsets: ["arabic"] });
 
 const lineData: ChartData = {
   labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -41,6 +45,7 @@ const lineData: ChartData = {
 };
 
 const Dashboard = () => {
+  const { locale } = useRouter();
   // const { locale, locales, asPath } = useRouter();
   // console.log("locale", locale, "locales", locales, "asPath", asPath);
   const { t } = useTranslation();
@@ -49,6 +54,7 @@ const Dashboard = () => {
   const [products, setProducts] = useState<Demo.Product[]>([]);
   const menu1 = useRef<Menu>(null);
   const menu2 = useRef<Menu>(null);
+  const { textFormat } = useContext(LangContext);
   const [lineOptions, setLineOptions] = useState<ChartOptions>({});
   const { layoutConfig } = useContext(LayoutContext);
   const customerService = new CustomerService();
@@ -183,7 +189,7 @@ const Dashboard = () => {
         <div className="card mb-0">
           <div className="flex justify-content-between mb-3">
             <div>
-              <span className="block text-500 font-medium mb-3">
+              <span className="block text-500 font-medium mb-3 ">
                 {t("ORDER")}
               </span>
               <div className="text-900 font-medium text-xl">
@@ -272,10 +278,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div dir="rtl" className=" col-12 xl:col-6">
+      <div dir={textFormat} className=" col-12 xl:col-6">
         <div className="card">
           <h5>{t("RECENT_SALES")}</h5>
           <DataTable
+            className={locale === "ar" ? noto.className : ""}
+            tableClassName={locale === "ar" ? noto.className : ""}
             value={mealItems}
             rows={5}
             paginator

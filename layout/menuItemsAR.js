@@ -56,7 +56,7 @@ const menus = {
       to: "/secure/mealGroup",
     },
     {
-      label: "اسم مجموعة ال",
+      label: "(المعرض) اسم مجموعة ال",
       icon: "pi pi-fw pi-images",
       to: "/secure/mealGroup/dataview",
     },
