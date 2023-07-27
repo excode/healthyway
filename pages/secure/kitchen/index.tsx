@@ -28,6 +28,7 @@ import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import countryData from "../../utilities/countryData.json";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 const UsersPage = () => {
   const { asPath } = useRouter();
   const [userData, setUserData] = useState<UserData>({ email: "" });
@@ -943,3 +944,15 @@ const UsersPage = () => {
 };
 
 export default UsersPage;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}

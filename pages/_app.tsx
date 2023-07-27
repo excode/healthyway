@@ -3,6 +3,8 @@
 import { LangProvider } from "hooks/lan";
 import { appWithTranslation } from "next-i18next";
 import type { AppProps } from "next/app";
+import { Noto_Naskh_Arabic } from "next/font/google";
+import { useRouter } from "next/router";
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.css";
@@ -15,8 +17,11 @@ import type { Page } from "../types/types";
 type Props = AppProps & {
   Component: Page;
 };
+const noto = Noto_Naskh_Arabic({ subsets: ["arabic"] });
 
 function MyApp({ Component, pageProps }: Props) {
+  const { locale } = useRouter();
+
   if (Component.getLayout) {
     return (
       <CookiesProvider>
@@ -27,15 +32,17 @@ function MyApp({ Component, pageProps }: Props) {
     );
   } else {
     return (
-      <CookiesProvider>
-        <LayoutProvider>
-          <LangProvider>
+      <LangProvider>
+        <CookiesProvider>
+          <LayoutProvider>
             <Layout>
-              <Component {...pageProps} />
+              <main className={locale === "ar" ? noto.className : ""}>
+                <Component {...pageProps} />
+              </main>
             </Layout>
-          </LangProvider>
-        </LayoutProvider>
-      </CookiesProvider>
+          </LayoutProvider>
+        </CookiesProvider>
+      </LangProvider>
     );
   }
 }

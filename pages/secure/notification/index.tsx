@@ -8,6 +8,7 @@ import {
   NotificationService,
 } from "@services/Notification";
 import { LangContext } from "hooks/lan";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -826,3 +827,14 @@ const NotificationPage = () => {
 };
 
 export default NotificationPage;
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}

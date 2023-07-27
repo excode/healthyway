@@ -1,3 +1,4 @@
+import { Noto_Naskh_Arabic } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Ripple } from "primereact/ripple";
@@ -6,6 +7,7 @@ import React, { useContext, useEffect } from "react";
 import { CSSTransition } from "react-transition-group";
 import { AppMenuItemProps } from "../types/types";
 import { MenuContext } from "./context/menucontext";
+const noto = Noto_Naskh_Arabic({ subsets: ["arabic"] });
 
 const AppMenuitem = (props: AppMenuItemProps) => {
   const { activeMenu, setActiveMenu } = useContext(MenuContext);
@@ -14,6 +16,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
   const key = props.parentKey
     ? props.parentKey + "-" + props.index
     : String(props.index);
+  // console.log("item:", item, "key:", key);
   const isActiveRoute = item!.to && router.pathname === item!.to;
   const active = activeMenu === key || activeMenu.startsWith(key + "-");
 
@@ -79,10 +82,13 @@ const AppMenuitem = (props: AppMenuItemProps) => {
 
   return (
     <li
-      className={classNames({
-        "layout-root-menuitem": props.root,
-        "active-menuitem": active,
-      })}
+      className={classNames(
+        {
+          "layout-root-menuitem": props.root,
+          "active-menuitem": active,
+        },
+        router.locale === "ar" && noto.className
+      )}
     >
       {props.root && item!.visible !== false && (
         <div className="layout-menuitem-root-text">{item!.label}</div>
@@ -96,7 +102,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
           tabIndex={0}
         >
           <i className={classNames("layout-menuitem-icon", item!.icon)}></i>
-          <span className="layout-menuitem-text">{item!.label}</span>
+          <span className={`layout-menuitem-text`}>{item!.label}</span>
           {item!.items && (
             <i className="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
           )}
@@ -116,7 +122,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
           tabIndex={0}
         >
           <i className={classNames("layout-menuitem-icon", item!.icon)}></i>
-          <span className="layout-menuitem-text">{item!.label}</span>
+          <span className="layout-menuitem-text ">{item!.label}</span>
           {item!.items && (
             <i className="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
           )}

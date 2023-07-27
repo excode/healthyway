@@ -48,7 +48,6 @@
   "THURSDAY": "الخميس",
   "FRIDAY": "الجمعة",
   "SATURDAY": "السبت",
-
   "CHEF": "الطَّباخ",
   "CHEF_GALLERY": "الطَّباخ (المعرض)",
   "MEAL_ORDER": "طَلبِية الوجبة",
@@ -75,5 +74,6 @@
   "INGREDIENT": "المكوّن",
   "INGREDIENT_GALLERY": "المكوّن (المعرض)",
   "MEAL_GROUP_NAME": "اسم مجموعة ال",
-  "MEAL_GROUP_NAME_GALLERY": "اسم مجموعة ال"
+  "MEAL_GROUP_NAME_GALLERY": "(المعرض) اسم مجموعة ال",
+  "DASHBOARD": "لوحة معلومات"
 }

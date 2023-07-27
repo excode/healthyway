@@ -46,7 +46,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
       locale: newLocale,
     });
 
-    console.log(i18n?.language);
+    // console.log(i18n?.language);
     setSelectedLang(newLocale);
   };
 
@@ -57,6 +57,8 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   }));
 
   selectedLang === "ar" ? setTextFormat("rtl") : setTextFormat("ltr");
+  const role = ["Admin", "Kitchen", "Chef", "Customer"];
+
   // useEffect(() => {
   //   setCookie("lang", selectedLang);
   // }, []);
@@ -67,6 +69,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
     setUserData(decoded);
   }, []);
+
   const onPress = () => {
     removeCookie("user");
     router.push("/auth/login");
@@ -76,8 +79,8 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   // console.log(userData);
   return (
     // <div dir={textFormat} className="layout-topbar flex align-items-center ">
-    <div className="layout-topbar flex align-items-center ">
-      <div className="flex">
+    <div className="layout-topbar grid  ">
+      <div className="flex md:col-9 lg:col-10">
         <Link href="/" className="layout-topbar-logo">
           <img
             src={`/layout/images/logo.png`}
@@ -92,7 +95,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         </Link>
 
         <button
-          dir="p-rtl"
+          dir={textFormat}
           // dir={textFormat}
           ref={menubuttonRef}
           type="button"
@@ -116,30 +119,42 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
       <div
         dir={textFormat}
         ref={topbarmenuRef}
-        className={classNames("layout-topbar-menu ", {
-          "layout-topbar-menu-mobile-active": layoutState.profileSidebarVisible,
-        })}
+        className={classNames(
+          "layout-topbar-menu ",
+          // `md:col-3 lg:col-2 flex justify-content-evenly`,
+          {
+            "layout-topbar-menu-mobile-active":
+              layoutState.profileSidebarVisible,
+          }
+        )}
       >
-        <span className="p-link layout-topbar-button flex gap-2 mr-2">
-          {userData.permissionLevel === 0 && (
-            <img src="/layout/images/superAdmin.png" width={30} height={30} />
-          )}
-          {userData.permissionLevel === 1 && (
-            <img src="/layout/images/kitchen.png" width={30} height={30} />
-          )}
-          {userData.permissionLevel === 2 && (
-            <img src="/layout/images/chef.png" width={30} height={30} />
-          )}
-          {userData.firstName} {userData.lastName}
-        </span>
-
+        <div className="p-link layout-topbar-button flex gap-3 mx-2">
+          <div className="">
+            {userData.permissionLevel === 0 && (
+              <img src="/layout/images/superAdmin.png" width={30} height={30} />
+            )}
+            {userData.permissionLevel === 1 && (
+              <img src="/layout/images/kitchen.png" width={30} height={30} />
+            )}
+            {userData.permissionLevel === 2 && (
+              <img src="/layout/images/chef.png" width={30} height={30} />
+            )}
+          </div>
+          <div className="">
+            <p className="mb-0">{userData.firstName}</p>
+            <p>
+              {userData.permissionLevel !== undefined &&
+                role[userData.permissionLevel]}
+            </p>
+          </div>
+        </div>
         <button
           type="button"
           onClick={onPress}
-          className="p-link layout-topbar-button "
+          className="p-link layout-topbar-button mr-4"
         >
           <i className="pi pi-sign-out"></i>
-          <span>Sign out</span>
+          {/* <span>Sign out</span> */}
         </button>
         {/* <button type="button" className="p-link layout-topbar-button">
           <i className="pi pi-user"></i>

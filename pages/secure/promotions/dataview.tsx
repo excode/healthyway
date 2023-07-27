@@ -16,6 +16,7 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import React, { useEffect, useRef, useState } from "react";
 import { LayoutType, SortOrderType } from "../../../types/types";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const PromotionsDataview = () => {
   const [globalFilterValue, setGlobalFilterValue] = useState("");
@@ -296,3 +297,15 @@ const PromotionsDataview = () => {
 };
 
 export default PromotionsDataview;
+
+export async function getStaticProps(context: any) {
+  // extract the locale identifier from the URL
+  const { locale } = context;
+
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
