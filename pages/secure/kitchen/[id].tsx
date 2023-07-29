@@ -1,4 +1,4 @@
-import { Users, UsersService } from "@services/Users";
+import { Kitchen, KitchenService } from "@services/Kitchen";
 import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
@@ -7,8 +7,9 @@ import BlockViewer from "../../../components/BlockViewer";
 
 const UsersDetails = () => {
   const router = useRouter();
-  const usersService = new UsersService();
-  const [users, setUsers] = useState<Users>({} as Users);
+  // const usersService = new UsersService();
+  const kitchenService = new KitchenService();
+  const [kitchen, setKitchen] = useState<Kitchen>({} as Kitchen);
   //   const [users, setUsers] = useState<Users>({
   //     firstName: "",
   //     email: "",
@@ -35,9 +36,9 @@ const UsersDetails = () => {
     setLoading(true);
     (async () => {
       let idVal: string = id?.toString() || "";
-      let d = await usersService.getUsersDetails(idVal);
+      let d = await kitchenService.getKitchenDetails(idVal);
       if (d.error == undefined) {
-        setUsers(d.data);
+        setKitchen(d.data);
         setLoading(false);
         toast.current?.show({
           severity: "success",
@@ -76,103 +77,93 @@ const UsersDetails = () => {
             <>
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">
-                    First Name
-                  </div>
+                  <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {users.firstName}
+                    {kitchen.kitchenName}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Last Name
+                    Kitchen's Chef
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {users.lastName}
+                    {kitchen.chefId}
                   </div>
                 </li>
 
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Email</div>
-                  <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {users.email}
-                  </div>
-                </li>
-
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Mobile</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {users.mobile}
+                    {kitchen.mobile}
                   </div>
-                </li>
+                </li> */}
 
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Country</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    {users.country}
+                    {kitchen.country}
                   </div>
-                </li>
+                </li> */}
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">Address</div>
                   <li>
-                    {users.address?.length > 0 ||
-                    Array.isArray(users.address) ? (
-                      users.address.map((a) => (
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 mt-1">
-                          <span className="underline">
-                            {a.addressPreference}:
-                          </span>
-                          <div className="mt-1">
-                            <span className="font-semibold">Zone: </span>
-                            {a.zone},
-                            <span className="font-semibold"> Building: </span>
-                            {a.building},
-                            <span className="font-semibold"> Unite: </span>
-                            {a.unit},
-                            <span className="font-semibold"> Street: </span>
-                            {a.streetName}
-                          </div>
-                          <div>
-                            <span className="font-semibold">Latitude: </span>
-                            {a.geoTag.coordinates[0]},
-                            <span className="font-semibold"> Longitude: </span>
-                            {a.geoTag.coordinates[1]}
-                          </div>
+                    {kitchen.address ? (
+                      <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 mt-1">
+                        {/* <span className="underline">
+                          {kitchen.address.addressPreference}:
+                        </span> */}
+                        <div className="mt-1">
+                          <span className="font-semibold">Zone: </span>
+                          {kitchen.address.zone},
+                          <span className="font-semibold"> Building: </span>
+                          {kitchen.address.building},
+                          <span className="font-semibold"> Unite: </span>
+                          {kitchen.address.unit},
+                          <span className="font-semibold"> Street: </span>
+                          {kitchen.address.streetName}
                         </div>
-                      ))
+                        <div>
+                          <span className="font-semibold">Latitude: </span>
+                          {kitchen.address.geoTag &&
+                            kitchen.address.geoTag.coordinates[0]}
+                          ,<span className="font-semibold"> Longitude: </span>
+                          {kitchen.address.geoTag &&
+                            kitchen.address.geoTag.coordinates[1]}
+                        </div>
+                      </div>
                     ) : (
                       <div>No address available</div>
                     )}{" "}
                   </li>
                 </li>
 
-                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
                     User Types
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     <p>
-                      {users.userType >= 0 ? (
-                        dataUserTypes[users.userType].name
+                      {kitchen.userType >= 0 ? (
+                        dataUserTypes[kitchen.userType].name
                       ) : (
                         <span>User type not set yet!</span>
                       )}
                     </p>
                   </div>
-                </li>
+                </li> */}
 
-                {users.kitchen !== 3 || (
+                {/* {kitchen.kitchen !== 3 || (
                   <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                     <div className="text-500 w-6 md:w-2 font-medium">
                       Kitchen
                     </div>
                     <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                      {users.kitchen}
+                      {kitchen.kitchen}
                     </div>
                   </li>
-                )}
+                )} */}
               </ul>
             </>
           )}

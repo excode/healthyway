@@ -9,7 +9,7 @@ import {
   SubscriptionQuery,
   SubscriptionService,
 } from "@services/Subscription";
-import { Users, UsersService } from "@services/Users";
+import { AddressType, Users, UsersService } from "@services/Users";
 import { LangContext } from "hooks/lan";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -60,6 +60,7 @@ const SubscriptionPage = () => {
     endDate: new Date(),
     status: "",
     subPlans: [],
+    deliveryAddress: {},
   };
 
   const dataWeekdays = [
@@ -73,6 +74,7 @@ const SubscriptionPage = () => {
   ];
 
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  // const [deliveryAddress, setDeliveryAddress] = useState({});
   const [backupSubscriptions, setBackupSubscriptions] = useState<
     Subscription[]
   >([]);
@@ -108,6 +110,11 @@ const SubscriptionPage = () => {
   const [sugmealItems, setSugMealItems] = useState<MealItem[]>([]);
 
   const [allMealItem, setAllMealItem] = useState<MealItem[]>([]);
+  const [customers, setCustomers] = useState<Users[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<Users>({} as Users);
+  console.log({ selectedCustomer });
+  const [selectedDeliveryAddress, setSelectedDeliveryAddress] =
+    useState<AddressType>({} as AddressType);
   const [breakfastMeal, setBreakFastMeal] = useState<MealItem[]>([]);
   const [lunchMeal, setLunchMeal] = useState<MealItem[]>([]);
   const [dinnerMeal, setDinnerMeal] = useState<MealItem[]>([]);
@@ -148,6 +155,7 @@ const SubscriptionPage = () => {
     })();
     initFilters1();
   }, [refreshFlag]);
+
   function getWeekdayNames(startDate: Date, endDate: Date): WeekdayDate[] {
     const weekdays: string[] = [
       "Sunday",
@@ -224,7 +232,8 @@ const SubscriptionPage = () => {
   };
 
   const searchCustomer = async (e: any) => {
-    if (e.query.trim().length > 1) {
+    if (e.query.trim().length > 0) {
+      // console.log({ dataCustomer });
       let dataCustomer_ = await userService.getUsersSuggestions(e.query.trim());
       // let dataCustomer_ = await customerService.getCustomerSuggestions(
       //   e.query.trim()
@@ -236,7 +245,7 @@ const SubscriptionPage = () => {
 
   const datastatuss = [
     { value: "Expired", name: "Expired" },
-    { value: " Active", name: " Active" },
+    { value: "Active", name: "Active" },
   ];
 
   const searchMealItem = async (e: any) => {
@@ -380,7 +389,8 @@ const SubscriptionPage = () => {
     const allMealItem = await mealitemService.getMealItemAll({});
     allMealItem && setLoading(false);
     setAllMealItem(allMealItem?.data);
-
+    const dataCustomer = await userService.getUsersAll({ userType: 3 });
+    setCustomers(dataCustomer.data);
     const breakFastMeal = allMealItem?.data.filter((meal) =>
       meal.mealType.includes("Breakfast")
     );
@@ -419,7 +429,11 @@ const SubscriptionPage = () => {
     const validationErrors: string[] = validateForm(subscription, validation);
     if (validationErrors.length == 0) {
       let _subscriptions: Subscription[] = [...subscriptions];
-      let _subscription: Subscription = { ...subscription };
+      let _subscription: Subscription = {
+        ...subscription,
+        customerId: selectedCustomer.id,
+        deliveryAddress: selectedDeliveryAddress,
+      };
       if (subscription.id) {
         let d = await subscriptionService.updateSubscription(_subscription);
         if (d.error == undefined) {
@@ -478,6 +492,8 @@ const SubscriptionPage = () => {
       setBackupSubscriptions(_subscriptions);
       setSubscriptionDialog(false);
       setSubscription(emptySubscription);
+      setSelectedCustomer({} as Users);
+      setSelectedDeliveryAddress({} as AddressType);
     } else {
       toast.current?.show({
         severity: "error",
@@ -842,7 +858,24 @@ const SubscriptionPage = () => {
     // _subscription.subPlans[rowIndex][columnName] = e.value;
     setSubscription(_subscription);
   };
+  const customerOptionTemplate = (option: Users) => {
+    return (
+      <div className="flex align-items-center">
+        <div>{`${option.firstName} ${option.lastName}`}</div>
+      </div>
+    );
+  };
 
+  const selectedCustomerTemplate = (option: Users, props: any) => {
+    if (option) {
+      return (
+        <div className="flex align-items-center">
+          <div>{`${option.firstName} ${option.lastName}`}</div>
+        </div>
+      );
+    }
+    return <span>{props.placeholder}</span>;
+  };
   const renderMealDropdown = (
     rowData: MealData,
     rowIndex: any,
@@ -875,7 +908,7 @@ const SubscriptionPage = () => {
         // optionValue="id"
         valueTemplate={selectedMealTemplate}
         itemTemplate={mealOptionsTemplate}
-        placeholder="Select your meal"
+        placeholder={`Select your ${columnName}`}
         filter
         onChange={(e) => onMealChange(e, rowIndex.rowIndex, columnName)}
       >
@@ -1052,27 +1085,59 @@ const SubscriptionPage = () => {
 
           <Dialog
             visible={subscriptionDialog}
-            style={{ width: "750px" }}
+            style={{ width: "850px" }}
             header="Subscription Details"
             modal
             className="p-fluid"
             footer={subscriptionDialogFooter}
             onHide={hideDialog}
             rtl={true}
+            blockScroll
           >
-            <div dir={textFormat} className="field">
-              <label className="font-bold" htmlFor="customerId">
-                Customer Id
-              </label>
-              <AutoComplete
-                field="firstName"
-                id="customerId"
-                completeMethod={searchCustomer}
-                value={subscription.customerId}
-                suggestions={sugUsers}
-                // suggestions={sugcustomers}
-                onChange={(e) => onInputChange(e, "customerId")}
-              />
+            <div className="flex align-items-center gap-5">
+              <div dir={textFormat} className="field">
+                <label className="font-bold" htmlFor="customerId">
+                  Customer
+                </label>
+
+                <Dropdown
+                  value={selectedCustomer}
+                  onChange={(e) => setSelectedCustomer(e.value)}
+                  options={customers}
+                  optionLabel="firstName"
+                  itemTemplate={customerOptionTemplate}
+                  valueTemplate={selectedCustomerTemplate}
+                  filter
+                  placeholder="Select Customer"
+                  // placeholder="Choose Customer"
+                  className="w-full md:w-14rem"
+                />
+              </div>
+
+              <div className="field">
+                <label
+                  className={`font-bold  ${
+                    Object.keys(selectedCustomer).length === 0 &&
+                    "text-gray-500"
+                  }`}
+                  htmlFor="deliveryAddress"
+                >
+                  Delivery Address{" "}
+                  {Object.keys(selectedCustomer).length === 0 &&
+                    "(Select Customer First)"}
+                </label>
+
+                <Dropdown
+                  value={selectedDeliveryAddress}
+                  onChange={(e) => setSelectedDeliveryAddress(e.value)}
+                  options={selectedCustomer.address}
+                  optionLabel="addressPreference"
+                  disabled={Object.keys(selectedCustomer).length === 0}
+                  required={true}
+                  placeholder="Select Delivery Address"
+                  className="w-full md:w-14rem"
+                />
+              </div>
             </div>
 
             <div dir={textFormat} className="flex gap-5">
@@ -1124,6 +1189,7 @@ const SubscriptionPage = () => {
                 <Dropdown
                   id="status"
                   optionLabel="name"
+                  placeholder="Status"
                   value={subscription.status}
                   options={datastatuss}
                   onChange={(e) => onInputChange(e, "status")}
@@ -1131,8 +1197,6 @@ const SubscriptionPage = () => {
               </div>
             </div>
 
-            {/* <DataTable value={subscription.subPlans}> */}
-            {/* <DataTable value={subPlansData}> */}
             <DataTable dir={textFormat} value={dataWeekdays}>
               <Column field="name" header="Weekday" />
               <Column
@@ -1142,6 +1206,7 @@ const SubscriptionPage = () => {
                   renderMealDropdown(rowData, rowIndex, "breakfast")
                 }
               />
+
               <Column
                 field="lunch"
                 header="Lunch"
@@ -1149,6 +1214,7 @@ const SubscriptionPage = () => {
                   renderMealDropdown(rowData, rowIndex, "lunch")
                 }
               />
+
               <Column
                 field="dinner"
                 header="Dinner"

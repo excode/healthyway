@@ -7,6 +7,7 @@ import {
   patchData,
   postData,
 } from "@lib/httpRequest";
+import { AddressType } from "./Users";
 
 interface SubPlan {
   weekday: string;
@@ -28,11 +29,12 @@ export type Subscription = {
   status: string | any;
   subPlans?: SubPlan[];
   kitchen?: string | any;
+  deliveryAddress: AddressType;
 };
 
 export type SubscriptionQuery = Omit<
   Subscription,
-  "customerId" | "startDate" | "endDate" | "status"
+  "customerId" | "startDate" | "endDate" | "status" | "deliveryAddress"
 > & {
   customerId?: string;
   startDate?: Date;

@@ -10,6 +10,7 @@ import {
 } from "@services/MealOrder";
 import { LangContext } from "hooks/lan";
 import moment from "moment";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import getConfig from "next/config";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -33,7 +34,6 @@ import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import cooking from "/public/layout/images/cooking.png";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const MealOrderPage = () => {
   const { asPath } = useRouter();
@@ -99,9 +99,11 @@ const MealOrderPage = () => {
     setLoading(true);
     (async () => {
       let d = await mealorderService.getMealOrder({});
-      console.log(d);
+      // console.log(d);
       if (d.error == undefined) {
-        setMealOrders(d.docs);
+        const filteredData = d.docs.filter((i) => i.status !== "prepared");
+        setMealOrders(filteredData);
+        // setMealOrders(d.docs);
         setBackupMealOrders(d.docs);
         setLoading(false);
         setTotalRecords(d.count);
@@ -426,8 +428,9 @@ const MealOrderPage = () => {
           });
         }
       }
-
-      setMealOrders(_mealOrders);
+      const filteredData = _mealOrders.filter((i) => i.status !== "prepared");
+      setMealOrders(filteredData);
+      // setMealOrders(_mealOrders);
       setBackupMealOrders(_mealOrders);
       setMealOrderDialog(false);
       setMealOrder(emptyMealOrder);

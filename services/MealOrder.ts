@@ -85,7 +85,11 @@ export type MealOrderKey = keyof MealOrder;
 
 export class MealOrderService {
   getMealOrder(request: MealOrderQuery) {
-    return getDatas<MealOrder, MealOrderQuery>("/mealOrder", request);
+    console.log(
+      "🚀 ~ file: MealOrder.ts:88 ~ MealOrderService ~ getMealOrder ~ request:",
+      request
+    );
+    return getDatas<MealOrder, MealOrderQuery>("/mealorder", request);
   }
   getMealOrderAll(request: MealOrderQuery) {
     return getDataAll<MealOrder, MealOrderQuery>("/mealOrder/all", request);

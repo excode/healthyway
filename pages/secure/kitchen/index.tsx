@@ -1,11 +1,23 @@
 import { GetLoginResponse } from "@lib/httpRequest";
 import { validate, validateForm } from "@lib/validation";
 import { SortType } from "@services/CommonTypes";
-import { Kitchen, KitchenService } from "@services/Kitchen";
+import {
+  Kitchen,
+  KitchenKey,
+  KitchenQuery,
+  KitchenService,
+} from "@services/Kitchen";
 import { UserData } from "@services/Login";
-import { Users, UsersKey, UsersQuery, UsersService } from "@services/Users";
+import {
+  AddressKey,
+  AddressType,
+  Users,
+  UsersKey,
+  UsersService,
+} from "@services/Users";
 import { LangContext } from "hooks/lan";
 import jwt_decode, { JwtPayload } from "jwt-decode";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -20,15 +32,17 @@ import {
 } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
+import {
+  InputNumber,
+  InputNumberValueChangeEvent,
+} from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import countryData from "../../utilities/countryData.json";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 const UsersPage = () => {
   const { asPath } = useRouter();
   const [userData, setUserData] = useState<UserData>({ email: "" });
@@ -55,22 +69,35 @@ const UsersPage = () => {
   //   lastName: "",
   // };
 
-  const [userss, setUserss] = useState<Users[]>([]);
-  const [backupUserss, setBackupUserss] = useState<Users[]>([]);
+  const [kitchens, setKitchens] = useState<Kitchen[]>([]);
+  const [backupUserss, setBackupUserss] = useState<Kitchen[]>([]);
   const [loading, setLoading] = useState(false);
   const [usersDialog, setUsersDialog] = useState(false);
   const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
   const [deleteUserssDialog, setDeleteUserssDialog] = useState(false);
   const [users, setUsers] = useState<Users>({} as Users);
+  const [chefs, setChefs] = useState<Users[]>({} as Users[]);
+  // console.log({ chefs });
+  const [selectedChefs, setSelectedChefs] = useState("");
+
+  const [kitchen, setKitchen] = useState<Kitchen>({} as Kitchen);
+  // const [kitchens, setKitchens] = useState<Kitchen[]>([]);
   // const [users, setUsers] = useState<Users>(emptyUsers);
-  const [selectedUserss, setSelectedUserss] = useState<Users[]>([]);
+  const [longitude, setLongitude] = useState<any>(0);
+  const [latitude, setLatitude] = useState<any>(0);
+  const [kitchenAddress, setKitchenAddress] = useState<AddressType>(
+    {} as AddressType
+  );
+
+  // const [selectedUserss, setSelectedUserss] = useState<Users[]>([]);
+  const [selectedKitchens, setSelectedKitchens] = useState<Kitchen[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [sortOrders, setSortOrders] = useState<SortType>({});
   const [globalFilter, setGlobalFilter] = useState("");
   const [row, setRow] = useState<number>(10);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Users[]>>(null);
+  const dt = useRef<DataTable<Kitchen[]>>(null);
   const contextPath = getConfig().publicRuntimeConfig.contextPath;
   const usersService = new UsersService();
   const [refreshFlag, setRefreshFlag] = useState<number>(Date.now());
@@ -87,10 +114,10 @@ const UsersPage = () => {
   useEffect(() => {
     setLoading(true);
     (async () => {
-      let d = await usersService.getUsers({ limit: row });
+      let d = await kitchenService.getKitchen({ limit: row });
       if (d.error == undefined) {
-        const kitchenFilter = d.docs.filter((k) => k.userType === 1);
-        setUserss(kitchenFilter);
+        // const kitchenFilter = d.docs.filter((k) => k.userType === 1);
+        setKitchens(d.docs);
         setBackupUserss(d.docs);
         setLoading(false);
         setTotalRecords(d.count);
@@ -115,6 +142,7 @@ const UsersPage = () => {
     })();
     initFilters1();
   }, [refreshFlag]);
+
   useEffect(() => {
     const data: GetLoginResponse = cookies.user;
     let token: string = data.accessToken || "";
@@ -239,8 +267,12 @@ const UsersPage = () => {
   const defaultImage = (e: any) => {
     e.target.src = "/photo_na.png";
   };
-  const openNew = () => {
+  const openNew = async () => {
     setUsers({} as Users);
+    let chefList = await usersService.getUsers({ userType: 2 });
+    console.log("🚀 ~ file: index.tsx:263 ~ openNew ~ chefList:", chefList);
+    setChefs(chefList.docs);
+
     // setUsers(emptyUsers);
     setSubmitted(false);
     setUsersDialog(true);
@@ -263,15 +295,19 @@ const UsersPage = () => {
     setSubmitted(true);
     const validationErrors: string[] = validateForm(users, validation);
     if (validationErrors.length == 0) {
-      let _userss: Users[] = [...userss];
-      let _users: Users = { ...users };
+      let _kitchens: Kitchen[] = [...kitchens];
+      let _kitchen: Kitchen = {
+        ...kitchen,
+        chefId: selectedChefs,
+        address: kitchenAddress,
+      };
 
       if (users.id) {
-        let d = await usersService.updateUsers(_users);
+        let d = await kitchenService.updateKitchen(_kitchen);
         if (d.error == undefined) {
-          const index = _userss.findIndex((c) => c.id === users.id);
+          const index = _kitchens.findIndex((c) => c.id === users.id);
           if (index !== -1) {
-            _userss[index] = { ..._users };
+            _kitchens[index] = { ..._kitchen };
             // _userss[index] = _users;
             //_userss.splice(index, 1, {..._users,id:id});
           }
@@ -290,8 +326,8 @@ const UsersPage = () => {
           });
         }
       } else {
-        console.log({ _users });
-        let d = await usersService.addUsers(_users);
+        // console.log({ _users });
+        let d = await kitchenService.addKitchen(_kitchen);
         if (d.error == undefined) {
           var newID = d.id;
           // _userss.unshift({..._users,id:newID})
@@ -313,11 +349,14 @@ const UsersPage = () => {
           });
         }
       }
-
-      setUserss(_userss);
-      setBackupUserss(_userss);
+      setKitchen(_kitchen);
+      setKitchens(_kitchens);
+      setBackupUserss(_kitchens);
       setUsersDialog(false);
       setUsers({} as Users);
+      // setLatitude(0);
+      // setLongitude(0);
+      setKitchenAddress({});
       // setUsers(emptyUsers);
     } else {
       toast.current?.show({
@@ -342,8 +381,8 @@ const UsersPage = () => {
   const deleteUsers = async () => {
     let d = await usersService.deleteUsers(users.id ?? "");
     if (d.error == undefined) {
-      let _userss = userss.filter((val) => val.id !== users.id);
-      setUserss(_userss);
+      let _userss = kitchens.filter((val) => val.id !== users.id);
+      setKitchens(_userss);
       setBackupUserss(_userss);
       setDeleteUsersDialog(false);
       setUsers({} as Users);
@@ -375,10 +414,10 @@ const UsersPage = () => {
   };
 
   const deleteSelectedUserss = () => {
-    let _userss = userss.filter((val) => !selectedUserss.includes(val));
-    setUserss(_userss);
+    let _userss = kitchens.filter((val) => !selectedKitchens.includes(val));
+    setKitchens(_userss);
     setDeleteUserssDialog(false);
-    setSelectedUserss([]);
+    setSelectedKitchens([]);
     toast.current?.show({
       severity: "success",
       summary: "Successful",
@@ -400,14 +439,15 @@ const UsersPage = () => {
 
     setUsers(_users);
   };
-  const onInputChange = (e: any, name: UsersKey) => {
+  const onInputChange = (e: any, name: KitchenKey) => {
     let val = (e.target && e.target.value) || undefined;
     const ctrlType = e.target.type;
     if (typeof val === "object") {
       if (val instanceof Date && isFinite(val.getTime())) {
         val = val;
       } else if ("value" in val) {
-        let aVal = users[name];
+        let aVal = kitchen[name];
+        // let aVal = users[name];
 
         if (ctrlType == "radio") {
           aVal = val.value;
@@ -424,10 +464,56 @@ const UsersPage = () => {
       }
     }
 
-    let _users: Users = { ...users };
-    _users[name] = val;
+    let _kitchen: Kitchen = { ...kitchen };
+    _kitchen[name] = val;
 
-    setUsers(_users);
+    setKitchen(_kitchen);
+  };
+
+  const onAddressChange = (e: any, name: AddressKey) => {
+    let value = (e.target && e.target.value) || undefined;
+    const temp = { ...kitchenAddress };
+    temp[name] = value;
+
+    // Assuming 'temp' is defined and has a 'geoTag' property
+    if (temp.geoTag) {
+      // Make sure 'geoTag' is not undefined
+      if (!temp.geoTag.coordinates) {
+        // If 'coordinates' is not defined, initialize it as an empty array or with appropriate default values
+        temp.geoTag.coordinates = [0, 0];
+      } else {
+        // If 'coordinates' is already defined, update its values
+        temp.geoTag.coordinates[0] = longitude;
+        temp.geoTag.coordinates[1] = latitude;
+      }
+    } else {
+      // If 'geoTag' is undefined, create it with the coordinates
+      temp.geoTag = {
+        type: "Point",
+        coordinates: [longitude, latitude],
+      };
+    }
+
+    setKitchenAddress(temp);
+  };
+
+  const selectedChefTemplate = (option: Users, props: any) => {
+    if (option) {
+      return (
+        <div className="flex align-items-center">
+          <div>{`${option.firstName} ${option.lastName}`}</div>
+        </div>
+      );
+    }
+    return <span>{props.placeholder}</span>;
+  };
+
+  const chefOptionTemplate = (option: Users) => {
+    return (
+      <div className="flex align-items-center">
+        <div>{`${option.firstName} ${option.lastName}`}</div>
+      </div>
+    );
   };
 
   const onInputNumberChange = (e: any, name: UsersKey) => {
@@ -439,7 +525,7 @@ const UsersPage = () => {
   };
   const getNewData = async (e: any, type: number = 0) => {
     setLoading(true);
-    let searchObj: UsersQuery = {};
+    let searchObj: KitchenQuery = {};
     for (const key in e.filters) {
       if (e.filters[key].constraints) {
         if (e.filters[key].constraints[0].value) {
@@ -482,9 +568,9 @@ const UsersPage = () => {
       searchObj = { ...searchObj, page: 0, limit: e.rows };
     }
 
-    let d = await usersService.getUsers(searchObj);
+    let d = await kitchenService.getKitchen(searchObj);
     if (d.error == undefined) {
-      setUserss(d.docs);
+      setKitchens(d.docs);
       setBackupUserss(d.docs);
       setLoading(false);
       setTotalRecords(d.count);
@@ -516,15 +602,15 @@ const UsersPage = () => {
 
   const localFilter = (val: string) => {
     if (val.length > 1) {
-      let _userss = [...userss];
+      let _userss = [...kitchens];
       let filtered = _userss.filter(
         (data) =>
           JSON.stringify(data).toLowerCase().indexOf(val.toLowerCase()) !== -1
       );
-      setUserss(filtered);
+      setKitchens(filtered);
     } else if (val.length == 0) {
       // RETRIVE FROM BACKUP
-      setUserss(backupUserss);
+      setKitchens(backupUserss);
     }
   };
   const leftToolbarTemplate = () => {
@@ -542,7 +628,7 @@ const UsersPage = () => {
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
-            disabled={!selectedUserss || !selectedUserss.length}
+            disabled={!selectedKitchens || !selectedKitchens.length}
           />
         </div>
       </React.Fragment>
@@ -669,9 +755,9 @@ const UsersPage = () => {
 
           <DataTable
             ref={dt}
-            value={userss}
-            selection={selectedUserss}
-            onSelectionChange={(e) => setSelectedUserss(e.value as Users[])}
+            value={kitchens}
+            selection={selectedKitchens}
+            onSelectionChange={(e) => setSelectedKitchens(e.value as Kitchen[])}
             dataKey="id"
             loading={loading}
             filters={filters1}
@@ -699,15 +785,15 @@ const UsersPage = () => {
 
             <Column
               showAddButton={false}
-              field="firstName"
-              header="First Name"
+              field="kitchenName"
+              header="Kitchen Name"
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
-              filterPlaceholder="Search by firstName"
+              filterPlaceholder="Search by kitchen"
             ></Column>
 
-            <Column
+            {/* <Column
               showAddButton={false}
               field="lastName"
               header="Last Name"
@@ -715,19 +801,19 @@ const UsersPage = () => {
               headerStyle={{ minWidth: "10rem" }}
               filter
               filterPlaceholder="Search by lastName"
-            ></Column>
+            ></Column> */}
 
             <Column
               showAddButton={false}
-              field="email"
-              header="Email"
+              field="chefId"
+              header="Chef"
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
               filterPlaceholder="Search by email"
             ></Column>
 
-            <Column
+            {/* <Column
               showAddButton={false}
               field="mobile"
               header="Mobile"
@@ -735,7 +821,7 @@ const UsersPage = () => {
               headerStyle={{ minWidth: "10rem" }}
               filter
               filterPlaceholder="Search by mobile"
-            ></Column>
+            ></Column> */}
 
             {/* <Column
               showAddButton={false}
@@ -759,7 +845,7 @@ const UsersPage = () => {
               filterElement={userTypeFilterTemplate}
             ></Column> */}
 
-            <Column
+            {/* <Column
               showAddButton={false}
               field="kitchen"
               header="Kitchen"
@@ -768,15 +854,202 @@ const UsersPage = () => {
               filterField="kitchen"
               filter
               filterElement={kitchenFilterTemplate}
-            ></Column>
+            ></Column> */}
 
             <Column
               body={actionBodyTemplate}
               headerStyle={{ minWidth: "10rem" }}
             ></Column>
           </DataTable>
-
           <Dialog
+            visible={usersDialog}
+            style={{ width: "450px" }}
+            header="Kitchen Details"
+            modal
+            className="p-fluid"
+            footer={usersDialogFooter}
+            onHide={hideDialog}
+          >
+            <div dir={textFormat}>
+              <div className="grid ">
+                <div className="field col-6">
+                  <label htmlFor="kitchenName">Kitchen Name</label>
+                  <InputText
+                    id="kitchenName"
+                    placeholder="Type Kitchen Name"
+                    value={users.firstName}
+                    onChange={(e) => onInputChange(e, "kitchenName")}
+                    required
+                    className={classNames({
+                      "p-invalid": submitted && !kitchen.kitchenName,
+                    })}
+                  />
+                </div>
+              </div>
+
+              {/* <div className="field">
+                <label htmlFor="email">Email</label>
+                <InputText
+                  id="email"
+                  placeholder="Email"
+                  value={users.email}
+                  onChange={(e) => onInputChange(e, "email")}
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !users.email,
+                  })}
+                />
+              </div> */}
+
+              {/* <div className="field">
+                <label htmlFor="mobile">Mobile</label>
+                <InputText
+                  id="mobile"
+                  placeholder="Mobile number"
+                  value={users.mobile}
+                  onChange={(e) => onInputChange(e, "mobile")}
+                />
+              </div> */}
+
+              {/* <div className="field">
+                <label htmlFor="password">Password</label>
+                <Password
+                  id="password"
+                  value={users.password}
+                  onChange={(e) => onInputChange(e, "password")}
+                  toggleMask
+                  required
+                  className={classNames({
+                    "p-invalid": submitted && !users.password,
+                  })}
+                  placeholder="Type a password"
+                />
+              </div> */}
+
+              {/* <div className="grid">
+                <div className="field col-6">
+                  <label htmlFor="country">Country</label>
+                  <Dropdown
+                    id="country"
+                    placeholder="Select Country"
+                    optionLabel="name"
+                    value={users.country}
+                    options={datacountrys}
+                    onChange={(e) => onInputChange(e, "country")}
+                  />
+                </div>
+                <div className="field col-6">
+                  <label htmlFor="userType">User Types</label>
+                  <Dropdown
+                    id="userType"
+                    optionLabel="name"
+                    value={users.userType}
+                    options={dataUserTypes.filter(
+                      (e) => e.value > userData!.permissionLevel!
+                    )}
+                    onChange={(e) => onInputChange(e, "userType")}
+                    placeholder="Select User Type"
+                  />
+                </div>
+              </div> */}
+              {
+                // users.userType === 2 &&
+                <div className="field">
+                  <label htmlFor="kitchen">Assign Chef</label>
+                  <Dropdown
+                    id="kitchen"
+                    optionLabel="firstName"
+                    optionValue="id"
+                    value={selectedChefs}
+                    itemTemplate={chefOptionTemplate}
+                    valueTemplate={selectedChefTemplate}
+                    options={chefs}
+                    onChange={(e) => setSelectedChefs(e.value)}
+                    placeholder="Assign Chef in This kitchen"
+                  />
+                </div>
+              }
+              <div>
+                <div className="field">
+                  <label htmlFor="kitchen">Address</label> <hr />
+                  <div className="mt-5 flex gap-2">
+                    <span className="p-float-label">
+                      <InputText
+                        id="addressPreference"
+                        value={kitchenAddress.addressPreference}
+                        onChange={(e) =>
+                          onAddressChange(e, "addressPreference")
+                        }
+                      />
+                      <label htmlFor="addressPreference">
+                        Address Preference
+                      </label>
+                    </span>
+                    <span className="p-float-label">
+                      <InputText
+                        id="zone"
+                        value={kitchenAddress.zone}
+                        onChange={(e) => onAddressChange(e, "zone")}
+                      />
+                      <label htmlFor="username">Zone</label>
+                    </span>
+                  </div>
+                  <div className="field mt-5 flex gap-2">
+                    <span className="p-float-label">
+                      <InputText
+                        id="building"
+                        value={kitchenAddress.building}
+                        onChange={(e) => onAddressChange(e, "building")}
+                      />
+                      <label htmlFor="building">Building</label>
+                    </span>
+                    <span className="p-float-label">
+                      <InputText
+                        id="unit"
+                        value={kitchenAddress.unit}
+                        onChange={(e) => onAddressChange(e, "unit")}
+                      />
+                      <label htmlFor="unit">Unit</label>
+                    </span>
+                    <span className="p-float-label">
+                      <InputText
+                        id="streetName"
+                        value={kitchenAddress.streetName}
+                        onChange={(e) => onAddressChange(e, "streetName")}
+                      />
+                      <label htmlFor="streetName">Street Name</label>
+                    </span>
+                  </div>
+                  <div className="field mt-5 flex gap-2">
+                    <span className="p-float-label">
+                      <InputNumber
+                        value={longitude}
+                        onValueChange={(e: InputNumberValueChangeEvent) =>
+                          setLongitude(e.value)
+                        }
+                        // onValueChange={(e) => onAddressChange(e, "longitude")}
+                        maxFractionDigits={4}
+                        // minFractionDigits={0}
+                      />
+                      <label htmlFor="longitude">Longitude</label>
+                    </span>
+                    <span className="p-float-label">
+                      <InputNumber
+                        value={latitude}
+                        onValueChange={(e: InputNumberValueChangeEvent) =>
+                          setLatitude(e.value)
+                        }
+                        // onValueChange={(e) => onAddressChange(e, "latitude")}
+                        maxFractionDigits={4}
+                      />
+                      <label htmlFor="latitude">Latitude</label>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Dialog>
+          {/* <Dialog
             visible={usersDialog}
             style={{ width: "450px" }}
             header="Users Details"
@@ -896,7 +1169,7 @@ const UsersPage = () => {
                 <p></p>
               )}
             </div>
-          </Dialog>
+          </Dialog> */}
 
           <Dialog
             visible={deleteUsersDialog}

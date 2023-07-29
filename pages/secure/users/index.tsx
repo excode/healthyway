@@ -3,10 +3,18 @@ import { validate, validateForm } from "@lib/validation";
 import { SortType } from "@services/CommonTypes";
 import { Kitchen, KitchenService } from "@services/Kitchen";
 import { UserData } from "@services/Login";
-import { Users, UsersKey, UsersQuery, UsersService } from "@services/Users";
+import {
+  AddressKey,
+  AddressType,
+  Users,
+  UsersKey,
+  UsersQuery,
+  UsersService,
+} from "@services/Users";
 // import { LangContext } from "hooks/lan";
 import { LangContext } from "hooks/lan";
 import jwt_decode, { JwtPayload } from "jwt-decode";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -21,6 +29,10 @@ import {
 } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
+import {
+  InputNumber,
+  InputNumberValueChangeEvent,
+} from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Toast } from "primereact/toast";
@@ -29,7 +41,6 @@ import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import countryData from "../../utilities/countryData.json";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 const UsersPage = () => {
   const { asPath } = useRouter();
   const [userData, setUserData] = useState<UserData>({ email: "" });
@@ -75,7 +86,13 @@ const UsersPage = () => {
   const contextPath = getConfig().publicRuntimeConfig.contextPath;
   const usersService = new UsersService();
   const [refreshFlag, setRefreshFlag] = useState<number>(Date.now());
-
+  // const coordinates = [Number, Number];
+  const [coordinates, setCoordinates] = useState<number[]>([]);
+  const [longitude, setLongitude] = useState<any>(0);
+  const [latitude, setLatitude] = useState<any>(0);
+  const [userAddress, setUserAddress] = useState<AddressType>(
+    {} as AddressType
+  );
   const kitchenService = new KitchenService();
   const [datakitchens, setDataKitchens] = useState<Kitchen[]>([]);
   const { textFormat } = useContext(LangContext);
@@ -264,7 +281,8 @@ const UsersPage = () => {
     const validationErrors: string[] = validateForm(users, validation);
     if (validationErrors.length == 0) {
       let _userss: Users[] = [...userss];
-      let _users: Users = { ...users };
+      // const address = { ...userAddress };
+      let _users: Users = { ...users, address: [userAddress] };
 
       if (users.id) {
         let d = await usersService.updateUsers(_users);
@@ -318,6 +336,9 @@ const UsersPage = () => {
       setBackupUserss(_userss);
       setUsersDialog(false);
       setUsers({} as Users);
+      setUserAddress({} as AddressType);
+      setLongitude(0);
+      setLatitude(0);
       // setUsers(emptyUsers);
     } else {
       toast.current?.show({
@@ -428,6 +449,34 @@ const UsersPage = () => {
     _users[name] = val;
 
     setUsers(_users);
+  };
+
+  const onAddressChange = (e: any, name: AddressKey) => {
+    let value = (e.target && e.target.value) || undefined;
+    const temp = { ...userAddress };
+    temp[name] = value;
+
+    // Assuming 'temp' is defined and has a 'geoTag' property
+    if (temp.geoTag) {
+      // Make sure 'geoTag' is not undefined
+      if (!temp.geoTag.coordinates) {
+        // If 'coordinates' is not defined, initialize it as an empty array or with appropriate default values
+        temp.geoTag.coordinates = [0, 0];
+      } else {
+        // If 'coordinates' is already defined, update its values
+        temp.geoTag.coordinates[0] = longitude;
+        temp.geoTag.coordinates[1] = latitude;
+      }
+    } else {
+      // If 'geoTag' is undefined, create it with the coordinates
+      temp.geoTag = {
+        type: "Point",
+        coordinates: [longitude, latitude],
+      };
+    }
+
+    setUserAddress(temp);
+    console.log(userAddress);
   };
 
   const onInputNumberChange = (e: any, name: UsersKey) => {
@@ -858,6 +907,7 @@ const UsersPage = () => {
                   className={classNames({
                     "p-invalid": submitted && !users.password,
                   })}
+                  placeholder="Type a password"
                 />
               </div>
 
@@ -866,7 +916,7 @@ const UsersPage = () => {
                   <label htmlFor="country">Country</label>
                   <Dropdown
                     id="country"
-                    placeholder=""
+                    placeholder="Select Country"
                     optionLabel="name"
                     value={users.country}
                     options={datacountrys}
@@ -883,11 +933,11 @@ const UsersPage = () => {
                       (e) => e.value > userData!.permissionLevel!
                     )}
                     onChange={(e) => onInputChange(e, "userType")}
+                    placeholder="Select User Type"
                   />
                 </div>
               </div>
-
-              {userData.permissionLevel == 0 ? (
+              {users.userType === 2 && (
                 <div className="field">
                   <label htmlFor="kitchen">Kitchen</label>
                   <Dropdown
@@ -897,11 +947,88 @@ const UsersPage = () => {
                     value={users.kitchen}
                     options={datakitchens}
                     onChange={(e) => onInputChange(e, "kitchen")}
+                    placeholder="Assign Chef in a kitchen"
                   />
                 </div>
-              ) : (
-                <p></p>
               )}
+              <div>
+                <div className="field">
+                  <label htmlFor="kitchen">Address</label> <hr />
+                  <div className="mt-5 flex gap-2">
+                    <span className="p-float-label">
+                      <InputText
+                        id="addressPreference"
+                        value={userAddress.addressPreference}
+                        onChange={(e) =>
+                          onAddressChange(e, "addressPreference")
+                        }
+                      />
+                      <label htmlFor="addressPreference">
+                        Address Preference
+                      </label>
+                    </span>
+                    <span className="p-float-label">
+                      <InputText
+                        id="zone"
+                        value={userAddress.zone}
+                        onChange={(e) => onAddressChange(e, "zone")}
+                      />
+                      <label htmlFor="username">Zone</label>
+                    </span>
+                  </div>
+                  <div className="field mt-5 flex gap-2">
+                    <span className="p-float-label">
+                      <InputText
+                        id="building"
+                        value={userAddress.building}
+                        onChange={(e) => onAddressChange(e, "building")}
+                      />
+                      <label htmlFor="building">Building</label>
+                    </span>
+                    <span className="p-float-label">
+                      <InputText
+                        id="unit"
+                        value={userAddress.unit}
+                        onChange={(e) => onAddressChange(e, "unit")}
+                      />
+                      <label htmlFor="unit">Unit</label>
+                    </span>
+                    <span className="p-float-label">
+                      <InputText
+                        id="streetName"
+                        value={userAddress.streetName}
+                        onChange={(e) => onAddressChange(e, "streetName")}
+                      />
+                      <label htmlFor="streetName">Street Name</label>
+                    </span>
+                  </div>
+                  <div className="field mt-5 flex gap-2">
+                    <span className="p-float-label">
+                      <InputNumber
+                        value={longitude}
+                        onValueChange={(e: InputNumberValueChangeEvent) =>
+                          setLongitude(e.value)
+                        }
+                        // onValueChange={(e) => onAddressChange(e, "longitude")}
+                        maxFractionDigits={4}
+                        // minFractionDigits={0}
+                      />
+                      <label htmlFor="longitude">Longitude</label>
+                    </span>
+                    <span className="p-float-label">
+                      <InputNumber
+                        value={latitude}
+                        onValueChange={(e: InputNumberValueChangeEvent) =>
+                          setLatitude(e.value)
+                        }
+                        // onValueChange={(e) => onAddressChange(e, "latitude")}
+                        maxFractionDigits={4}
+                      />
+                      <label htmlFor="latitude">Latitude</label>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </Dialog>
 

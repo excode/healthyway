@@ -1,9 +1,9 @@
 import { Users, UsersService } from "@services/Users";
+import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useContext, useEffect, useRef, useState } from "react";
 import BlockViewer from "../../../components/BlockViewer";
-import { LangContext } from "hooks/lan";
 
 const UsersDetails = () => {
   const router = useRouter();
@@ -135,9 +135,9 @@ const UsersDetails = () => {
                           </div>
                           <div>
                             <span className="font-semibold">Latitude: </span>
-                            {a.geoTag.coordinates[0]},
+                            {a.geoTag && a.geoTag.coordinates[0]},
                             <span className="font-semibold"> Longitude: </span>
-                            {a.geoTag.coordinates[1]}
+                            {a.geoTag && a.geoTag.coordinates[1]}
                           </div>
                         </div>
                       ))
