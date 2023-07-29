@@ -132,9 +132,9 @@ const UsersDetails = () => {
                           </div>
                           <div>
                             <span className="">Latitude: </span>
-                            {a.geoTag.coordinates[0]},
+                            {a.geoTag && a.geoTag.coordinates[0]},
                             <span className=""> Longitude: </span>
-                            {a.geoTag.coordinates[1]}
+                            {a.geoTag && a.geoTag.coordinates[1]}
                           </div>
                         </div>
                       ))

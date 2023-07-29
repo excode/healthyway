@@ -10,14 +10,9 @@ import BlockViewer from "../../../components/BlockViewer";
 const SubscriptionDetails = () => {
   const router = useRouter();
   const subscriptionService = new SubscriptionService();
-  const [subscription, setSubscription] = useState<Subscription>({
-    customerId: "",
-    startDate: "",
-    endDate: "",
-    status: "",
-    subPlans: [],
-  });
-  console.log({ subscription });
+  const [subscription, setSubscription] = useState<Subscription>(
+    {} as Subscription
+  );
   const [loading, setLoading] = useState(false);
   const { id } = router.query;
   const { textFormat } = useContext(LangContext);

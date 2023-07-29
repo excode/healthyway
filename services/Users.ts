@@ -14,11 +14,12 @@ export interface AddressType {
   unit?: string;
   streetName?: string;
   addressPreference?: string;
-  geoTag: {
+  geoTag?: {
     type: "Point";
-    coordinates: [number, number];
+    coordinates: [0, 0];
   };
 }
+export type AddressKey = keyof AddressType;
 
 export type Users = {
   id?: string | any;
