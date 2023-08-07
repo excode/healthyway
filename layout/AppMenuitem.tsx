@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next";
 import { Noto_Naskh_Arabic } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,6 +11,7 @@ import { MenuContext } from "./context/menucontext";
 const noto = Noto_Naskh_Arabic({ subsets: ["arabic"] });
 
 const AppMenuitem = (props: AppMenuItemProps) => {
+  const { t } = useTranslation();
   const { activeMenu, setActiveMenu } = useContext(MenuContext);
   const router = useRouter();
   const item = props.item;
@@ -81,6 +83,8 @@ const AppMenuitem = (props: AppMenuItemProps) => {
   );
 
   return (
+    <>
+
     <li
       className={classNames(
         {
@@ -122,7 +126,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
           tabIndex={0}
         >
           <i className={classNames("layout-menuitem-icon", item!.icon)}></i>
-          <span className="layout-menuitem-text ">{item!.label}</span>
+          <span className="layout-menuitem-text ">{t(item!.label)}</span>
           {item!.items && (
             <i className="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
           )}
@@ -132,7 +136,9 @@ const AppMenuitem = (props: AppMenuItemProps) => {
 
       {subMenu}
     </li>
+    </>
   );
 };
 
 export default AppMenuitem;
+

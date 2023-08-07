@@ -1,34 +1,34 @@
 const menus = {
-  label: "Chef Dashboard",
+  label: "CHEF_DASHBOARD",
   items: [
     {
-      label: "Meal Order",
+      label: "MEAL_ORDER",
       icon: "pi pi-fw pi-cart-plus",
       to: "/secure/mealOrder",
     },
     {
-      label: "Packaging",
+      label: "PACKAGING",
       icon: "pi pi-fw pi-sync",
       to: "/secure/packaging",
     },
     {
-      label: "Meal Ready To Delivered",
+      label: "MEAL_READY_TO_DELIVERED",
       icon: "pi pi-fw pi-check-circle",
       to: "/secure/mealReadyToDelivered",
     },
     {
-      label: "Meal Prepare",
+      label: "MEAL_PREPARE",
       icon: "pi pi-fw pi-box",
       to: "/secure/mealPrepare",
     },
     {
-      label: "Delivery",
+      label: "DELIVERY",
       icon: "pi pi-fw pi-map-marker",
       to: "/secure/delivery",
     },
-    { label: "Feedback", icon: "pi pi-fw pi-comments", to: "/secure/feedback" },
+    { label: "FEEDBACK", icon: "pi pi-fw pi-comments", to: "/secure/feedback" },
     {
-      label: "Notification",
+      label: "NOTIFICATION",
       icon: "pi pi-fw pi-bell",
       to: "/secure/notification",
     },

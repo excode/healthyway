@@ -5,37 +5,35 @@ import { useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { AppMenuItem } from "../types/types";
 import AppMenuitem from "./AppMenuitem";
-import chefMenusEN from "./chef-menuItems";
-import chefMenusAR from "./chef-menuItemsAR";
+import chefMenus from "./chef-menuItems";
+//import chefMenusAR from "./chef-menuItemsAR";
 import { LayoutContext } from "./context/layoutcontext";
 import { MenuProvider } from "./context/menucontext";
-import kitchenMenusEN from "./kitchen-menuItems";
-import kitchenMenusAR from "./kitchen-menuItemsAR";
-import adminMenusAR from "./menuItemsAR";
-import adminMenusEN from "./menuItemsEN";
+import kitchenMenus from "./kitchen-menuItems";
+//import kitchenMenusAR from "./kitchen-menuItemsAR";
+import adminMenus from "./menuItems";
+//import adminMenusEN from "./menuItemsEN";
 
 import { UserData } from "@services/Login";
 import { LangContext } from "hooks/lan";
+//NEW
+
+
 
 const AppMenu = () => {
   const { layoutConfig } = useContext(LayoutContext);
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
-  const [menus, setMenus] = useState<AppMenuItem>(adminMenusAR);
+  const [menus, setMenus] = useState<AppMenuItem>(adminMenus);
   const { textFormat } = useContext(LangContext);
-  const homeMenu =
-    textFormat === "rtl"
-      ? {
-          label: "بيت",
-          items: [
-            { label: "لوحة معلومات", icon: "pi pi-fw pi-home", to: "/secure" },
-          ],
-        }
-      : {
-          label: "Home",
-          items: [
-            { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/secure" },
-          ],
-        };
+
+  
+        const homeMenu =
+       {
+              label: "HOME",
+              items: [
+                { label: "DASHBOARD", icon: "pi pi-fw pi-home", to: "/secure" },
+              ],
+            };
   var model: AppMenuItem[] = [
     // {
     //   label: "Home",
@@ -56,15 +54,11 @@ const AppMenu = () => {
     let token: string = data.accessToken || "";
     const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
     if (decoded.permissionLevel == 0) {
-      textFormat === "rtl" ? setMenus(adminMenusAR) : setMenus(adminMenusEN);
+      setMenus(adminMenus) ;
     } else if (decoded.permissionLevel == 1) {
-      textFormat === "rtl"
-        ? setMenus(kitchenMenusAR)
-        : setMenus(kitchenMenusEN);
-      // setMenus(kitchenMenus);
+     setMenus(kitchenMenus);
     } else if (decoded.permissionLevel == 2) {
-      textFormat === "rtl" ? setMenus(chefMenusAR) : setMenus(chefMenusEN);
-      // setMenus(chefMenusEN);
+     setMenus(chefMenus) 
     }
   }, [textFormat]);
 

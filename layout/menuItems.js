@@ -1,28 +1,6 @@
 const menus = {
-  label: "KITCHEN_DASHBOARD",
+  label: "ADMIN_DASHBOARD",
   items: [
-    { label: "CHEF", icon: "pi pi-fw pi-user", to: "/secure/chef" },
-    {
-      label: "CHEF_GALLERY",
-      // icon: "fa-sharp fa-light fa-hat-chef",
-      icon: "pi pi-fw pi-images",
-      to: "/secure/chef/dataview",
-    },
-    {
-      label: "MEAL_ORDER",
-      icon: "pi pi-fw pi-cart-plus",
-      to: "/secure/mealOrder",
-    },
-    {
-      label: "MEAL_PREPARE",
-      icon: "pi pi-fw pi-box",
-      to: "/secure/mealPrepare",
-    },
-    {
-      label: "DELIVERY",
-      icon: "pi pi-fw pi-map-marker",
-      to: "/secure/delivery",
-    },
     { label: "FEEDBACK", icon: "pi pi-fw pi-comments", to: "/secure/feedback" },
     {
       label: "NOTIFICATION",
@@ -57,23 +35,20 @@ const menus = {
       icon: " pi pi-fw pi-images",
       to: "/secure/mealItem/dataview",
     },
+
     {
-      label: "INVENTORY",
-      icon: "pi pi-fw pi-book",
-      to: "/secure/inventory",
+      label: "INGREDIENT_GALLERY",
+      icon: "pi pi-fw pi-align-center",
+      to: "/secure/ingredient",
     },
     
+    {
+      label: "MEAL_GROUP_NAME",
+      icon: "pi pi-fw pi-clone",
+      to: "/secure/mealGroup",
+    },
     
-    {
-      label: "MEAL_ORDER_ITEMS",
-      icon: "pi pi-fw pi-check-circle",
-      to: "/secure/mealOrderItem",
-    },
-    {
-      label: "MEAL_INGREDIENT_CONFIG",
-      icon: "pi pi-fw pi-cog",
-      to: "/secure/mealIngItem",
-    },
+
     { label: "USER_TABLE", icon: "pi pi-fw pi-users", to: "/secure/users" },
   ],
 };

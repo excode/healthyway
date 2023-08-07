@@ -31,7 +31,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [userData, setUserData] = useState<UserData>({ email: "" });
-  const [selectedLang, setSelectedLang] = useState(i18n.language);
+  const [selectedLang, setSelectedLang] = useState('en');
   const { textFormat, setTextFormat } = useContext(LangContext);
   // const [textFormat, setTextFormat] = useState<string>("");
   // const lang = [{ name: "en" }, { name: "ar" }];
@@ -49,14 +49,16 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     // console.log(i18n?.language);
     setSelectedLang(newLocale);
   };
+ 
+    useImperativeHandle(ref, () => ({
+      menubutton: menubuttonRef.current,
+      topbarmenu: topbarmenuRef.current,
+      topbarmenubutton: topbarmenubuttonRef.current,
+    }));
 
-  useImperativeHandle(ref, () => ({
-    menubutton: menubuttonRef.current,
-    topbarmenu: topbarmenuRef.current,
-    topbarmenubutton: topbarmenubuttonRef.current,
-  }));
+  
 
-  selectedLang === "ar" ? setTextFormat("rtl") : setTextFormat("ltr");
+  
   const role = ["Admin", "Kitchen", "Chef", "Customer"];
 
   // useEffect(() => {
@@ -68,6 +70,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     let token: string = data?.accessToken || "";
     const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
     setUserData(decoded);
+    selectedLang === "ar" ? setTextFormat("rtl") : setTextFormat("ltr");
   }, []);
 
   const onPress = () => {
@@ -166,7 +169,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
           onChange={(e) => changeLocale(e.value)}
           options={lang}
           // optionLabel="name"
-          placeholder="Select a Country"
+          //placeholder="Select a Country"
           // valueTemplate={selectedCountryTemplate}
           // itemTemplate={countryOptionTemplate}
           className="w-full md:w-7rem"

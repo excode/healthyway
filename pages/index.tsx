@@ -8,7 +8,7 @@ import { Divider } from "primereact/divider";
 import { Ripple } from "primereact/ripple";
 import { StyleClass } from "primereact/styleclass";
 import { classNames } from "primereact/utils";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AppConfig from "../layout/AppConfig";
 import { LayoutContext } from "../layout/context/layoutcontext";
 import { NodeRef, Page } from "../types/types";
@@ -18,6 +18,10 @@ const LandingPage: Page = () => {
   const { layoutConfig } = useContext(LayoutContext);
   const menuRef = useRef<HTMLElement | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    
+  }, []);
   const toggleMenuItemClick = () => {
     setIsHidden((prevState) => !prevState);
   };
