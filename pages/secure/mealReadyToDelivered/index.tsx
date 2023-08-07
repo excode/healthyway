@@ -96,7 +96,7 @@ const MealOrderPage = () => {
   useEffect(() => {
     setLoading(true);
     (async () => {
-      let d = await mealorderService.getMealOrder({ status: "prepared" });
+      let d = await mealorderService.getMealOrder({ status: "packaged" });
       // console.log(d);
       if (d.error == undefined) {
         setMealOrders(d.docs);
@@ -904,6 +904,34 @@ const MealOrderPage = () => {
     return <Tag value={data.status} severity={getSeverity(data.status)} />;
   };
 
+  const addressBodyTemplate = (data: MealOrder) => {
+    return (
+      <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 mt-1">
+        <span className="underline">
+          {data.deliveryAddress.addressPreference}:
+        </span>
+        <div className="mt-1">
+          <span className="font-semibold">Zone: </span>
+          {data.deliveryAddress.zone},
+          <span className="font-semibold"> Building: </span>
+          {data.deliveryAddress.building},
+          <span className="font-semibold"> Unite: </span>
+          {data.deliveryAddress.unit},
+          <span className="font-semibold"> Street: </span>
+          {data.deliveryAddress.streetName}
+        </div>
+        {/* <div>
+          <span className="font-semibold">Latitude: </span>
+          {data.deliveryAddress.geoTag &&
+            data.deliveryAddress.geoTag.coordinates[0]}
+          ,<span className="font-semibold"> Longitude: </span>
+          {data.deliveryAddress.geoTag &&
+            data.deliveryAddress.geoTag.coordinates[1]}
+        </div> */}
+      </div>
+    );
+  };
+
   const nameBodyTemplate = (data: MealOrder) => {
     let imageURL = config.serverURI + "/" + data.item?.image;
 
@@ -1109,18 +1137,18 @@ const MealOrderPage = () => {
               header="Session"
               className="capitalize"
               // body={countryBodyTemplate}
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "100px" }}
             ></Column>
 
             <Column
-              field="Instruction"
-              header="Instruction"
-              style={{ minWidth: "200px" }}
+              field="quantity"
+              header="Quantity"
+              style={{ minWidth: "100px" }}
             ></Column>
             <Column
               header="Delivery Time"
               body={timeLeftBodyTemplate}
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "150px" }}
             ></Column>
             <Column
               // field="status"
@@ -1132,17 +1160,23 @@ const MealOrderPage = () => {
             <Column
               field="invoiceNo"
               header="Invoice No"
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "100px" }}
             ></Column>
             <Column
               field="customerPhone"
               header="Customer Phone"
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "150px" }}
+            ></Column>
+            <Column
+              field="customerPhone"
+              header="Delivery Address"
+              style={{ minWidth: "150px" }}
+              body={addressBodyTemplate}
             ></Column>
             <Column
               // field="customerPhone"
               header="Action"
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "150px" }}
               body={actionBodyTemplate}
             ></Column>
           </DataTable>

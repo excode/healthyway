@@ -28,6 +28,7 @@ import {
 } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
+import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
@@ -829,7 +830,8 @@ const SubscriptionPage = () => {
   const onMealChange = (
     e: { value: MealItem },
     rowIndex: number,
-    columnName: string
+    columnName: string,
+    quantity: number
   ) => {
     // console.log(e, rowIndex, columnName);
     // console.log({ e });
@@ -839,7 +841,7 @@ const SubscriptionPage = () => {
       weekday,
       session: columnName,
       item: e.value,
-      quantity: 1,
+      quantity,
       status: "pending",
     };
     // const index = _subscription.subPlans?.filter((d) => d.weekday === weekday);
@@ -853,11 +855,27 @@ const SubscriptionPage = () => {
     } else {
       _subscription.subPlans?.push(meal);
     }
-    // console.log({ subscription });
-    // console.log({ _subscription });
-    // _subscription.subPlans[rowIndex][columnName] = e.value;
+
+    // console.log(_subscription);
     setSubscription(_subscription);
   };
+
+  const onMealQuantityChange = (
+    e: any,
+    rowIndex: number,
+    columnName: string,
+    weekday: string
+  ) => {
+    let _subscription: Subscription = { ...subscription };
+    const index = _subscription.subPlans?.findIndex(
+      (d) => d.weekday === weekday && d.session === columnName
+    );
+    if (_subscription.subPlans && index !== -1) {
+      _subscription.subPlans[index].quantity = e;
+    }
+    setSubscription(_subscription);
+  };
+
   const customerOptionTemplate = (option: Users) => {
     return (
       <div className="flex align-items-center">
@@ -876,6 +894,7 @@ const SubscriptionPage = () => {
     }
     return <span>{props.placeholder}</span>;
   };
+
   const renderMealDropdown = (
     rowData: MealData,
     rowIndex: any,
@@ -894,30 +913,58 @@ const SubscriptionPage = () => {
     const mealOptionValue = subscription.subPlans?.find(
       (d) => d.weekday === weekday && d.session === columnName
     )?.item;
+    console.log(
+      "🚀 ~ file: index.tsx:921 ~ SubscriptionPage ~ mealOptionValue:",
+      mealOptionValue
+    );
     // console.log({ mealOptionValue });
-
+    const index = subscription.subPlans?.findIndex(
+      (d) => d.weekday === weekday && d.session === columnName
+    ) as number;
     return (
-      <Dropdown
-        id="mealList"
-        value={mealOptionValue}
-        options={optionType?.filter((opt) =>
-          opt.weekdays.includes(dataWeekdays[rowIndex.rowIndex].name)
-        )}
-        // opt.weekdays.includes(daysOfWeek[rowIndex?.rowIndex])
-        optionLabel="name"
-        // optionValue="id"
-        valueTemplate={selectedMealTemplate}
-        itemTemplate={mealOptionsTemplate}
-        placeholder={`Select your ${columnName}`}
-        filter
-        onChange={(e) => onMealChange(e, rowIndex.rowIndex, columnName)}
-      >
-        <img
-          src={`path/to/images/${rowData[columnName]}.png`}
-          alt={rowData[columnName]}
-          style={{ width: "50px", height: "50px" }}
+      <div className="flex">
+        <Dropdown
+          width={100}
+          // className="col-9"
+          id="mealList"
+          value={mealOptionValue}
+          options={optionType?.filter((opt) =>
+            opt.weekdays.includes(dataWeekdays[rowIndex.rowIndex].name)
+          )}
+          // opt.weekdays.includes(daysOfWeek[rowIndex?.rowIndex])
+          optionLabel="name"
+          // optionValue="id"
+          valueTemplate={selectedMealTemplate}
+          itemTemplate={mealOptionsTemplate}
+          placeholder={`Select your ${columnName}`}
+          filter
+          onChange={(e) => onMealChange(e, rowIndex.rowIndex, columnName, 1)}
+        >
+          <img
+            src={`path/to/images/${rowData[columnName]}.png`}
+            alt={rowData[columnName]}
+            style={{ width: "50px", height: "50px" }}
+          />
+        </Dropdown>
+
+        <InputNumber
+          // className="col"
+          disabled={index < 0}
+          value={subscription.subPlans[index]?.quantity}
+          onValueChange={(e) =>
+            onMealQuantityChange(
+              e.value,
+              rowIndex.rowIndex,
+              columnName,
+              weekday
+            )
+          }
+          mode="decimal"
+          showButtons
+          min={1}
+          max={100}
         />
-      </Dropdown>
+      </div>
     );
   };
 
@@ -1085,7 +1132,7 @@ const SubscriptionPage = () => {
 
           <Dialog
             visible={subscriptionDialog}
-            style={{ width: "850px" }}
+            style={{ width: "1100px" }}
             header="Subscription Details"
             modal
             className="p-fluid"

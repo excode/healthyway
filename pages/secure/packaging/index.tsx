@@ -33,7 +33,7 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import cooking from "/public/layout/images/cooking.png";
+import packaged from "/public/layout/images/package.png";
 
 const MealOrderPage = () => {
   const { asPath } = useRouter();
@@ -98,17 +98,10 @@ const MealOrderPage = () => {
   useEffect(() => {
     setLoading(true);
     (async () => {
-      let d = await mealorderService.getMealOrder({});
+      let d = await mealorderService.getMealOrder({ status: "prepared" });
       // console.log(d);
       if (d.error == undefined) {
-        const filteredData = d.docs.filter(
-          (i) =>
-            i.status !== "prepared" &&
-            i.status !== "packaged" &&
-            i.status !== "dispatched"
-        );
-        setMealOrders(filteredData);
-        // setMealOrders(d.docs);
+        setMealOrders(d.docs);
         setBackupMealOrders(d.docs);
         setLoading(false);
         setTotalRecords(d.count);
@@ -226,7 +219,7 @@ const MealOrderPage = () => {
     { value: "cooking", name: "cooking" },
     { value: "prepared", name: "prepared" },
     { value: "cancelled", name: "cancelled" },
-    { value: "packaging", name: "packaging" },
+    { value: "packaged", name: "packaged" },
   ];
 
   const createAtFilterTemplate = (options: any) => {
@@ -390,8 +383,9 @@ const MealOrderPage = () => {
       let _mealOrder: MealOrder = { ...mealOrder };
       if (mealOrder.id) {
         let d = await mealorderService.updateMealOrder(_mealOrder);
-        if (d.error == undefined) {
+        if (d.error === undefined) {
           const index = _mealOrders.findIndex((c) => c.id === mealOrder.id);
+
           if (index !== -1) {
             _mealOrders[index] = { ..._mealOrder };
             // _mealOrders[index] = _mealOrder;
@@ -400,7 +394,7 @@ const MealOrderPage = () => {
           toast.current?.show({
             severity: "success",
             summary: "Loaded",
-            detail: "MealOrder Updated",
+            detail: `${_mealOrder.item?.name} packaging done. Now ready to delivered"`,
             life: 3000,
           });
         } else {
@@ -434,9 +428,10 @@ const MealOrderPage = () => {
           });
         }
       }
-      const filteredData = _mealOrders.filter((i) => i.status !== "prepared");
-      setMealOrders(filteredData);
-      // setMealOrders(_mealOrders);
+      const filteredMealOrders = _mealOrders.filter(
+        (m) => m.status !== "packaged"
+      );
+      setMealOrders(filteredMealOrders);
       setBackupMealOrders(_mealOrders);
       setMealOrderDialog(false);
       setMealOrder(emptyMealOrder);
@@ -704,13 +699,13 @@ const MealOrderPage = () => {
       <div className="flex align-content-center gap-2">
         <Button
           name="completed"
-          icon="pi pi-check"
-          className="p-button-rounded p-button-success "
-          onClick={() => confirmMealOrderAction(rowData, dataStatus[2].value)}
+          // icon="pi pi-arrow-right-arrow-left"
+          className="p-button-rounded p-button-success gap-3 "
+          onClick={() => confirmMealOrderAction(rowData, "packaged")}
         >
-          {/* <Image src={packaging} alt="packaging" width={18} /> */}
+          <Image src={packaged} alt="packaging" width={18} /> Packaged
         </Button>
-        <Button
+        {/* <Button
           name="cooking"
           className="p-button-rounded p-button-info "
           onClick={() => confirmMealOrderAction(rowData, dataStatus[1].value)}
@@ -718,19 +713,14 @@ const MealOrderPage = () => {
         >
           <Image src={cooking} alt="cooking" width={18} />
         </Button>
+      */}
 
-        {/* <Link
-          href={{
-            pathname: asPath + "/" + rowData.id,
-          }}
-        > */}
         <Button
           name="cancelled"
           icon="pi pi-times"
           className="p-button-rounded p-button-danger"
           onClick={() => confirmMealOrderAction(rowData, dataStatus[3].value)}
         />
-        {/* </Link> */}
       </div>
     );
   };
@@ -819,8 +809,10 @@ const MealOrderPage = () => {
     const date = moment(data.deliveryDate).format("dddd, DD MMMM");
     return (
       <div className="flex align-items-center gap-2 ">
-        <span className="font-bold capitalize text-lg">{data.session}:</span>
-        <span>{date}</span>
+        <span className="font-semibold capitalize text-lg">
+          Ready To Dispatched
+        </span>
+        {/* <span>{date}</span> */}
         {/* <span>{data.deliveryDate}</span> */}
       </div>
     );
@@ -828,7 +820,7 @@ const MealOrderPage = () => {
 
   const calculateSessionMealTotal = (data: MealOrder) => {
     return mealOrders.reduce((total, meal) => {
-      if (meal.session === data.session) {
+      if (meal.status === data.status) {
         if (meal.quantity) return total + meal.quantity;
       }
       return total;
@@ -840,7 +832,7 @@ const MealOrderPage = () => {
       <React.Fragment>
         <td colSpan={5}>
           <div className="flex justify-content-end font-bold w-full">
-            Total {data.session}: {calculateSessionMealTotal(data)}
+            Total {data.status}: {calculateSessionMealTotal(data)}
           </div>
         </td>
       </React.Fragment>
@@ -868,10 +860,33 @@ const MealOrderPage = () => {
   };
 
   const timeLeftBodyTemplate = (rowData: MealOrder) => {
-    const time = updateTimeDifference(rowData);
+    // const time = updateTimeDifference(rowData);
     // setInterval(updateTimeDifference, 1000);
+    const time = moment(rowData.deliveryDate).format("HH:mm");
     return time;
   };
+
+  // const statusBodyTemplate = (data: MealOrder) => {
+  //   const getSeverity = (status: string) => {
+  //     switch (status) {
+  //       case "dispatched":
+  //         return "help";
+
+  //       case "prepared":
+  //         return "success";
+
+  //       default:
+  //         return "success";
+
+  //       // case "cancelled":
+  //       //   return "danger";
+
+  //       // case "cooking":
+  //       //   return "info";
+  //     }
+  //   };
+  //   return <Tag value={data.status} severity={getSeverity(data?.status)} />;
+  // };
 
   const statusBodyTemplate = (data: MealOrder) => {
     const getSeverity = (status: string) => {
@@ -890,6 +905,34 @@ const MealOrderPage = () => {
       }
     };
     return <Tag value={data.status} severity={getSeverity(data.status)} />;
+  };
+
+  const addressBodyTemplate = (data: MealOrder) => {
+    return (
+      <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 mt-1">
+        <span className="underline">
+          {data.deliveryAddress.addressPreference}:
+        </span>
+        <div className="mt-1">
+          <span className="font-semibold">Zone: </span>
+          {data.deliveryAddress.zone},
+          <span className="font-semibold"> Building: </span>
+          {data.deliveryAddress.building},
+          <span className="font-semibold"> Unite: </span>
+          {data.deliveryAddress.unit},
+          <span className="font-semibold"> Street: </span>
+          {data.deliveryAddress.streetName}
+        </div>
+        {/* <div>
+          <span className="font-semibold">Latitude: </span>
+          {data.deliveryAddress.geoTag &&
+            data.deliveryAddress.geoTag.coordinates[0]}
+          ,<span className="font-semibold"> Longitude: </span>
+          {data.deliveryAddress.geoTag &&
+            data.deliveryAddress.geoTag.coordinates[1]}
+        </div> */}
+      </div>
+    );
   };
 
   const nameBodyTemplate = (data: MealOrder) => {
@@ -1073,7 +1116,7 @@ const MealOrderPage = () => {
           <DataTable
             value={mealOrders}
             rowGroupMode="subheader"
-            groupRowsBy="session"
+            groupRowsBy="status"
             sortMode="single"
             sortField="session"
             sortOrder={1}
@@ -1092,49 +1135,51 @@ const MealOrderPage = () => {
               body={nameBodyTemplate}
               style={{ minWidth: "200px" }}
             ></Column>
-            {/* <Column
-              field="quantity"
-              header="Quantity"
-              className=""
+            <Column
+              field="session"
+              header="Session"
+              className="capitalize"
               // body={countryBodyTemplate}
-              style={{ minWidth: "200px" }}
-            ></Column> */}
-            {/* <Column
-              field="Instruction"
-              header="Instruction"
-              style={{ minWidth: "200px" }}
-            ></Column> */}
+              style={{ minWidth: "100px" }}
+            ></Column>
+
             <Column
               field="quantity"
               header="Quantity"
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "50px" }}
             ></Column>
             <Column
-              // field={timeLeft}
-              header="Time Left"
+              header="Delivery Time"
               body={timeLeftBodyTemplate}
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "150px" }}
             ></Column>
             <Column
-              field="status"
+              // field="status"
               header="Status"
               body={statusBodyTemplate}
               style={{ minWidth: "100px" }}
             ></Column>
+
             <Column
               field="invoiceNo"
               header="Invoice No"
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "150px" }}
             ></Column>
             <Column
               field="customerPhone"
               header="Customer Phone"
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "150px" }}
+            ></Column>
+            <Column
+              field="customerPhone"
+              header="Delivery Address"
+              style={{ minWidth: "150px" }}
+              body={addressBodyTemplate}
             ></Column>
             <Column
               // field="customerPhone"
               header="Action"
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "100px" }}
               body={actionBodyTemplate}
             ></Column>
           </DataTable>

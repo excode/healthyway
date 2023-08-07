@@ -7,8 +7,13 @@ const menus = {
       to: "/secure/mealOrder",
     },
     {
-      label: "Meal Ready To Delivered",
+      label: "Packaging",
       icon: "pi pi-fw pi-sync",
+      to: "/secure/packaging",
+    },
+    {
+      label: "Meal Ready To Delivered",
+      icon: "pi pi-fw pi-check-circle",
       to: "/secure/mealReadyToDelivered",
     },
     {

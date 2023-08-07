@@ -27,14 +27,19 @@ export type Subscription = {
   startDate?: Date | any;
   endDate?: Date | any;
   status: string | any;
-  subPlans?: SubPlan[];
+  subPlans: SubPlan[];
   kitchen?: string | any;
   deliveryAddress: AddressType;
 };
 
 export type SubscriptionQuery = Omit<
   Subscription,
-  "customerId" | "startDate" | "endDate" | "status" | "deliveryAddress"
+  | "customerId"
+  | "startDate"
+  | "endDate"
+  | "status"
+  | "deliveryAddress"
+  | "subPlans"
 > & {
   customerId?: string;
   startDate?: Date;
@@ -55,7 +60,7 @@ export type SubscriptionQuery = Omit<
   totalPages?: number;
   sortBy?: string;
   sortDirection?: number;
-  subPlans?: any;
+  // subPlans?: SubPlan[];
 };
 export type SubscriptionKey = keyof Subscription;
 
