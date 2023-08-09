@@ -5,6 +5,7 @@ import { Customer, CustomerService } from "@services/Customer";
 import { FeedbackService } from "@services/Feedback";
 import { MealItem, MealItemService } from "@services/MealItem";
 import { MealOrderItem, MealOrderItemService } from "@services/MealOrderItem";
+import { Report, ReportService } from "@services/Report";
 import { ChartData, ChartOptions } from "chart.js";
 import { LangContext } from "hooks/lan";
 import { useTranslation } from "next-i18next";
@@ -63,7 +64,9 @@ const Dashboard = () => {
   const [totalMealItemRecords, setTotalMealItemRecords] = useState(0);
   const [totalMealOrderRecords, setTotalMealOrderRecords] = useState(0);
   const mealitemService = new MealItemService();
+  const reportService = new ReportService();
   const [mealItems, setMealItems] = useState<MealItem[]>([]);
+  const [report, setReport] = useState<Report[]>([]);
   const mealorderitemService = new MealOrderItemService();
   const [mealOrderItems, setMealOrderItems] = useState<MealOrderItem[]>([]);
   const feedbackService = new FeedbackService();
@@ -148,6 +151,8 @@ const Dashboard = () => {
     // setLoading(true);
     (async () => {
       let dCustomers = await customerService.getCustomer({ limit: 10 });
+      const dReport = await reportService.getReportAll({});
+      console.log({ dReport });
       // console.log(dCustomers)
       let dMeal = await mealitemService.getMealItem({ limit: 10 });
       let dMealOrder = await mealorderitemService.getMealOrderItem({
@@ -158,6 +163,7 @@ const Dashboard = () => {
         (dCustomers.error && dMeal.error && dMealOrder && dFeedBack) ===
         undefined
       ) {
+        setReport(dReport.data);
         setCustomers(dCustomers.docs);
         setMealItems(dMeal.docs);
         // setBackupCustomers(d.docs);
@@ -193,7 +199,8 @@ const Dashboard = () => {
                 {t("ORDER")}
               </span>
               <div className="text-900 font-medium text-xl">
-                {totalMealOrderRecords}
+                {/* {totalMealOrderRecords} */}
+                {report[0]?.order}
               </div>
             </div>
             <div
@@ -203,10 +210,10 @@ const Dashboard = () => {
               <i className="pi pi-shopping-cart text-blue-500 text-xl" />
             </div>
           </div>
-          <span className="text-green-500 font-medium">
+          {/* <span className="text-green-500 font-medium">
             {totalMealOrderRecords} {t("NEW")}
           </span>
-          <span className="text-500">{t("SINCE_LAST_VISIT")}</span>
+          <span className="text-500">{t("SINCE_LAST_VISIT")}</span> */}
         </div>
       </div>
       <div className="col-12 lg:col-6 xl:col-3">
@@ -216,7 +223,9 @@ const Dashboard = () => {
               <span className="block text-500 font-medium mb-3">
                 {t("REVENUE")}
               </span>
-              <div className="text-900 font-medium text-xl">$2.100</div>
+              <div className="text-900 font-medium text-xl">
+                {report[0]?.revenue}
+              </div>
             </div>
             <div
               className="flex align-items-center justify-content-center bg-orange-100 border-round"
@@ -225,8 +234,8 @@ const Dashboard = () => {
               <i className="pi pi-map-marker text-orange-500 text-xl" />
             </div>
           </div>
-          <span className="text-green-500 font-medium">%52+ </span>
-          <span className="text-500">{t("SINCE_LAST_WEEK")}</span>
+          {/* <span className="text-green-500 font-medium">%52+ </span>
+          <span className="text-500">{t("SINCE_LAST_WEEK")}</span> */}
         </div>
       </div>
       <div className="col-12 lg:col-6 xl:col-3">
@@ -237,7 +246,8 @@ const Dashboard = () => {
                 {t("CUSTOMERS")}
               </span>
               <div className="text-900 font-medium text-xl">
-                {totalCustomerRecords}
+                {/* {totalCustomerRecords} */}
+                {report[0]?.customer}
               </div>
             </div>
             <div
@@ -247,10 +257,10 @@ const Dashboard = () => {
               <i className="pi pi-inbox text-cyan-500 text-xl" />
             </div>
           </div>
-          <span className="text-green-500 font-medium">
+          {/* <span className="text-green-500 font-medium">
             {totalCustomerRecords}
           </span>
-          <span className="text-500"> {t("NEWLY_REGISTERED")}</span>
+          <span className="text-500"> {t("NEWLY_REGISTERED")}</span> */}
         </div>
       </div>
       <div className="col-12 lg:col-6 xl:col-3">
@@ -271,10 +281,10 @@ const Dashboard = () => {
               <i className="pi pi-comment text-purple-500 text-xl" />
             </div>
           </div>
-          <span className="text-green-500 font-medium">
+          {/* <span className="text-green-500 font-medium">
             {totalFeedbackRecords}{" "}
           </span>
-          <span className="text-500">{t("RESPONDED")}</span>
+          <span className="text-500">{t("RESPONDED")}</span> */}
         </div>
       </div>
 

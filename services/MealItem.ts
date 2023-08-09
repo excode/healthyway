@@ -8,6 +8,13 @@ import {
   postData,
 } from "@lib/httpRequest";
 
+interface nutritionalInfoType {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+}
+
 export type MealItem = {
   id?: string | any;
   createBy?: string | any;
@@ -26,11 +33,18 @@ export type MealItem = {
   active?: boolean | any;
   mealType?: string[] | any;
   kitchen: string | any;
+  nutritionalInfo: nutritionalInfoType;
 };
 
 export type MealItemQuery = Omit<
   MealItem,
-  "name" | "price" | "groupName" | "code" | "active" | "kitchen"
+  | "name"
+  | "price"
+  | "groupName"
+  | "code"
+  | "active"
+  | "kitchen"
+  | "nutritionalInfo"
 > & {
   name?: string;
   nameInArabic?: string | any;
@@ -54,7 +68,9 @@ export type MealItemQuery = Omit<
   sortBy?: string;
   sortDirection?: number;
 };
+
 export type MealItemKey = keyof MealItem;
+export type nutritionalInfoKey = keyof nutritionalInfoType;
 
 export class MealItemService {
   getMealItem(request: MealItemQuery) {
