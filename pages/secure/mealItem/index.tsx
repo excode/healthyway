@@ -6,6 +6,7 @@ import {
   MealItemKey,
   MealItemQuery,
   MealItemService,
+  nutritionalInfoKey,
 } from "@services/MealItem";
 import getConfig from "next/config";
 import Link from "next/link";
@@ -41,6 +42,7 @@ import { MealGroup, MealGroupService } from "@services/MealGroup";
 import { LangContext } from "hooks/lan";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { Chip } from "primereact/chip";
 
 const MealItemPage = () => {
   const { t } = useTranslation();
@@ -79,6 +81,7 @@ const MealItemPage = () => {
     weekdays: [],
     active: false,
     mealType: [],
+    nutritionalInfo: { calories: 0, carbs: 0, fats: 0, protein: 0 },
     kitchen: "",
   };
   const [mealItems, setMealItems] = useState<MealItem[]>([]);
@@ -207,7 +210,6 @@ const MealItemPage = () => {
   };
 
   const imageBodyTemplate = (rowData: MealItem) => {
-    console.log({ rowData });
     let imageURL = config.serverURI + "/" + rowData.image;
     let fileURL = "/file_icon.png";
     let fileNoURL = "/file_icon_na.png";
@@ -257,6 +259,18 @@ const MealItemPage = () => {
     );
   };
 
+  const nutritionBodyTemplate = (rowData: any) => {
+    const { fats, protein, carbs, calories } = rowData.nutritionalInfo;
+    return (
+      <div className="flex flex-wrap gap-1 justify-content-between">
+        <Chip className="" label={`Fat: ${fats}`} icon="" />
+        <Chip label={`protein: ${protein}`} icon="" />
+        <Chip label={`Carbs: ${carbs}`} icon="" />
+        <Chip label={`Calories: ${calories}`} icon="" />
+      </div>
+    );
+  };
+
   const dataweekdayss = [
     { value: "Sunday", name: `${t("SATURDAY")}` },
     { value: "Monday", name: `${t("MONDAY")}` },
@@ -281,6 +295,7 @@ const MealItemPage = () => {
     link.target = "_blank";
     link.click();
   };
+
   const updateFileName = (
     newUploadedFileName: string,
     colName: MealItemKey
@@ -294,6 +309,7 @@ const MealItemPage = () => {
     setMealItem(_mealItem);
     setMealItems(_mealItems);
   };
+
   const showUploadDialog = (
     mealItem: MealItem,
     dbColName: string,
@@ -415,9 +431,11 @@ const MealItemPage = () => {
       </>
     );
   };
+
   const defaultImage = (e: any) => {
     e.target.src = "/photo_na.png";
   };
+
   const openNew = async () => {
     setMealItem(emptyMealItem);
     setSubmitted(false);
@@ -576,6 +594,14 @@ const MealItemPage = () => {
 
     setMealItem(_mealItem);
   };
+
+  const onValueChange = (e: any, name: nutritionalInfoKey) => {
+    let val = e.value;
+    let _mealItem: MealItem = { ...mealItem };
+    _mealItem.nutritionalInfo[name] = val;
+    setMealItem(_mealItem);
+  };
+
   const onInputChange = (e: any, name: MealItemKey) => {
     let val = (e.target && e.target.value) || undefined;
     const ctrlType = e.target.type;
@@ -768,7 +794,7 @@ const MealItemPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t("MANAGE_MEAL_ITEMS")}</h5>
+      <h5 className="m-0">{t("MANAGE MEAL ITEMS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -939,23 +965,12 @@ const MealItemPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header={t("CREATED_BY")}
+              header={t("Nutrition")}
+              body={nutritionBodyTemplate}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
               filterPlaceholder="Search by createBy"
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="createAt"
-              header={t("CREATED_AT")}
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="createAt"
-              dataType="date"
-              filter
-              filterElement={createAtFilterTemplate}
             ></Column>
 
             <Column
@@ -966,7 +981,7 @@ const MealItemPage = () => {
 
           <Dialog
             visible={mealItemDialog}
-            style={{ width: "450px" }}
+            style={{ width: "500px" }}
             header={t("MEAL_ITEM_DETAILS")}
             modal
             className="p-fluid"
@@ -1094,7 +1109,68 @@ const MealItemPage = () => {
                   })}
                 </div>
               </div>
-
+              <div className="grid">
+                <div className="field col-3">
+                  <label className="font-bold" htmlFor="fats">
+                    {t("Fats")}
+                  </label>
+                  <InputNumber
+                    inputId="fats"
+                    value={mealItem.nutritionalInfo.fats}
+                    onChange={(e) => onValueChange(e, "fats")}
+                    required
+                    className={classNames({
+                      "p-invalid": submitted && !mealItem.nutritionalInfo.fats,
+                    })}
+                  />
+                </div>
+                <div className="field col-3">
+                  <label className="font-bold" htmlFor="protein">
+                    {t("Protein")}
+                  </label>
+                  <InputNumber
+                    inputId="protein"
+                    value={mealItem.nutritionalInfo.protein}
+                    onChange={(e) => onValueChange(e, "protein")}
+                    required
+                    className={classNames({
+                      "p-invalid":
+                        submitted && !mealItem.nutritionalInfo.protein,
+                    })}
+                  />
+                </div>
+                <div className="field col-3">
+                  <label className="font-bold" htmlFor="carbs">
+                    {t("Carbs")}
+                  </label>
+                  <InputNumber
+                    inputId="carbs"
+                    value={mealItem.nutritionalInfo.carbs}
+                    onChange={(e) => onValueChange(e, "carbs")}
+                    required
+                    className={classNames({
+                      "p-invalid": submitted && !mealItem.nutritionalInfo.carbs,
+                    })}
+                  />
+                </div>
+                <div className="field col-3">
+                  <label className="font-bold" htmlFor="calories">
+                    {t("Calories")}
+                  </label>
+                  <InputNumber
+                    // id="calories"
+                    inputId="hello"
+                    name="calories"
+                    value={mealItem.nutritionalInfo.calories}
+                    onChange={(e) => onValueChange(e, "calories")}
+                    required
+                    className={classNames({
+                      "p-invalid":
+                        submitted && !mealItem.nutritionalInfo.calories,
+                    })}
+                  />
+                </div>
+              </div>
               <div className="field">
                 <label className="font-bold" htmlFor="description">
                   {t("DESCRIPTION")}

@@ -10,23 +10,13 @@ import BlockViewer from "../../../components/BlockViewer";
 
 import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
-import { Dialog } from "primereact/dialog";
 import { LangContext } from "hooks/lan";
+import { Dialog } from "primereact/dialog";
 
 const MealItemDetails = () => {
   const router = useRouter();
   const mealitemService = new MealItemService();
-  const [mealItem, setMealItem] = useState<MealItem>({
-    name: "",
-    description: "",
-    price: 0,
-    groupName: "",
-    code: "",
-    weekdays: "",
-    active: "",
-    mealType: "",
-    kitchen: "",
-  });
+  const [mealItem, setMealItem] = useState<MealItem>({} as MealItem);
   const [loading, setLoading] = useState(false);
   const { id } = router.query;
   const toast = useRef<Toast>(null);
@@ -212,7 +202,34 @@ const MealItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    description
+                    Nutrition
+                  </div>
+                  <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 ">
+                    <Chip
+                      className=""
+                      label={`Fat: ${mealItem.nutritionalInfo?.fats}`}
+                      icon=""
+                    />
+                    <Chip
+                      className="mx-2"
+                      label={`protein: ${mealItem.nutritionalInfo?.protein}`}
+                      icon=""
+                    />
+                    <Chip
+                      label={`Carbs: ${mealItem.nutritionalInfo?.carbs}`}
+                      icon=""
+                    />
+                    <Chip
+                      className="mx-2"
+                      label={`Calories: ${mealItem.nutritionalInfo?.calories}`}
+                      icon=""
+                    />
+                  </div>
+                </li>
+
+                <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    Description
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.description}
