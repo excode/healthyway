@@ -82,6 +82,7 @@ const SubscriptionPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [subscriptionDialog, setSubscriptionDialog] = useState(false);
+  const [reSubDialog, setReSubDialog] = useState(false);
   const [deleteSubscriptionDialog, setDeleteSubscriptionDialog] =
     useState(false);
   const [deleteSubscriptionsDialog, setDeleteSubscriptionsDialog] =
@@ -247,6 +248,7 @@ const SubscriptionPage = () => {
   const datastatuss = [
     { value: "Expired", name: "Expired" },
     { value: "Active", name: "Active" },
+    { value: "ReSubscribe", name: "ReSubscribe" },
   ];
 
   const searchMealItem = async (e: any) => {
@@ -412,9 +414,14 @@ const SubscriptionPage = () => {
     setSubscriptionDialog(true);
   };
 
+  const openReSub = async () => {};
+
   const hideDialog = () => {
     setSubmitted(false);
     setSubscriptionDialog(false);
+  };
+  const hideReSubDialog = () => {
+    setReSubDialog(false);
   };
 
   const hideDeleteSubscriptionDialog = () => {
@@ -436,34 +443,42 @@ const SubscriptionPage = () => {
         deliveryAddress: selectedDeliveryAddress,
       };
       if (subscription.id) {
-        let d = await subscriptionService.updateSubscription(_subscription);
-        if (d.error == undefined) {
-          const index = _subscriptions.findIndex(
-            (c) => c.id === subscription.id
+        if (subscription.status === "ReSubscribe") {
+          const { startDate, endDate, subscriptionId } = subscription;
+          const d = await subscriptionService.reSubscription(
+            { startDate, endDate },
+            subscriptionId
           );
-
-          if (index !== -1) {
-            _subscriptions[index] = {
-              ..._subscription,
-              startDate: _subscription.startDate.toString(),
-              endDate: _subscription.endDate.toString(),
-            };
-            // _subscriptions[index] = _subscription;
-            //_subscriptions.splice(index, 1, {..._subscription,id:id});
-          }
-          toast.current?.show({
-            severity: "success",
-            summary: "Loaded",
-            detail: "Subscription Updated",
-            life: 3000,
-          });
         } else {
-          toast.current?.show({
-            severity: "error",
-            summary: "Error",
-            detail: d.error,
-            life: 3000,
-          });
+          let d = await subscriptionService.updateSubscription(_subscription);
+          if (d.error == undefined) {
+            const index = _subscriptions.findIndex(
+              (c) => c.id === subscription.id
+            );
+
+            if (index !== -1) {
+              _subscriptions[index] = {
+                ..._subscription,
+                startDate: _subscription.startDate.toString(),
+                endDate: _subscription.endDate.toString(),
+              };
+              // _subscriptions[index] = _subscription;
+              //_subscriptions.splice(index, 1, {..._subscription,id:id});
+            }
+            toast.current?.show({
+              severity: "success",
+              summary: "Loaded",
+              detail: "Subscription Updated",
+              life: 3000,
+            });
+          } else {
+            toast.current?.show({
+              severity: "error",
+              summary: "Error",
+              detail: d.error,
+              life: 3000,
+            });
+          }
         }
       } else {
         let d = await subscriptionService.addSubscription(_subscription);
@@ -505,7 +520,14 @@ const SubscriptionPage = () => {
     }
   };
 
-  const editSubscription = (subscription: Subscription) => {
+  const editSubscription = async (subscription: Subscription) => {
+    const id = subscription.customerId;
+    const dataCustomer = await userService.getUsers({ id });
+    // console.log(
+    //   "🚀 ~ file: index.tsx:514 ~ editSubscription ~ dataCustomer:",
+    //   dataCustomer
+    // );
+
     setSubscription({ ...subscription });
     setSubscriptionDialog(true);
   };
@@ -723,16 +745,23 @@ const SubscriptionPage = () => {
             loading={loading}
             label="New"
             icon="pi pi-plus"
-            className="p-button-success mr-2"
+            className="p-button-success"
             onClick={openNew}
           />
           <Button
             label="Delete"
             icon="pi pi-trash"
-            className="p-button-danger"
+            className="p-button-danger mx-2"
             onClick={confirmDeleteSelected}
             disabled={!selectedSubscriptions || !selectedSubscriptions.length}
           />
+          {/* <Button
+            label="Re Subscribe"
+            icon="pi pi-sync"
+            className="p-button-primary"
+            onClick={openReSub}
+            // disabled={!selectedSubscriptions || !selectedSubscriptions.length}
+          /> */}
         </div>
       </React.Fragment>
     );
@@ -1080,11 +1109,11 @@ const SubscriptionPage = () => {
 
             <Column
               showAddButton={false}
-              field="customerId"
-              header="Customer Id"
+              field="subscriptionId"
+              header="Subscription Id"
               sortable
               headerStyle={{ minWidth: "10rem" }}
-              filterField="customerId"
+              filterField="subscriptionId"
               filter
               filterElement={customerIdFilterTemplate}
             ></Column>
@@ -1270,6 +1299,10 @@ const SubscriptionPage = () => {
                 }
               />
             </DataTable>
+          </Dialog>
+
+          <Dialog visible={reSubDialog} onHide={hideReSubDialog}>
+            <div>Hello</div>
           </Dialog>
 
           <Dialog

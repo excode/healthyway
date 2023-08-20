@@ -143,6 +143,7 @@ async function postData<T>(path: string, postdata: T, secured: boolean = true) {
     }
   }
 }
+
 async function patchData<T>(
   path: string,
   postdata: T,

@@ -42,6 +42,7 @@ export type UsersQuery = Omit<
   Users,
   "firstName" | "email" | "lastName" | "address"
 > & {
+  _id?: string;
   firstName?: string;
   email?: string;
   lastName?: string;
