@@ -3,10 +3,12 @@ import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import BlockViewer from "../../../components/BlockViewer";
 
 const FeedbackDetails = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const feedbackService = new FeedbackService();
   const [feedback, setFeedback] = useState<Feedback>({
     customerId: "",
@@ -53,7 +55,7 @@ const FeedbackDetails = () => {
   return (
     <>
       <BlockViewer
-        header="Feedback details"
+        header={t("FEEDBACK_DETAILS")}
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast
@@ -70,7 +72,7 @@ const FeedbackDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created By
+                    {t("CREATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.createBy}
@@ -79,7 +81,7 @@ const FeedbackDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created At
+                    {t("CREATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.createAt}
@@ -88,7 +90,7 @@ const FeedbackDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update By
+                    {t("UPDATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.updateBy}
@@ -97,7 +99,7 @@ const FeedbackDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update At
+                    {t("UPDATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.updateAt}
@@ -106,7 +108,7 @@ const FeedbackDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    customerId
+                    {t("CUSTOMER_ID")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.customerId}
@@ -114,35 +116,47 @@ const FeedbackDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">chefId</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {" "}
+                    {t("CHEF_ID")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.chefId}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">orderId</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {" "}
+                    {t("ORDER_ID")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.orderId}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">rating</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("RATING")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.rating}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">comment</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("COMMENT")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.comment}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("KITCHEN")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {feedback.kitchen}
                   </div>

@@ -1,12 +1,14 @@
 import { Delivery, DeliveryService } from "@services/Delivery";
+import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import BlockViewer from "../../../components/BlockViewer";
-import { LangContext } from "hooks/lan";
 
 const DeliveryDetails = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const deliveryService = new DeliveryService();
   const [delivery, setDelivery] = useState<Delivery>({
     orderId: "",
@@ -53,7 +55,7 @@ const DeliveryDetails = () => {
   return (
     <>
       <BlockViewer
-        header="Delivery details"
+        header={t("DELIVERY_DETAILS")}
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast
@@ -70,7 +72,7 @@ const DeliveryDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created By
+                    {t("CREATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.createBy}
@@ -79,7 +81,7 @@ const DeliveryDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created At
+                    {t("CREATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.createAt}
@@ -88,7 +90,7 @@ const DeliveryDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update By
+                    {t("UPDATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.updateBy}
@@ -97,7 +99,7 @@ const DeliveryDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update At
+                    {t("UPDATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.updateAt}
@@ -105,14 +107,18 @@ const DeliveryDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">orderId</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("ORDER_ID")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.orderId}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">chefId</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("CHEF_ID")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.chefId}
                   </div>
@@ -120,7 +126,7 @@ const DeliveryDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Delivery Person
+                    {t("DELIVERY_PERSON")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.deliveryPersonId}
@@ -129,7 +135,7 @@ const DeliveryDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    deliveryStatus
+                    {t("DELIVERY_STATUS")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.deliveryStatus}
@@ -138,7 +144,7 @@ const DeliveryDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Delivery date
+                    {t("DELIVERY_DATE")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.deliverdate}
@@ -146,7 +152,9 @@ const DeliveryDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("KITCHEN")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {delivery.kitchen}
                   </div>

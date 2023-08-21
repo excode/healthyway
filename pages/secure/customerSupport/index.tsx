@@ -30,9 +30,11 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const CustomerSupportPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "customerName", type: validate.text, required: true },
     { id: "email", type: validate.email, max: 20, min: 0, required: false },
@@ -201,7 +203,7 @@ const CustomerSupportPage = () => {
   const statusFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Status Picker</div>
+        <div className="mb-3 text-bold">{t("STATUS_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datastatuss}
@@ -548,13 +550,13 @@ const CustomerSupportPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -571,7 +573,7 @@ const CustomerSupportPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -610,7 +612,7 @@ const CustomerSupportPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage CustomerSupports</h5>
+      <h5 className="m-0"> {t("MANAGE_CUSTOMER_SUPPORTS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -625,13 +627,13 @@ const CustomerSupportPage = () => {
   const customerSupportDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveCustomerSupport}
@@ -641,13 +643,13 @@ const CustomerSupportPage = () => {
   const deleteCustomerSupportDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteCustomerSupportDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteCustomerSupport}
@@ -657,13 +659,13 @@ const CustomerSupportPage = () => {
   const deleteCustomerSupportsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteCustomerSupportsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedCustomerSupports}
@@ -720,7 +722,7 @@ const CustomerSupportPage = () => {
             <Column
               showAddButton={false}
               field="customerName"
-              header="Name"
+              header={t("NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="customerName"
@@ -731,7 +733,7 @@ const CustomerSupportPage = () => {
             <Column
               showAddButton={false}
               field="email"
-              header="Email"
+              header={t("EMAIL")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -741,7 +743,7 @@ const CustomerSupportPage = () => {
             <Column
               showAddButton={false}
               field="customerPhone"
-              header="Phone"
+              header={t("PHONE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="customerPhone"
@@ -752,7 +754,7 @@ const CustomerSupportPage = () => {
             <Column
               showAddButton={false}
               field="subject"
-              header="subject"
+              header={t("SUBJECT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -762,7 +764,7 @@ const CustomerSupportPage = () => {
             <Column
               showAddButton={false}
               field="description"
-              header="Description"
+              header={t("DESCRIPTION")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -772,7 +774,7 @@ const CustomerSupportPage = () => {
             <Column
               showAddButton={false}
               field="status"
-              header="status"
+              header={t("STATUS")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="status"
@@ -783,7 +785,7 @@ const CustomerSupportPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -801,7 +803,7 @@ const CustomerSupportPage = () => {
           <Dialog
             visible={customerSupportDialog}
             style={{ width: "450px" }}
-            header="CustomerSupport Details"
+            header={t("CUSTOMER_SUPPORT_DETAILS")}
             modal
             className="p-fluid"
             footer={customerSupportDialogFooter}
@@ -809,7 +811,7 @@ const CustomerSupportPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="customerName">Name</label>
+                <label htmlFor="customerName"> {t("NAME")}</label>
                 <AutoComplete
                   field="name"
                   id="customerName"
@@ -821,7 +823,7 @@ const CustomerSupportPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email"> {t("EMAIL")}</label>
                 <InputText
                   id="email"
                   value={customerSupport.email}
@@ -830,7 +832,7 @@ const CustomerSupportPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="subject">subject</label>
+                <label htmlFor="subject"> {t("SUBJECT")}</label>
                 <InputText
                   id="subject"
                   value={customerSupport.subject}
@@ -843,7 +845,7 @@ const CustomerSupportPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="description">Description</label>
+                <label htmlFor="description">{t("DESCRIPTION")}</label>
                 <InputText
                   id="description"
                   value={customerSupport.description}
@@ -856,7 +858,7 @@ const CustomerSupportPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="status">status</label>
+                <label htmlFor="status"> {t("STATUS")}</label>
                 <ListBox
                   id="status"
                   optionLabel="name"
@@ -867,7 +869,7 @@ const CustomerSupportPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="customerPhone">Phone</label>
+                <label htmlFor="customerPhone"> {t("PHONE")}</label>
                 <AutoComplete
                   field="mobile"
                   id="customerPhone"
@@ -895,7 +897,8 @@ const CustomerSupportPage = () => {
               />
               {customerSupport && (
                 <span>
-                  Are you sure you want to delete <b>CustomerSupport record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")}{" "}
+                  <b>CustomerSupport record</b>?
                 </span>
               )}
             </div>

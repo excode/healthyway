@@ -841,13 +841,13 @@ const MealItemPage = () => {
   const deleteMealItemsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealItemsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedMealItems}

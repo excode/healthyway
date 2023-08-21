@@ -30,9 +30,11 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const DeliveryPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "orderId", type: validate.text, required: true },
     { id: "chefId", type: validate.text, required: true },
@@ -238,7 +240,7 @@ const DeliveryPage = () => {
   const deliveryStatusFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">DeliveryStatus Picker</div>
+        <div className="mb-3 text-bold">{t("DELIVERY_STATUS_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datadeliveryStatuss}
@@ -555,13 +557,13 @@ const DeliveryPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -576,7 +578,7 @@ const DeliveryPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -615,13 +617,13 @@ const DeliveryPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Deliverys</h5>
+      <h5 className="m-0"> {t("MANAGE_DELIVERY")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           type="search"
           onInput={(e: any) => localFilter(e.target.value)}
-          placeholder="Local Search..."
+          placeholder={t("LOCAL_SEARCH")}
         />
       </span>
     </div>
@@ -630,13 +632,13 @@ const DeliveryPage = () => {
   const deliveryDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveDelivery}
@@ -646,13 +648,13 @@ const DeliveryPage = () => {
   const deleteDeliveryDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteDeliveryDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteDelivery}
@@ -662,13 +664,13 @@ const DeliveryPage = () => {
   const deleteDeliverysDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteDeliverysDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedDeliverys}
@@ -725,7 +727,7 @@ const DeliveryPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -735,7 +737,7 @@ const DeliveryPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -747,7 +749,7 @@ const DeliveryPage = () => {
             <Column
               showAddButton={false}
               field="updateBy"
-              header="Update By"
+              header={t("UPDATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -757,7 +759,7 @@ const DeliveryPage = () => {
             <Column
               showAddButton={false}
               field="updateAt"
-              header="Update At"
+              header={t("UPDATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="updateAt"
@@ -769,7 +771,7 @@ const DeliveryPage = () => {
             <Column
               showAddButton={false}
               field="orderId"
-              header="orderId"
+              header={t("ORDER_ID")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="orderId"
@@ -780,7 +782,7 @@ const DeliveryPage = () => {
             <Column
               showAddButton={false}
               field="chefId"
-              header="chefId"
+              header={t("CHEF_ID")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="chefId"
@@ -791,17 +793,17 @@ const DeliveryPage = () => {
             <Column
               showAddButton={false}
               field="deliveryPersonId"
-              header="Delivery Person"
+              header={t("DELIVERY_PERSON")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
-              filterPlaceholder="Search by deliveryPersonId"
+              filterPlaceholder="Search by delivery PersonId"
             ></Column>
 
             <Column
               showAddButton={false}
               field="deliveryStatus"
-              header="deliveryStatus"
+              header={t("DELIVERY_STATUS")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="deliveryStatus"
@@ -812,7 +814,7 @@ const DeliveryPage = () => {
             <Column
               showAddButton={false}
               field="deliverdate"
-              header="Delivery date"
+              header={t("DELIVERY_DATE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="deliverdate"
@@ -824,7 +826,7 @@ const DeliveryPage = () => {
             <Column
               showAddButton={false}
               field="kitchen"
-              header="Kitchen"
+              header={t("KITCHEN")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -840,7 +842,7 @@ const DeliveryPage = () => {
           <Dialog
             visible={deliveryDialog}
             style={{ width: "450px" }}
-            header="Delivery Details"
+            header={t("DELIVERY_DETAILS")}
             modal
             className="p-fluid"
             footer={deliveryDialogFooter}
@@ -848,7 +850,7 @@ const DeliveryPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="orderId">orderId</label>
+                <label htmlFor="orderId"> {t("ORDER_ID")}</label>
                 <AutoComplete
                   field="invoiceNo"
                   id="orderId"
@@ -860,7 +862,7 @@ const DeliveryPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="chefId">chefId</label>
+                <label htmlFor="chefId"> {t("CHEF_ID")}</label>
                 <AutoComplete
                   field="name"
                   id="chefId"
@@ -872,7 +874,7 @@ const DeliveryPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="deliveryPersonId">Delivery Person</label>
+                <label htmlFor="deliveryPersonId">{t("DELIVERY_PERSON")}</label>
                 <InputText
                   id="deliveryPersonId"
                   value={delivery.deliveryPersonId}
@@ -885,7 +887,7 @@ const DeliveryPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="deliveryStatus">deliveryStatus</label>
+                <label htmlFor="deliveryStatus"> {t("DELIVERY_STATUS")}</label>
                 <Dropdown
                   id="deliveryStatus"
                   optionLabel="name"
@@ -896,7 +898,7 @@ const DeliveryPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="deliverdate">Delivery date</label>
+                <label htmlFor="deliverdate"> {t("DELIVERY_DATE")}</label>
                 <Calendar
                   id="deliverdate"
                   value={
@@ -917,7 +919,7 @@ const DeliveryPage = () => {
           <Dialog
             visible={deleteDeliveryDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteDeliveryDialogFooter}
             onHide={hideDeleteDeliveryDialog}
@@ -929,7 +931,7 @@ const DeliveryPage = () => {
               />
               {delivery && (
                 <span>
-                  Are you sure you want to delete <b>Delivery record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")} <b>Delivery record</b>?
                 </span>
               )}
             </div>

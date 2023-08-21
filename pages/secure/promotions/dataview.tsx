@@ -6,6 +6,7 @@ import {
   PromotionsQuery,
   PromotionsService,
 } from "@services/Promotions";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import {
   DataView,
   DataViewLayoutOptions,
@@ -15,10 +16,11 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LayoutType, SortOrderType } from "../../../types/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const PromotionsDataview = () => {
+  const { t } = useTranslation();
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [layout, setLayout] = useState<LayoutType>("grid");
   const [sortKey, setSortKey] = useState(null);
@@ -190,19 +192,6 @@ const PromotionsDataview = () => {
               <div>{data.endDate.split("T")[0]}</div>
             </div>
           </div>
-
-          {/* <div className="flex flex-row md:flex-column justify-content-between w-full md:w-auto align-items-center md:align-items-end mt-5 md:mt-0">
-            <span className="text-2xl font-semibold mb-2 align-self-center md:align-self-end">
-              $ {data.id}
-            </span>
-            <Button
-              icon="pi pi-shopping-cart"
-              label="Add to Cart"
-              disabled={data.id === "OUTOFSTOCK"}
-              className="mb-2 p-button-sm"
-            ></Button>
-            <span className={`product-badge status-active`}>{data.id}</span>
-          </div> */}
         </div>
       </div>
     );
@@ -212,13 +201,6 @@ const PromotionsDataview = () => {
     return (
       <div className="col-12 lg:col-4">
         <div className="card m-3 border-1 surface-border">
-          {/* <div className="flex flex-wrap gap-2 align-items-center justify-content-between mb-2">
-            <div className="flex align-items-center">
-              <i className="pi pi-tag mr-2" />
-              <span className="font-semibold">{data.id}</span>
-            </div>
-            <span className={`product-badge status-active`}>{data.id}</span>
-          </div> */}
           <div className="flex flex-column align-items-center text-center mb-3">
             {data.image != undefined ? (
               <img
@@ -246,13 +228,6 @@ const PromotionsDataview = () => {
             </div>
             {/* <Rating value={data.id} readOnly cancel={false} /> */}
           </div>
-          {/* <div className="flex align-items-center justify-content-between">
-            <span className="text-2xl font-semibold">$ {data.id}</span>
-            <Button
-              icon="pi pi-shopping-cart"
-              disabled={data.id === "OUTOFSTOCK"}
-            />
-          </div> */}
         </div>
       </div>
     );
@@ -274,7 +249,7 @@ const PromotionsDataview = () => {
     <div className="grid list-demo">
       <div className="col-12">
         <div className="card">
-          <h5>Promotions</h5>
+          <h5> {t("PROMOTIONS")}</h5>
           <DataView
             value={promotionss}
             layout={layout}

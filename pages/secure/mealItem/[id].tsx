@@ -12,9 +12,11 @@ import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
 import { LangContext } from "hooks/lan";
 import { Dialog } from "primereact/dialog";
+import { useTranslation } from "react-i18next";
 
 const MealItemDetails = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const mealitemService = new MealItemService();
   const [mealItem, setMealItem] = useState<MealItem>({} as MealItem);
   const [loading, setLoading] = useState(false);
@@ -141,7 +143,7 @@ const MealItemDetails = () => {
   return (
     <>
       <BlockViewer
-        header="MealItem details"
+        header={t("MEAL_ITEM_DETAILS")}
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast
@@ -159,7 +161,7 @@ const MealItemDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created By
+                    {t("CREATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.createBy}
@@ -168,7 +170,7 @@ const MealItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created At
+                    {t("CREATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.createAt}
@@ -177,7 +179,7 @@ const MealItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update By
+                    {t("UPDATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.updateBy}
@@ -186,7 +188,7 @@ const MealItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update At
+                    {t("UPDATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.updateAt}
@@ -194,7 +196,9 @@ const MealItemDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">name</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("NAME")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.name}
                   </div>
@@ -202,7 +206,7 @@ const MealItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Nutrition
+                    {t("NUTRITION")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 ">
                     <Chip
@@ -229,7 +233,7 @@ const MealItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Description
+                    {t("DESCRIPTION")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.description}
@@ -237,7 +241,9 @@ const MealItemDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">price</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("PRICE")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.price}
                   </div>
@@ -245,7 +251,7 @@ const MealItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Group Name
+                    {t("GROUP_NAME")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.groupName}
@@ -253,7 +259,9 @@ const MealItemDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Code</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("CODE")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.code}
                   </div>
@@ -261,7 +269,7 @@ const MealItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Week Days
+                    {t("WEEKS_DAYS")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.weekdays &&
@@ -272,7 +280,9 @@ const MealItemDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Active</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("ACTIVE")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.active}
                   </div>
@@ -280,7 +290,7 @@ const MealItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Meal type
+                    {t("MEAL_TYPE")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.mealType &&
@@ -291,7 +301,9 @@ const MealItemDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("KITCHEN")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealItem.kitchen}
                   </div>

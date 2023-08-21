@@ -28,9 +28,11 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const MealIngItemPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "ingredients", type: validate.text, required: true },
     { id: "quantity", type: validate.int, max: 5, min: 0, required: true },
@@ -169,7 +171,9 @@ const MealIngItemPage = () => {
   const ingredientsFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Ingredients Picker</div>
+        <div className="mb-3 text-bold">
+          Ingredients Picker {t("INGREDIENTS_PICKER")}
+        </div>
         <Dropdown
           value={options.value}
           options={dataingredients}
@@ -477,13 +481,13 @@ const MealIngItemPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -498,7 +502,7 @@ const MealIngItemPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -537,7 +541,7 @@ const MealIngItemPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage MealIngItems</h5>
+      <h5 className="m-0"> {t("MANAGE_MEAL_INGREDIENT_ITEMS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -552,13 +556,13 @@ const MealIngItemPage = () => {
   const mealIngItemDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveMealIngItem}
@@ -568,13 +572,13 @@ const MealIngItemPage = () => {
   const deleteMealIngItemDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealIngItemDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteMealIngItem}
@@ -584,13 +588,13 @@ const MealIngItemPage = () => {
   const deleteMealIngItemsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealIngItemsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedMealIngItems}
@@ -647,7 +651,7 @@ const MealIngItemPage = () => {
             <Column
               showAddButton={false}
               field="ingredients"
-              header="ingredients"
+              header={t("INGREDIENT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="ingredients"
@@ -658,7 +662,7 @@ const MealIngItemPage = () => {
             <Column
               showAddButton={false}
               field="quantity"
-              header="quantity"
+              header={t("QUANTITY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               dataType="numeric"
@@ -669,7 +673,7 @@ const MealIngItemPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -679,7 +683,7 @@ const MealIngItemPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -697,7 +701,7 @@ const MealIngItemPage = () => {
           <Dialog
             visible={mealIngItemDialog}
             style={{ width: "450px" }}
-            header="MealIngItem Details"
+            header={t("MEAL_INGREDIENT_DETAILS")}
             modal
             className="p-fluid"
             footer={mealIngItemDialogFooter}
@@ -705,7 +709,7 @@ const MealIngItemPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="ingredients">ingredients</label>
+                <label htmlFor="ingredients"> {t("INGREDIENTS")}</label>
                 <Dropdown
                   id="ingredients"
                   optionLabel="name"
@@ -717,7 +721,7 @@ const MealIngItemPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="quantity">quantity</label>
+                <label htmlFor="quantity"> {t("QUANTITY")}</label>
                 <InputNumber
                   id="quantity"
                   value={mealIngItem.quantity}
@@ -742,7 +746,8 @@ const MealIngItemPage = () => {
               />
               {mealIngItem && (
                 <span>
-                  Are you sure you want to delete <b>MealIngItem record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")}{" "}
+                  <b>MealIngItem record</b>?
                 </span>
               )}
             </div>

@@ -5,9 +5,11 @@ import { useRouter } from "next/router";
 import { Chip } from "primereact/chip";
 import { Toast } from "primereact/toast";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import BlockViewer from "../../../components/BlockViewer";
 
 const SubscriptionDetails = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const subscriptionService = new SubscriptionService();
   const [subscription, setSubscription] = useState<Subscription>(
@@ -68,7 +70,7 @@ const SubscriptionDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created By
+                    {t("CREATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription.createBy}
@@ -77,7 +79,7 @@ const SubscriptionDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created At
+                    {t("CREATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription.createAt}
@@ -86,7 +88,7 @@ const SubscriptionDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update By
+                    {t("UPDATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription.updateBy}
@@ -95,7 +97,7 @@ const SubscriptionDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update At
+                    {t("UPDATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription.updateAt}
@@ -104,7 +106,7 @@ const SubscriptionDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Customer Id
+                    {t("CUSTOMER_ID")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription.customerId}
@@ -113,7 +115,7 @@ const SubscriptionDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Start Date
+                    {t("START_DATE")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {moment(new Date(subscription.startDate)).format("LL")}
@@ -122,7 +124,7 @@ const SubscriptionDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    End Date
+                    {t("END_DATE")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {moment(new Date(subscription.endDate)).format("LL")}
@@ -130,7 +132,9 @@ const SubscriptionDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Status</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("STATUS")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription.status}
                   </div>
@@ -138,7 +142,7 @@ const SubscriptionDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Breakfast
+                    {t("BREAKFAST")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription?.subPlans
@@ -152,7 +156,9 @@ const SubscriptionDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Lunch</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("LUNCH")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription?.subPlans
                       ? subscription?.subPlans
@@ -165,7 +171,9 @@ const SubscriptionDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Dinner</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("DINNER")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription?.subPlans
                       ? subscription?.subPlans
@@ -178,7 +186,9 @@ const SubscriptionDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("KITCHEN")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {subscription?.kitchen}
                   </div>

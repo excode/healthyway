@@ -47,8 +47,6 @@ const lineData: ChartData = {
 
 const Dashboard = () => {
   const { locale } = useRouter();
-  // const { locale, locales, asPath } = useRouter();
-  // console.log("locale", locale, "locales", locales, "asPath", asPath);
   const { t } = useTranslation();
 
   // i18n.changeLanguage("en");

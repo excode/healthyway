@@ -12,9 +12,11 @@ import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
 import { LangContext } from "hooks/lan";
 import { Dialog } from "primereact/dialog";
+import { useTranslation } from "react-i18next";
 
 const ChefDetails = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const chefService = new ChefService();
   const [chef, setChef] = useState<Chef>({
     name: "",
@@ -142,7 +144,7 @@ const ChefDetails = () => {
   return (
     <>
       <BlockViewer
-        header="Chef details"
+        header={t("CHEF_DETAILS")}
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast
@@ -160,7 +162,7 @@ const ChefDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created By
+                    {t("CREATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.createBy}
@@ -169,7 +171,7 @@ const ChefDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created At
+                    {t("CREATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.createAt}
@@ -178,7 +180,7 @@ const ChefDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update By
+                    {t("UPDATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.updateBy}
@@ -187,7 +189,7 @@ const ChefDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update At
+                    {t("UPDATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.updateAt}
@@ -195,14 +197,18 @@ const ChefDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">name</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("NAME")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.name}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">email</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("EMAIL")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.email}
                   </div>
@@ -210,7 +216,7 @@ const ChefDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Expertise
+                    {t("EXPERTISE")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.expertise &&
@@ -221,7 +227,9 @@ const ChefDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">address</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("ADDRESS")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.address}
                   </div>
@@ -229,7 +237,7 @@ const ChefDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    phoneNumber
+                    {t("PHONE_NUMBER")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.phoneNumber}
@@ -237,7 +245,7 @@ const ChefDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">{t("KITCHEN")}</div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {chef.kitchen}
                   </div>

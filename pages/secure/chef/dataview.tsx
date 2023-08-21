@@ -2,7 +2,7 @@
 import config from "@config/index";
 import { Chef, ChefQuery, ChefService } from "@services/Chef";
 import { SortType } from "@services/CommonTypes";
-import { Button } from "primereact/button";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import {
   DataView,
   DataViewLayoutOptions,
@@ -10,14 +10,14 @@ import {
 } from "primereact/dataview";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { Rating } from "primereact/rating";
 import { Tag } from "primereact/tag";
 import { Toast } from "primereact/toast";
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LayoutType, SortOrderType } from "../../../types/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const ChefDataview = () => {
+  const { t } = useTranslation();
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [layout, setLayout] = useState<LayoutType>("grid");
   const [sortKey, setSortKey] = useState(null);
@@ -283,7 +283,7 @@ const ChefDataview = () => {
     <div className="grid list-demo">
       <div className="col-12">
         <div className="card">
-          <h5>Chef</h5>
+          <h5>{t("CHEF")}</h5>
           <DataView
             value={chefs}
             layout={layout}

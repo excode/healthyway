@@ -1,12 +1,14 @@
 import { Notification, NotificationService } from "@services/Notification";
+import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import BlockViewer from "../../../components/BlockViewer";
-import { LangContext } from "hooks/lan";
 
 const NotificationDetails = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const notificationService = new NotificationService();
   const [notification, setNotification] = useState<Notification>({
     chefId: "",

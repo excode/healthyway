@@ -29,11 +29,13 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
 import { LangContext } from "hooks/lan";
-import { Image } from "primereact/image";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { Image } from "primereact/image";
+import { useTranslation } from "react-i18next";
 
 const MealGroupPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "name", type: validate.text, max: 50, min: 2, required: true },
   ];
@@ -522,13 +524,13 @@ const MealGroupPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -543,7 +545,7 @@ const MealGroupPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -582,7 +584,7 @@ const MealGroupPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage MealGroups</h5>
+      <h5 className="m-0"> {t("MANAGE_MEAL_GROUP")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -613,13 +615,13 @@ const MealGroupPage = () => {
   const deleteMealGroupDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealGroupDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteMealGroup}
@@ -629,13 +631,13 @@ const MealGroupPage = () => {
   const deleteMealGroupsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealGroupsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedMealGroups}
@@ -692,7 +694,7 @@ const MealGroupPage = () => {
             <Column
               showAddButton={false}
               field="image"
-              header="Image"
+              header={t("IMAGE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               body={imageBodyTemplate}
@@ -701,7 +703,7 @@ const MealGroupPage = () => {
             <Column
               showAddButton={false}
               field="name"
-              header="Name"
+              header={t("NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -711,7 +713,7 @@ const MealGroupPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -723,7 +725,7 @@ const MealGroupPage = () => {
             <Column
               showAddButton={false}
               field="updateBy"
-              header="Update By"
+              header={t("UPDATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -739,7 +741,7 @@ const MealGroupPage = () => {
           <Dialog
             visible={mealGroupDialog}
             style={{ width: "450px" }}
-            header="MealGroup Details"
+            header={t("MEAL_GROUP_DETAILS")}
             modal
             className="p-fluid"
             footer={mealGroupDialogFooter}
@@ -747,7 +749,7 @@ const MealGroupPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name"> {t("NAME")}</label>
                 <InputText
                   id="name"
                   value={mealGroup.name}
@@ -764,7 +766,7 @@ const MealGroupPage = () => {
           <Dialog
             visible={deleteMealGroupDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteMealGroupDialogFooter}
             onHide={hideDeleteMealGroupDialog}
@@ -776,7 +778,8 @@ const MealGroupPage = () => {
               />
               {mealGroup && (
                 <span>
-                  Are you sure you want to delete <b>MealGroup record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")} <b>MealGroup record</b>
+                  ?
                 </span>
               )}
             </div>

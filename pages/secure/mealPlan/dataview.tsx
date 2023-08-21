@@ -2,6 +2,7 @@
 import config from "@config/index";
 import { SortType } from "@services/CommonTypes";
 import { MealPlan, MealPlanQuery, MealPlanService } from "@services/MealPlan";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Button } from "primereact/button";
 import {
   DataView,
@@ -13,10 +14,11 @@ import { InputText } from "primereact/inputtext";
 import { Rating } from "primereact/rating";
 import { Toast } from "primereact/toast";
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LayoutType, SortOrderType } from "../../../types/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const MealPlanDataview = () => {
+  const { t } = useTranslation();
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [layout, setLayout] = useState<LayoutType>("grid");
   const [sortKey, setSortKey] = useState(null);
@@ -188,7 +190,7 @@ const MealPlanDataview = () => {
             </span>
             <Button
               icon="pi pi-shopping-cart"
-              label="Add to Cart"
+              label={t("ADD_TO_CART")}
               disabled={data.quantity === "OUTOFSTOCK"}
               className="mb-2 p-button-sm"
             ></Button>
@@ -258,7 +260,7 @@ const MealPlanDataview = () => {
     <div className="grid list-demo">
       <div className="col-12">
         <div className="card">
-          <h5>MealPlan</h5>
+          <h5>{t("MEAL_PLAN")}</h5>
           <DataView
             value={mealPlans}
             layout={layout}

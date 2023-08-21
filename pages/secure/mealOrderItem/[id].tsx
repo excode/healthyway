@@ -3,10 +3,12 @@ import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import BlockViewer from "../../../components/BlockViewer";
 
 const MealOrderItemDetails = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const mealorderitemService = new MealOrderItemService();
   const [mealOrderItem, setMealOrderItem] = useState<MealOrderItem>({
     mealOrder: "",
@@ -52,7 +54,7 @@ const MealOrderItemDetails = () => {
   return (
     <>
       <BlockViewer
-        header="MealOrderItem details"
+        header={t("MEAL_ORDER_ITEM_DETAILS")}
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast
@@ -69,7 +71,7 @@ const MealOrderItemDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created By
+                    {t("CREATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.createBy}
@@ -78,7 +80,7 @@ const MealOrderItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created At
+                    {t("CREATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.createAt}
@@ -87,7 +89,7 @@ const MealOrderItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update By
+                    {t("UPATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.updateBy}
@@ -96,7 +98,7 @@ const MealOrderItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update At
+                    {t("UPDATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.updateAt}
@@ -105,7 +107,7 @@ const MealOrderItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Meal Order No
+                    {t("MEAL_ORDER_NO")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.mealOrder}
@@ -114,7 +116,7 @@ const MealOrderItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    quantity
+                    {t("QUANTITY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.quantity}
@@ -123,7 +125,7 @@ const MealOrderItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Meal Items
+                    {t("MEAL_ITEMS")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.mealItem}
@@ -131,7 +133,9 @@ const MealOrderItemDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Code</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("CODE")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.code}
                   </div>
@@ -139,7 +143,7 @@ const MealOrderItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Special Note
+                    {t("SPECIAL_NOTE")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.note}
@@ -148,7 +152,7 @@ const MealOrderItemDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Sub Total
+                    {t("SUB_TOTAL")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.subTotal}
@@ -156,7 +160,9 @@ const MealOrderItemDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("KITCHEN")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealOrderItem.kitchen}
                   </div>

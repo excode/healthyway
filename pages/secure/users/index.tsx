@@ -40,9 +40,11 @@ import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
+import { useTranslation } from "react-i18next";
 import countryData from "../../utilities/countryData.json";
 const UsersPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const [userData, setUserData] = useState<UserData>({ email: "" });
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const validation = [
@@ -184,7 +186,7 @@ const UsersPage = () => {
   const countryFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Country Picker</div>
+        <div className="mb-3 text-bold">{t("COUNTRY_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datacountrys}
@@ -200,7 +202,7 @@ const UsersPage = () => {
   const userTypeFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">UserType Picker</div>
+        <div className="mb-3 text-bold"> {t("USER_TYPE_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={dataUserTypes.filter(
@@ -240,7 +242,7 @@ const UsersPage = () => {
   const kitchenFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Kitchen Picker</div>
+        <div className="mb-3 text-bold"> {t("KITCHEN_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datakitchens}
@@ -581,13 +583,13 @@ const UsersPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -602,7 +604,7 @@ const UsersPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -647,7 +649,7 @@ const UsersPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Userss</h5>
+      <h5 className="m-0"> {t("MANAGE_USERS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -662,13 +664,13 @@ const UsersPage = () => {
   const usersDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveUsers}
@@ -678,13 +680,13 @@ const UsersPage = () => {
   const deleteUsersDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteUsersDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteUsers}
@@ -694,13 +696,13 @@ const UsersPage = () => {
   const deleteUserssDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteUserssDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedUserss}
@@ -755,7 +757,7 @@ const UsersPage = () => {
             <Column
               showAddButton={false}
               field="firstName"
-              header="First Name"
+              header={t("FIRST_NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -765,7 +767,7 @@ const UsersPage = () => {
             <Column
               showAddButton={false}
               field="lastName"
-              header="Last Name"
+              header={t("LAST_NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -775,7 +777,7 @@ const UsersPage = () => {
             <Column
               showAddButton={false}
               field="email"
-              header="Email"
+              header={t("EMAIL")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -785,7 +787,7 @@ const UsersPage = () => {
             <Column
               showAddButton={false}
               field="mobile"
-              header="Mobile"
+              header={t("MOBILE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -795,7 +797,7 @@ const UsersPage = () => {
             <Column
               showAddButton={false}
               field="country"
-              header="Country"
+              header={t("COUNTRY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="country"
@@ -806,7 +808,7 @@ const UsersPage = () => {
             <Column
               showAddButton={false}
               field="userType"
-              header="User Types"
+              header={t("USER_TYPES")}
               body={userTypeBodyTamplate}
               sortable
               headerStyle={{ minWidth: "10rem" }}
@@ -818,7 +820,7 @@ const UsersPage = () => {
             <Column
               showAddButton={false}
               field="kitchen"
-              header="Kitchen"
+              header={t("KITCHEN")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="kitchen"
@@ -835,7 +837,7 @@ const UsersPage = () => {
           <Dialog
             visible={usersDialog}
             style={{ width: "450px" }}
-            header="Users Details"
+            header={t("USERS_DETAILS")}
             modal
             className="p-fluid"
             footer={usersDialogFooter}
@@ -844,7 +846,7 @@ const UsersPage = () => {
             <div dir={textFormat}>
               <div className="grid ">
                 <div className="field col-6">
-                  <label htmlFor="firstName">First Name</label>
+                  <label htmlFor="firstName"> {t("FIRST_NAME")}</label>
                   <InputText
                     id="firstName"
                     placeholder="First Name"
@@ -858,7 +860,7 @@ const UsersPage = () => {
                 </div>
 
                 <div className="field col-6">
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="lastName"> {t("LAST_NAME")}</label>
                   <InputText
                     id="lastName"
                     placeholder="Last Name"
@@ -873,7 +875,7 @@ const UsersPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email"> {t("EMAIL")}</label>
                 <InputText
                   id="email"
                   placeholder="Email"
@@ -887,7 +889,7 @@ const UsersPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="mobile">Mobile</label>
+                <label htmlFor="mobile"> {t("MOBILE")}</label>
                 <InputText
                   id="mobile"
                   placeholder="Mobile number"
@@ -897,7 +899,7 @@ const UsersPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">{t("PASSWORD")}</label>
                 <Password
                   id="password"
                   value={users.password}
@@ -913,7 +915,7 @@ const UsersPage = () => {
 
               <div className="grid">
                 <div className="field col-6">
-                  <label htmlFor="country">Country</label>
+                  <label htmlFor="country">{t("COUNTRY")}</label>
                   <Dropdown
                     id="country"
                     placeholder="Select Country"
@@ -924,7 +926,7 @@ const UsersPage = () => {
                   />
                 </div>
                 <div className="field col-6">
-                  <label htmlFor="userType">User Types</label>
+                  <label htmlFor="userType"> {t("USER_TYPES")}</label>
                   <Dropdown
                     id="userType"
                     optionLabel="name"
@@ -939,7 +941,7 @@ const UsersPage = () => {
               </div>
               {users.userType === 2 && (
                 <div className="field">
-                  <label htmlFor="kitchen">Kitchen</label>
+                  <label htmlFor="kitchen">{t("KITCHEN")}</label>
                   <Dropdown
                     id="kitchen"
                     optionLabel="kitchenName"
@@ -953,7 +955,7 @@ const UsersPage = () => {
               )}
               <div>
                 <div className="field">
-                  <label htmlFor="kitchen">Address</label> <hr />
+                  <label htmlFor="kitchen">{t("ADDRESS")}</label> <hr />
                   <div className="mt-5 flex gap-2">
                     <span className="p-float-label">
                       <InputText
@@ -964,7 +966,7 @@ const UsersPage = () => {
                         }
                       />
                       <label htmlFor="addressPreference">
-                        Address Preference
+                        {t("ADDRESS_PREFERENCE")}
                       </label>
                     </span>
                     <span className="p-float-label">
@@ -973,7 +975,7 @@ const UsersPage = () => {
                         value={userAddress.zone}
                         onChange={(e) => onAddressChange(e, "zone")}
                       />
-                      <label htmlFor="username">Zone</label>
+                      <label htmlFor="username">{t("ZONE")}</label>
                     </span>
                   </div>
                   <div className="field mt-5 flex gap-2">
@@ -983,7 +985,7 @@ const UsersPage = () => {
                         value={userAddress.building}
                         onChange={(e) => onAddressChange(e, "building")}
                       />
-                      <label htmlFor="building">Building</label>
+                      <label htmlFor="building">{t("BUILDING")}</label>
                     </span>
                     <span className="p-float-label">
                       <InputText
@@ -991,7 +993,7 @@ const UsersPage = () => {
                         value={userAddress.unit}
                         onChange={(e) => onAddressChange(e, "unit")}
                       />
-                      <label htmlFor="unit">Unit</label>
+                      <label htmlFor="unit">{t("UNIT")}</label>
                     </span>
                     <span className="p-float-label">
                       <InputText
@@ -999,7 +1001,7 @@ const UsersPage = () => {
                         value={userAddress.streetName}
                         onChange={(e) => onAddressChange(e, "streetName")}
                       />
-                      <label htmlFor="streetName">Street Name</label>
+                      <label htmlFor="streetName"> {t("STREET_NAME")}</label>
                     </span>
                   </div>
                   <div className="field mt-5 flex gap-2">
@@ -1013,7 +1015,7 @@ const UsersPage = () => {
                         maxFractionDigits={4}
                         // minFractionDigits={0}
                       />
-                      <label htmlFor="longitude">Longitude</label>
+                      <label htmlFor="longitude"> {t("LONGITUDE")}</label>
                     </span>
                     <span className="p-float-label">
                       <InputNumber
@@ -1024,7 +1026,7 @@ const UsersPage = () => {
                         // onValueChange={(e) => onAddressChange(e, "latitude")}
                         maxFractionDigits={4}
                       />
-                      <label htmlFor="latitude">Latitude</label>
+                      <label htmlFor="latitude"> {t("LATITUDE")}</label>
                     </span>
                   </div>
                 </div>
@@ -1047,7 +1049,7 @@ const UsersPage = () => {
               />
               {users && (
                 <span>
-                  Are you sure you want to delete <b>Users record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")} <b>Users record</b>?
                 </span>
               )}
             </div>

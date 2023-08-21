@@ -29,8 +29,10 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const MealOrderItemPage = () => {
+  const { t } = useTranslation();
   const { asPath } = useRouter();
   const validation = [
     { id: "quantity", type: validate.number, max: 30, min: 0, required: true },
@@ -107,6 +109,7 @@ const MealOrderItemPage = () => {
     })();
     initFilters1();
   }, [refreshFlag]);
+
   const initFilters1 = () => {
     setFilters1({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -541,13 +544,13 @@ const MealOrderItemPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -562,7 +565,7 @@ const MealOrderItemPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -601,7 +604,7 @@ const MealOrderItemPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage MealOrderItems</h5>
+      <h5 className="m-0">{t("MANAGE_MEAL_ORDER_ITEMS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -616,13 +619,13 @@ const MealOrderItemPage = () => {
   const mealOrderItemDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveMealOrderItem}
@@ -632,13 +635,13 @@ const MealOrderItemPage = () => {
   const deleteMealOrderItemDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealOrderItemDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteMealOrderItem}
@@ -648,13 +651,13 @@ const MealOrderItemPage = () => {
   const deleteMealOrderItemsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealOrderItemsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedMealOrderItems}
@@ -711,7 +714,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -721,7 +724,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -733,7 +736,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="updateBy"
-              header="Update By"
+              header={t("UPDATE_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -743,7 +746,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="updateAt"
-              header="Update At"
+              header={t("UPDATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="updateAt"
@@ -755,7 +758,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="mealOrder"
-              header="Meal Order No"
+              header={t("MEAL_ORDER_NO")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="mealOrder"
@@ -766,7 +769,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="quantity"
-              header="quantity"
+              header={t("QUANTITY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               dataType="numeric"
@@ -777,7 +780,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="mealItem"
-              header="Meal Items"
+              header={t("MEAL_ITEMS")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="mealItem"
@@ -788,7 +791,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="code"
-              header="Code"
+              header={t("CODE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -798,7 +801,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="note"
-              header="Special Note"
+              header={t("SPECIAL_NOTE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -808,7 +811,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="subTotal"
-              header="Sub Total"
+              header={t("SUB_TOTAL")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               dataType="numeric"
@@ -819,7 +822,7 @@ const MealOrderItemPage = () => {
             <Column
               showAddButton={false}
               field="kitchen"
-              header="Kitchen"
+              header={t("KITCHEN")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -835,7 +838,7 @@ const MealOrderItemPage = () => {
           <Dialog
             visible={mealOrderItemDialog}
             style={{ width: "450px" }}
-            header="MealOrderItem Details"
+            header={t("MEAL_ORDER_ITEM")}
             modal
             className="p-fluid"
             footer={mealOrderItemDialogFooter}
@@ -843,7 +846,7 @@ const MealOrderItemPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="quantity">quantity</label>
+                <label htmlFor="quantity"> {t("QUANTITY")}</label>
                 <InputNumber
                   id="quantity"
                   value={mealOrderItem.quantity}
@@ -852,7 +855,7 @@ const MealOrderItemPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="note">Special Note</label>
+                <label htmlFor="note"> {t("SPECIAL_NOTE")}</label>
                 <InputText
                   id="note"
                   value={mealOrderItem.note}
@@ -877,7 +880,8 @@ const MealOrderItemPage = () => {
               />
               {mealOrderItem && (
                 <span>
-                  Are you sure you want to delete <b>MealOrderItem record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")}
+                  <b>MealOrderItem record</b>?
                 </span>
               )}
             </div>

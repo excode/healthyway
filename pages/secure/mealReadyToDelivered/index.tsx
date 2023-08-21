@@ -32,9 +32,11 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const MealOrderPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "invoiceNo", type: validate.text, max: 30, min: 0, required: true },
     { id: "customerName", type: validate.text, required: true },
@@ -280,7 +282,7 @@ const MealOrderPage = () => {
   const orderTypeFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">OrderType Picker</div>
+        <div className="mb-3 text-bold"> {t("ORDER_TYPE_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={dataorderTypes}
@@ -296,7 +298,7 @@ const MealOrderPage = () => {
   const statusFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Status Picker</div>
+        <div className="mb-3 text-bold"> {t("STATUS_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={dataStatus}
@@ -633,6 +635,7 @@ const MealOrderPage = () => {
       });
     }
   };
+
   const filterAction = async (e: DataTableFilterEvent) => {
     await getNewData(e, 0);
   };
@@ -700,17 +703,8 @@ const MealOrderPage = () => {
           className="p-button-rounded p-button-success gap-3 "
           onClick={() => confirmMealOrderAction(rowData, "dispatched")}
         >
-          Dispatched
+          {t("DISPATCHED")}
         </Button>
-        {/* <Button
-          name="cooking"
-          className="p-button-rounded p-button-info "
-          onClick={() => confirmMealOrderAction(rowData, dataStatus[1].value)}
-          // onClick={() => confirmCookingMealOrder(rowData)}
-        >
-          <Image src={cooking} alt="cooking" width={18} />
-        </Button>
-      */}
 
         <Button
           name="cancelled"
@@ -724,7 +718,7 @@ const MealOrderPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage MealOrders</h5>
+      <h5 className="m-0">{t("MANAGE_MEAL_ORDERS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -739,13 +733,13 @@ const MealOrderPage = () => {
   const mealOrderDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveMealOrder}
@@ -755,7 +749,7 @@ const MealOrderPage = () => {
   const mealOrderConfirmationDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideMealOrderConfirmationDialog}
@@ -771,13 +765,13 @@ const MealOrderPage = () => {
   const cookingMealOrderDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealOrderDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveMealOrder}
@@ -788,13 +782,13 @@ const MealOrderPage = () => {
   const deleteMealOrdersDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealOrdersDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedMealOrders}
@@ -807,10 +801,8 @@ const MealOrderPage = () => {
     return (
       <div className="flex align-items-center gap-2 ">
         <span className="font-semibold capitalize text-lg">
-          Ready To Dispatched
+          {t("READY_TO_DISPATCHED")}
         </span>
-        {/* <span>{date}</span> */}
-        {/* <span>{data.deliveryDate}</span> */}
       </div>
     );
   };
@@ -829,7 +821,7 @@ const MealOrderPage = () => {
       <React.Fragment>
         <td colSpan={5}>
           <div className="flex justify-content-end font-bold w-full">
-            Total {data.status}: {calculateSessionMealTotal(data)}
+            {t("TOTAL")} {data.status}: {calculateSessionMealTotal(data)}
           </div>
         </td>
       </React.Fragment>
@@ -863,28 +855,6 @@ const MealOrderPage = () => {
     return time;
   };
 
-  // const statusBodyTemplate = (data: MealOrder) => {
-  //   const getSeverity = (status: string) => {
-  //     switch (status) {
-  //       case "dispatched":
-  //         return "help";
-
-  //       case "prepared":
-  //         return "success";
-
-  //       default:
-  //         return "success";
-
-  //       // case "cancelled":
-  //       //   return "danger";
-
-  //       // case "cooking":
-  //       //   return "info";
-  //     }
-  //   };
-  //   return <Tag value={data.status} severity={getSeverity(data?.status)} />;
-  // };
-
   const statusBodyTemplate = (data: MealOrder) => {
     const getSeverity = (status: string) => {
       switch (status) {
@@ -911,23 +881,15 @@ const MealOrderPage = () => {
           {data.deliveryAddress.addressPreference}:
         </span>
         <div className="mt-1">
-          <span className="font-semibold">Zone: </span>
+          <span className="font-semibold">{t("ZONE")}: </span>
           {data.deliveryAddress.zone},
-          <span className="font-semibold"> Building: </span>
+          <span className="font-semibold"> {t("BUILDING")}g: </span>
           {data.deliveryAddress.building},
-          <span className="font-semibold"> Unite: </span>
+          <span className="font-semibold"> {t("UNITE")}: </span>
           {data.deliveryAddress.unit},
-          <span className="font-semibold"> Street: </span>
+          <span className="font-semibold"> {t("STREET")}: </span>
           {data.deliveryAddress.streetName}
         </div>
-        {/* <div>
-          <span className="font-semibold">Latitude: </span>
-          {data.deliveryAddress.geoTag &&
-            data.deliveryAddress.geoTag.coordinates[0]}
-          ,<span className="font-semibold"> Longitude: </span>
-          {data.deliveryAddress.geoTag &&
-            data.deliveryAddress.geoTag.coordinates[1]}
-        </div> */}
       </div>
     );
   };
@@ -962,154 +924,6 @@ const MealOrderPage = () => {
             end={rightToolbarTemplate}
           ></Toolbar>
 
-          {/* <DataTable
-            ref={dt}
-            value={mealOrders}
-            selection={selectedMealOrders}
-            onSelectionChange={(e) =>
-              setSelectedMealOrders(e.value as MealOrder[])
-            }
-            dataKey="id"
-            loading={loading}
-            filters={filters1}
-            showGridlines
-            filterDisplay="menu"
-            onFilter={filterAction}
-            paginator
-            totalRecords={totalRecords}
-            rows={row}
-            lazy={true}
-            onSort={sortData}
-            onPage={changePage}
-            rowsPerPageOptions={[1, 5, 10, 25, 50]}
-            className="datatable-responsive"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} MealOrders"
-            emptyMessage="No MealOrders found."
-            header={header}
-            responsiveLayout="scroll"
-          >
-            <Column
-              selectionMode="multiple"
-              headerStyle={{ width: "4rem" }}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="createBy"
-              header="Created By"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by createBy"
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="updateBy"
-              header="Update By"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by updateBy"
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="updateAt"
-              header="Update At"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="updateAt"
-              dataType="date"
-              filter
-              filterElement={updateAtFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="orderDate"
-              header="orderDate"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="orderDate"
-              dataType="date"
-              filter
-              filterElement={orderDateFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="deliveryDate"
-              header="deliveryDate"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="deliveryDate"
-              dataType="date"
-              filter
-              filterElement={deliveryDateFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="status"
-              header="status"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="status"
-              filter
-              filterElement={statusFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="Instruction"
-              header="Instruction"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by Instruction"
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="orderType"
-              header="Order Type"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="orderType"
-              filter
-              filterElement={orderTypeFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="location"
-              header="Location"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by location"
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="createAt"
-              header="Created At"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="createAt"
-              dataType="date"
-              filter
-              filterElement={createAtFilterTemplate}
-            ></Column>
-
-            <Column
-              body={actionBodyTemplate}
-              headerStyle={{ minWidth: "10rem" }}
-            ></Column>
-          </DataTable> */}
-
           <DataTable
             value={mealOrders}
             rowGroupMode="subheader"
@@ -1128,13 +942,13 @@ const MealOrderPage = () => {
           >
             <Column
               field="item.name"
-              header="Meal Name"
+              header={t("MEAL_NAME")}
               body={nameBodyTemplate}
               style={{ minWidth: "200px" }}
             ></Column>
             <Column
               field="session"
-              header="Session"
+              header={t("SESSION")}
               className="capitalize"
               // body={countryBodyTemplate}
               style={{ minWidth: "100px" }}
@@ -1142,40 +956,40 @@ const MealOrderPage = () => {
 
             <Column
               field="quantity"
-              header="Quantity"
+              header={t("QUANTITY")}
               style={{ minWidth: "100px" }}
             ></Column>
             <Column
-              header="Delivery Time"
+              header={t("DELIVERY_TIME")}
               body={timeLeftBodyTemplate}
               style={{ minWidth: "150px" }}
             ></Column>
             <Column
               // field="status"
-              header="Status"
+              header={t("STATUS")}
               body={statusBodyTemplate}
               style={{ minWidth: "100px" }}
             ></Column>
 
             <Column
               field="invoiceNo"
-              header="Invoice No"
+              header={t("INVOICE_NO")}
               style={{ minWidth: "100px" }}
             ></Column>
             <Column
               field="customerPhone"
-              header="Customer Phone"
+              header={t("CUSTOMER_PHONE")}
               style={{ minWidth: "150px" }}
             ></Column>
             <Column
               field="customerPhone"
-              header="Delivery Address"
+              header={t("DELIVERY_ADDRESS")}
               style={{ minWidth: "150px" }}
               body={addressBodyTemplate}
             ></Column>
             <Column
               // field="customerPhone"
-              header="Action"
+              header={t("ACTION")}
               style={{ minWidth: "150px" }}
               body={actionBodyTemplate}
             ></Column>
@@ -1192,7 +1006,7 @@ const MealOrderPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="invoiceNo">Invoice No</label>
+                <label htmlFor="invoiceNo">{t("INVOICE_NO")}</label>
                 <InputText
                   id="invoiceNo"
                   value={mealOrder.invoiceNo}
@@ -1205,7 +1019,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="customerName">Customer Name</label>
+                <label htmlFor="customerName">{t("CUSTOMER_NAME")}</label>
                 <AutoComplete
                   field="name"
                   id="customerName"
@@ -1217,7 +1031,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="customerEmail">Email</label>
+                <label htmlFor="customerEmail">{t("EMAIL")}</label>
                 <AutoComplete
                   field="email"
                   id="customerEmail"
@@ -1229,7 +1043,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="customerPhone">Phone</label>
+                <label htmlFor="customerPhone">{t("PHONE")}</label>
                 <AutoComplete
                   field="mobile"
                   id="customerPhone"
@@ -1241,7 +1055,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="Instruction">Instruction</label>
+                <label htmlFor="Instruction">{t("INSTRUCTION")}</label>
                 <InputText
                   id="Instruction"
                   value={mealOrder.Instruction}
@@ -1254,7 +1068,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="orderType">Order Type</label>
+                <label htmlFor="orderType">{t("ORDER_TYPE")}</label>
                 <Dropdown
                   id="orderType"
                   optionLabel="name"
@@ -1265,7 +1079,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="location">Location</label>
+                <label htmlFor="location">{t("LOCATION")}</label>
                 <InputText
                   id="location"
                   value={mealOrder.location}

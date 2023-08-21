@@ -35,9 +35,11 @@ import { UploadInfo } from "@services/UploadInfo";
 import { LangContext } from "hooks/lan";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Image } from "primereact/image";
+import { useTranslation } from "react-i18next";
 
 const MealPlanPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "meals", type: validate.array, required: true },
     { id: "quantity", type: validate.int, max: 1000, min: 1, required: true },
@@ -607,13 +609,13 @@ const MealPlanPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -667,7 +669,7 @@ const MealPlanPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage MealPlans</h5>
+      <h5 className="m-0">{t("MANAGE_MEAL_PLANS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -682,13 +684,13 @@ const MealPlanPage = () => {
   const mealPlanDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveMealPlan}
@@ -698,13 +700,13 @@ const MealPlanPage = () => {
   const deleteMealPlanDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealPlanDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteMealPlan}
@@ -714,13 +716,13 @@ const MealPlanPage = () => {
   const deleteMealPlansDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealPlansDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedMealPlans}
@@ -777,7 +779,7 @@ const MealPlanPage = () => {
             <Column
               showAddButton={false}
               field="image"
-              header="Image"
+              header={t("IMAGE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               body={imageBodyTemplate}
@@ -786,7 +788,7 @@ const MealPlanPage = () => {
             <Column
               showAddButton={false}
               field="meals"
-              header="Item Name"
+              header={t("ITEM_NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="meals"
@@ -797,7 +799,7 @@ const MealPlanPage = () => {
             <Column
               showAddButton={false}
               field="quantity"
-              header="Quantity"
+              header={t("QUANTITY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               dataType="numeric"
@@ -808,7 +810,7 @@ const MealPlanPage = () => {
             <Column
               showAddButton={false}
               field="name"
-              header="name"
+              header={t("NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -818,7 +820,7 @@ const MealPlanPage = () => {
             <Column
               showAddButton={false}
               field="price"
-              header="price"
+              header={t("PRICE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               dataType="numeric"
@@ -829,7 +831,7 @@ const MealPlanPage = () => {
             <Column
               showAddButton={false}
               field="description"
-              header="description"
+              header={t("DESCRIPTION")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -839,7 +841,7 @@ const MealPlanPage = () => {
             <Column
               showAddButton={false}
               field="code"
-              header="code"
+              header={t("CODE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -849,7 +851,7 @@ const MealPlanPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -865,7 +867,7 @@ const MealPlanPage = () => {
           <Dialog
             visible={mealPlanDialog}
             style={{ width: "450px" }}
-            header="MealPlan Details"
+            header={t("MEAL_PLAN_DETAILS")}
             modal
             className="p-fluid"
             footer={mealPlanDialogFooter}
@@ -873,7 +875,7 @@ const MealPlanPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="meals">Item Name</label>
+                <label htmlFor="meals"> {t("ITEM_NAME")}</label>
                 <AutoComplete
                   field="name"
                   id="meals"
@@ -886,7 +888,7 @@ const MealPlanPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="quantity">Quantity</label>
+                <label htmlFor="quantity">{t("QUANTITY")}</label>
                 <InputNumber
                   id="quantity"
                   value={mealPlan.quantity}
@@ -895,7 +897,7 @@ const MealPlanPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="name">name</label>
+                <label htmlFor="name">{t("NAME")}</label>
                 <InputText
                   id="name"
                   value={mealPlan.name}
@@ -908,7 +910,7 @@ const MealPlanPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="price">price</label>
+                <label htmlFor="price">{t("PRICE")}</label>
                 <InputNumber
                   id="price"
                   value={mealPlan.price}
@@ -917,7 +919,7 @@ const MealPlanPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="description">description</label>
+                <label htmlFor="description">{t("DESCRIPTION")}</label>
                 <InputTextarea
                   id="description"
                   value={mealPlan.description}
@@ -928,7 +930,7 @@ const MealPlanPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="code">code</label>
+                <label htmlFor="code">{t("CODE")}</label>
                 <InputText
                   id="code"
                   value={mealPlan.code}
@@ -941,7 +943,7 @@ const MealPlanPage = () => {
           <Dialog
             visible={deleteMealPlanDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteMealPlanDialogFooter}
             onHide={hideDeleteMealPlanDialog}
@@ -953,7 +955,7 @@ const MealPlanPage = () => {
               />
               {mealPlan && (
                 <span>
-                  Are you sure you want to delete <b>MealPlan record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")} <b>MealPlan record</b>?
                 </span>
               )}
             </div>

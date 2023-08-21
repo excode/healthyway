@@ -13,10 +13,12 @@ import BlockViewer from "../../../components/BlockViewer";
 
 import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
-import { Dialog } from "primereact/dialog";
 import { LangContext } from "hooks/lan";
+import { Dialog } from "primereact/dialog";
+import { useTranslation } from "react-i18next";
 
 const IngredientDetails = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const ingredientService = new IngredientService();
   const [ingredient, setIngredient] = useState<Ingredient>({
@@ -148,7 +150,7 @@ const IngredientDetails = () => {
   return (
     <>
       <BlockViewer
-        header="Ingredient details"
+        header={t("INGREDIENT_DETAILS")}
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast
@@ -166,7 +168,7 @@ const IngredientDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created By
+                    {t("CREATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {ingredient.createBy}
@@ -175,7 +177,7 @@ const IngredientDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created At
+                    {t("CREATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {ingredient.createAt}
@@ -184,7 +186,7 @@ const IngredientDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update By
+                    {t("UPDATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {ingredient.updateBy}
@@ -193,7 +195,7 @@ const IngredientDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update At
+                    {t("UPDATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {ingredient.updateAt}
@@ -201,14 +203,20 @@ const IngredientDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">name</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {" "}
+                    {t("NAME")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {ingredient.name}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">unit</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {" "}
+                    {t(" UNITE")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {ingredient.unit}
                   </div>
@@ -216,7 +224,7 @@ const IngredientDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    description
+                    {t("DISCRIPTION")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {ingredient.description}
@@ -225,7 +233,7 @@ const IngredientDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Item Code
+                    {t("ITEM_CODE")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {ingredient.itemCode}
