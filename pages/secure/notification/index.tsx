@@ -29,9 +29,11 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const NotificationPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "chefId", type: validate.text, required: true },
     { id: "message", type: validate.text, max: 500, min: 0, required: true },
@@ -194,7 +196,7 @@ const NotificationPage = () => {
   const statusFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Status Picker</div>
+        <div className="mb-3 text-bold"> {t("STATUS_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datastatuss}
@@ -504,13 +506,13 @@ const NotificationPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -525,7 +527,7 @@ const NotificationPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -564,7 +566,7 @@ const NotificationPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Notifications</h5>
+      <h5 className="m-0">{t("MANAGE_NOTIFICATIONS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -579,13 +581,13 @@ const NotificationPage = () => {
   const notificationDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveNotification}
@@ -595,13 +597,13 @@ const NotificationPage = () => {
   const deleteNotificationDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteNotificationDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteNotification}
@@ -611,13 +613,13 @@ const NotificationPage = () => {
   const deleteNotificationsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteNotificationsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedNotifications}
@@ -674,7 +676,7 @@ const NotificationPage = () => {
             <Column
               showAddButton={false}
               field="chefId"
-              header="chefId"
+              header={t("CHEF_ID")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="chefId"
@@ -685,7 +687,7 @@ const NotificationPage = () => {
             <Column
               showAddButton={false}
               field="message"
-              header="message"
+              header={t("MESSAGE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -695,7 +697,7 @@ const NotificationPage = () => {
             <Column
               showAddButton={false}
               field="status"
-              header="Status"
+              header={t("STATUS")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="status"
@@ -706,7 +708,7 @@ const NotificationPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -716,7 +718,7 @@ const NotificationPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -742,7 +744,7 @@ const NotificationPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="chefId">chefId</label>
+                <label htmlFor="chefId">{t("CHEF_ID")}</label>
                 <AutoComplete
                   field="name"
                   id="chefId"
@@ -754,7 +756,7 @@ const NotificationPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="message">message</label>
+                <label htmlFor="message">{t("MESSAGE")}</label>
                 <InputText
                   id="message"
                   value={notification.message}
@@ -767,7 +769,7 @@ const NotificationPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="status">Status</label>
+                <label htmlFor="status">{t("STATUS")}</label>
                 <Dropdown
                   id="status"
                   optionLabel="name"
@@ -782,7 +784,7 @@ const NotificationPage = () => {
           <Dialog
             visible={deleteNotificationDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteNotificationDialogFooter}
             onHide={hideDeleteNotificationDialog}
@@ -794,7 +796,8 @@ const NotificationPage = () => {
               />
               {notification && (
                 <span>
-                  Are you sure you want to delete <b>Notification record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")}
+                  <b>Notification record</b>?
                 </span>
               )}
             </div>

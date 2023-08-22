@@ -29,11 +29,13 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
 import { LangContext } from "hooks/lan";
-import { Image } from "primereact/image";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { Image } from "primereact/image";
+import { useTranslation } from "react-i18next";
 
 const IngredientPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "name", type: validate.text, max: 30, min: 3, required: true },
     { id: "itemCode", type: validate.text, max: 90, min: 0, required: true },
@@ -551,13 +553,13 @@ const IngredientPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -572,7 +574,7 @@ const IngredientPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -611,13 +613,13 @@ const IngredientPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Ingredients</h5>
+      <h5 className="m-0"> {t("MANAGE_INGREDIENTS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           type="search"
           onInput={(e: any) => localFilter(e.target.value)}
-          placeholder="Local Search..."
+          placeholder={t("LOCAL_SEARCH")}
         />
       </span>
     </div>
@@ -626,13 +628,13 @@ const IngredientPage = () => {
   const ingredientDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveIngredient}
@@ -642,13 +644,13 @@ const IngredientPage = () => {
   const deleteIngredientDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteIngredientDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteIngredient}
@@ -658,13 +660,13 @@ const IngredientPage = () => {
   const deleteIngredientsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteIngredientsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedIngredients}
@@ -721,7 +723,7 @@ const IngredientPage = () => {
             <Column
               showAddButton={false}
               field="image"
-              header="Image"
+              header={t("IMAGE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               body={imageBodyTemplate}
@@ -730,17 +732,17 @@ const IngredientPage = () => {
             <Column
               showAddButton={false}
               field="name"
-              header="name"
+              header={t("NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
-              filterPlaceholder="Search by name"
+              filterPlaceholder={t("SEARCH_BY_NAME")}
             ></Column>
 
             <Column
               showAddButton={false}
               field="itemCode"
-              header="Item Code"
+              header={t("ITEM_CODE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -750,7 +752,7 @@ const IngredientPage = () => {
             <Column
               showAddButton={false}
               field="unit"
-              header="unit"
+              header={t("UNIT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -760,7 +762,7 @@ const IngredientPage = () => {
             <Column
               showAddButton={false}
               field="description"
-              header="description"
+              header={t("DESCRIPTION")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -770,7 +772,7 @@ const IngredientPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -780,7 +782,7 @@ const IngredientPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -806,7 +808,7 @@ const IngredientPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="name">name</label>
+                <label htmlFor="name">{t("NAME")}</label>
                 <InputText
                   id="name"
                   value={ingredient.name}
@@ -819,7 +821,7 @@ const IngredientPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="itemCode">Item Code</label>
+                <label htmlFor="itemCode"> {t("ITEM_CODE")}</label>
                 <InputText
                   id="itemCode"
                   value={ingredient.itemCode}
@@ -832,7 +834,7 @@ const IngredientPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="unit">unit</label>
+                <label htmlFor="unit"> {t("UNIT")}</label>
                 <InputText
                   id="unit"
                   value={ingredient.unit}
@@ -845,7 +847,7 @@ const IngredientPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="description">description</label>
+                <label htmlFor="description"> {t("DESCRIPTION")}</label>
                 <InputText
                   id="description"
                   value={ingredient.description}
@@ -870,7 +872,8 @@ const IngredientPage = () => {
               />
               {ingredient && (
                 <span>
-                  Are you sure you want to delete <b>Ingredient record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")}
+                  <b>Ingredient record</b>?
                 </span>
               )}
             </div>

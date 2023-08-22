@@ -6,6 +6,7 @@ import { UserData } from "@services/Login";
 import { Users, UsersKey, UsersQuery, UsersService } from "@services/Users";
 import { LangContext } from "hooks/lan";
 import jwt_decode, { JwtPayload } from "jwt-decode";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import getConfig from "next/config";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -27,11 +28,12 @@ import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
+import { useTranslation } from "react-i18next";
 import countryData from "../../utilities/countryData.json";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const CustomerPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const [userData, setUserData] = useState<UserData>({ email: "" });
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
@@ -171,7 +173,7 @@ const CustomerPage = () => {
   const countryFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Country Picker</div>
+        <div className="mb-3 text-bold">{t("COUNTRY_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datacountrys}
@@ -187,7 +189,7 @@ const CustomerPage = () => {
   const userTypeFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">UserType Picker</div>
+        <div className="mb-3 text-bold">{t("USER_TYPE_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datauserTypes.filter(
@@ -227,7 +229,9 @@ const CustomerPage = () => {
   const kitchenFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Kitchen Picker</div>
+        <div className="mb-3 text-bold">
+          Kitchen Picker {t("KITCHEN_PICKER")}
+        </div>
         <Dropdown
           value={options.value}
           options={dataKitchens}
@@ -536,13 +540,13 @@ const CustomerPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -557,7 +561,7 @@ const CustomerPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -596,13 +600,13 @@ const CustomerPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Customer Table</h5>
+      <h5 className="m-0">{t("CUSTOMER_TABLE")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           type="search"
           onInput={(e: any) => localFilter(e.target.value)}
-          placeholder="Local Search..."
+          placeholder={t("LOCAL_SEARCH")}
         />
       </span>
     </div>
@@ -611,13 +615,13 @@ const CustomerPage = () => {
   const usersDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveUsers}
@@ -627,13 +631,13 @@ const CustomerPage = () => {
   const deleteUsersDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteUsersDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteUsers}
@@ -643,13 +647,13 @@ const CustomerPage = () => {
   const deleteUserssDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteUserssDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedUserss}
@@ -704,7 +708,7 @@ const CustomerPage = () => {
             <Column
               showAddButton={false}
               field="firstName"
-              header="First Name"
+              header={t("FIRST_NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -714,7 +718,7 @@ const CustomerPage = () => {
             <Column
               showAddButton={false}
               field="lastName"
-              header="Last Name"
+              header={t("LAST_NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -724,7 +728,7 @@ const CustomerPage = () => {
             <Column
               showAddButton={false}
               field="email"
-              header="Email"
+              header={t("EMAIL")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -734,7 +738,7 @@ const CustomerPage = () => {
             <Column
               showAddButton={false}
               field="mobile"
-              header="Mobile"
+              header={t("MOBILE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -783,7 +787,7 @@ const CustomerPage = () => {
           <Dialog
             visible={usersDialog}
             style={{ width: "450px" }}
-            header="Users Details"
+            header={t("USERS_DETAILS")}
             modal
             className="p-fluid"
             footer={usersDialogFooter}
@@ -792,10 +796,10 @@ const CustomerPage = () => {
             <div dir={textFormat}>
               <div className="grid ">
                 <div className="field col-6">
-                  <label htmlFor="firstName">First Name</label>
+                  <label htmlFor="firstName">{t("FIRST_NAME")}</label>
                   <InputText
                     id="firstName"
-                    placeholder="First Name"
+                    placeholder={t("FIRST_NAME")}
                     value={users.firstName}
                     onChange={(e) => onInputChange(e, "firstName")}
                     required
@@ -806,7 +810,7 @@ const CustomerPage = () => {
                 </div>
 
                 <div className="field col-6">
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="lastName"> {t("LAST_NAME")}</label>
                   <InputText
                     id="lastName"
                     placeholder="Last Name"
@@ -821,7 +825,7 @@ const CustomerPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">{t("EMAIL")}</label>
                 <InputText
                   id="email"
                   placeholder="Email"
@@ -835,17 +839,17 @@ const CustomerPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="mobile">Mobile</label>
+                <label htmlFor="mobile"> {t("MOBILE")}</label>
                 <InputText
                   id="mobile"
-                  placeholder="Mobile number"
+                  placeholder={t("MOBILE_NUMBER")}
                   value={users.mobile}
                   onChange={(e) => onInputChange(e, "mobile")}
                 />
               </div>
 
               <div className="field">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password"> {t("PASSWORD")}</label>
                 <Password
                   id="password"
                   value={users.password}
@@ -860,7 +864,7 @@ const CustomerPage = () => {
 
               <div className="grid">
                 <div className="field col-6">
-                  <label htmlFor="country">Country</label>
+                  <label htmlFor="country"> {t("COUNTRY")}</label>
                   <Dropdown
                     id="country"
                     placeholder=""
@@ -871,7 +875,7 @@ const CustomerPage = () => {
                   />
                 </div>
                 <div className="field col-6">
-                  <label htmlFor="userType">User Types</label>
+                  <label htmlFor="userType"> {t("USER_TYPES")}</label>
                   <Dropdown
                     id="userType"
                     optionLabel="name"
@@ -886,7 +890,7 @@ const CustomerPage = () => {
 
               {userData.permissionLevel == 0 ? (
                 <div className="field">
-                  <label htmlFor="kitchen">Kitchen</label>
+                  <label htmlFor="kitchen">{t("KITCHEN")}</label>
                   <Dropdown
                     id="kitchen"
                     optionLabel="kitchenName"
@@ -905,7 +909,7 @@ const CustomerPage = () => {
           <Dialog
             visible={deleteUsersDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteUsersDialogFooter}
             onHide={hideDeleteUsersDialog}
@@ -917,7 +921,7 @@ const CustomerPage = () => {
               />
               {users && (
                 <span>
-                  Are you sure you want to delete <b>Users record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")} <b>Users record</b>?
                 </span>
               )}
             </div>

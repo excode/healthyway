@@ -3,10 +3,12 @@ import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import BlockViewer from "../../../components/BlockViewer";
 
 const UsersDetails = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const { textFormat } = useContext(LangContext);
   const usersService = new UsersService();
   const [users, setUsers] = useState<Users>({} as Users);
@@ -60,7 +62,7 @@ const UsersDetails = () => {
   return (
     <>
       <BlockViewer
-        header="Users details"
+        header={t("USERS_DETAILS")}
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast
@@ -77,7 +79,7 @@ const UsersDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    First Name
+                    {t("FIRST_NAME")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {users.firstName}
@@ -86,7 +88,7 @@ const UsersDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Last Name
+                    {t("LAST_NAME")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {users.lastName}
@@ -94,28 +96,36 @@ const UsersDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Email</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("EMAIL")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {users.email}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Mobile</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("MOBILE")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {users.mobile}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Country</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("COUNTRY")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {users.country}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Address</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("ADDRESS")}
+                  </div>
                   <li>
                     {users.address?.length > 0 ? (
                       users.address?.map((a) => (
@@ -124,19 +134,32 @@ const UsersDetails = () => {
                             {a.addressPreference}:
                           </span>
                           <div className="mt-1">
-                            <span className="font-semibold">Zone: </span>
+                            <span className="font-semibold">{t("ZONE")}: </span>
                             {a.zone},
-                            <span className="font-semibold"> Building: </span>
+                            <span className="font-semibold">
+                              {" "}
+                              {t("BUILDING")}:{" "}
+                            </span>
                             {a.building},
-                            <span className="font-semibold"> Unite: </span>
+                            <span className="font-semibold">
+                              {" "}
+                              {t("UNITE")}:{" "}
+                            </span>
                             {a.unit},
-                            <span className="font-semibold"> Street: </span>
+                            <span className="font-semibold">
+                              {" "}
+                              {t("STREET")}:{" "}
+                            </span>
                             {a.streetName}
                           </div>
                           <div>
-                            <span className="font-semibold">Latitude: </span>
+                            <span className="font-semibold">
+                              {t("LATITUDE")}:
+                            </span>
                             {a.geoTag && a.geoTag.coordinates[0]},
-                            <span className="font-semibold"> Longitude: </span>
+                            <span className="font-semibold">
+                              {t("LONGITUDE")}:
+                            </span>
                             {a.geoTag && a.geoTag.coordinates[1]}
                           </div>
                         </div>
@@ -149,14 +172,14 @@ const UsersDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    User Types
+                    {t("USER_TYPES")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     <p>
                       {users.userType >= 0 ? (
                         dataUserTypes[users.userType].name
                       ) : (
-                        <span>User type not set yet!</span>
+                        <span>{t("USER_TYPE_NOT_SET_YET")}</span>
                       )}
                     </p>
                   </div>
@@ -165,7 +188,7 @@ const UsersDetails = () => {
                 {users.kitchen !== 3 || (
                   <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                     <div className="text-500 w-6 md:w-2 font-medium">
-                      Kitchen
+                      {t("KITCHEN")}
                     </div>
                     <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                       {users.kitchen}

@@ -28,9 +28,11 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const InventoryPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "itemCode", type: validate.text, required: true },
     { id: "itemName", type: validate.text, max: 90, min: 0, required: false },
@@ -387,7 +389,6 @@ const InventoryPage = () => {
     let val = e.value || 0;
     let _inventory = { ...inventory };
     _inventory[name] = val;
-
     setInventory(_inventory);
   };
   const getNewData = async (e: any, type: number = 0) => {
@@ -485,13 +486,13 @@ const InventoryPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -506,7 +507,7 @@ const InventoryPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -545,13 +546,13 @@ const InventoryPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Inventorys</h5>
+      <h5 className="m-0">{t("MANAGE_INVENTORY")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           type="search"
           onInput={(e: any) => localFilter(e.target.value)}
-          placeholder="Local Search..."
+          placeholder={t("LOCAL_SEARCH")}
         />
       </span>
     </div>
@@ -560,13 +561,13 @@ const InventoryPage = () => {
   const inventoryDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveInventory}
@@ -576,13 +577,13 @@ const InventoryPage = () => {
   const deleteInventoryDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteInventoryDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteInventory}
@@ -592,13 +593,13 @@ const InventoryPage = () => {
   const deleteInventorysDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteInventorysDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedInventorys}
@@ -655,7 +656,7 @@ const InventoryPage = () => {
             <Column
               showAddButton={false}
               field="itemCode"
-              header="Item Code"
+              header={t("ITEM_CODE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="itemCode"
@@ -666,7 +667,7 @@ const InventoryPage = () => {
             <Column
               showAddButton={false}
               field="itemName"
-              header="Item Name"
+              header={t("ITEM_NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -676,7 +677,7 @@ const InventoryPage = () => {
             <Column
               showAddButton={false}
               field="quantity"
-              header="quantity"
+              header={t("QUANTITY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               dataType="numeric"
@@ -687,7 +688,7 @@ const InventoryPage = () => {
             <Column
               showAddButton={false}
               field="note"
-              header="Notes"
+              header={t("NOTES")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -697,7 +698,7 @@ const InventoryPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -709,7 +710,7 @@ const InventoryPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -725,7 +726,7 @@ const InventoryPage = () => {
           <Dialog
             visible={inventoryDialog}
             style={{ width: "450px" }}
-            header="Inventory Details"
+            header={t("INVENTORY_DETAILS")}
             modal
             className="p-fluid"
             footer={inventoryDialogFooter}
@@ -733,7 +734,7 @@ const InventoryPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="itemCode">Item Code</label>
+                <label htmlFor="itemCode"> {t("ITEM_CODE")}</label>
                 <AutoComplete
                   field="name"
                   id="itemCode"
@@ -746,7 +747,7 @@ const InventoryPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="itemName">Item Name</label>
+                <label htmlFor="itemName"> {t("ITEM_NAME")}</label>
                 <InputText
                   id="itemName"
                   value={inventory.itemName}
@@ -755,7 +756,7 @@ const InventoryPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="quantity">quantity</label>
+                <label htmlFor="quantity"> {t("QUANTITY")}</label>
                 <InputNumber
                   id="quantity"
                   value={inventory.quantity}
@@ -764,7 +765,7 @@ const InventoryPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="note">Notes</label>
+                <label htmlFor="note"> {t("NOTES")}</label>
                 <InputText
                   id="note"
                   value={inventory.note}
@@ -777,7 +778,7 @@ const InventoryPage = () => {
           <Dialog
             visible={deleteInventoryDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteInventoryDialogFooter}
             onHide={hideDeleteInventoryDialog}
@@ -789,7 +790,8 @@ const InventoryPage = () => {
               />
               {inventory && (
                 <span>
-                  Are you sure you want to delete <b>Inventory record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")} <b>Inventory record</b>
+                  ?
                 </span>
               )}
             </div>

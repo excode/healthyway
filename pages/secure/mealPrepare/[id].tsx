@@ -3,10 +3,12 @@ import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import BlockViewer from "../../../components/BlockViewer";
 
 const MealPrepareDetails = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const { textFormat } = useContext(LangContext);
   const mealprepareService = new MealPrepareService();
   const [mealPrepare, setMealPrepare] = useState<MealPrepare>({
@@ -54,7 +56,7 @@ const MealPrepareDetails = () => {
   return (
     <>
       <BlockViewer
-        header="MealPrepare details"
+        header={t("MEAL_PREPARE_DETAILS")}
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast
@@ -71,7 +73,7 @@ const MealPrepareDetails = () => {
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created By
+                    {t("CREATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.createBy}
@@ -80,7 +82,7 @@ const MealPrepareDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Created At
+                    {t("CREATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.createAt}
@@ -89,7 +91,7 @@ const MealPrepareDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update By
+                    {t("UPDATED_BY")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.updateBy}
@@ -98,7 +100,7 @@ const MealPrepareDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Update At
+                    {t("UPDATED_AT")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.updateAt}
@@ -106,14 +108,19 @@ const MealPrepareDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">chefId</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {" "}
+                    {t("CHEF_ID")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.chefId}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">orderId</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("ORDER_ID")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.orderId}
                   </div>
@@ -121,7 +128,7 @@ const MealPrepareDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    startTime
+                    {t("START_TIME")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.startTime}
@@ -129,14 +136,18 @@ const MealPrepareDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">endTime</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("END_TIME")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.endTime}
                   </div>
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">status</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("STATUS")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.status}
                   </div>
@@ -144,7 +155,7 @@ const MealPrepareDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Delivery Time
+                    {t("DELIVERY_TIME")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.deliveryTime}
@@ -152,7 +163,9 @@ const MealPrepareDetails = () => {
                 </li>
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("KITCHEN")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {mealPrepare.kitchen}
                   </div>

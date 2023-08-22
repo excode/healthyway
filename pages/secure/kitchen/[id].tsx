@@ -3,9 +3,11 @@ import { LangContext } from "hooks/lan";
 import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import BlockViewer from "../../../components/BlockViewer";
 
 const UsersDetails = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   // const usersService = new UsersService();
   const kitchenService = new KitchenService();
@@ -61,7 +63,7 @@ const UsersDetails = () => {
   return (
     <>
       <BlockViewer
-        header="Kitchen details"
+        header={t("KITCHEN_DETAILS")}
         containerClassName="surface-section px-4 py-8 md:px-6 lg:px-8"
       >
         <Toast
@@ -77,7 +79,9 @@ const UsersDetails = () => {
             <>
               <ul className="list-none p-0 m-0">
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Kitchen</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("KITCHEN")}
+                  </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {kitchen.kitchenName}
                   </div>
@@ -85,7 +89,7 @@ const UsersDetails = () => {
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                   <div className="text-500 w-6 md:w-2 font-medium">
-                    Kitchen's Chef
+                    {t("KITCHEN_S_CHEF")}
                   </div>
                   <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                     {kitchen.chefId}
@@ -107,7 +111,9 @@ const UsersDetails = () => {
                 </li> */}
 
                 <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">Address</div>
+                  <div className="text-500 w-6 md:w-2 font-medium">
+                    {t("ADDRESS")}
+                  </div>
                   <li>
                     {kitchen.address ? (
                       <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 mt-1">
@@ -115,20 +121,28 @@ const UsersDetails = () => {
                           {kitchen.address.addressPreference}:
                         </span> */}
                         <div className="mt-1">
-                          <span className="font-semibold">Zone: </span>
+                          <span className="font-semibold">{t("ZONE")}: </span>
                           {kitchen.address.zone},
-                          <span className="font-semibold"> Building: </span>
+                          <span className="font-semibold">
+                            {t("BUILDING")}:{" "}
+                          </span>
                           {kitchen.address.building},
-                          <span className="font-semibold"> Unite: </span>
+                          <span className="font-semibold"> {t("UNITE")}: </span>
                           {kitchen.address.unit},
-                          <span className="font-semibold"> Street: </span>
+                          <span className="font-semibold">{t("STREET")}:</span>
                           {kitchen.address.streetName}
                         </div>
                         <div>
-                          <span className="font-semibold">Latitude: </span>
+                          <span className="font-semibold">
+                            {" "}
+                            {t("LATITUDE")}:
+                          </span>
                           {kitchen.address.geoTag &&
                             kitchen.address.geoTag.coordinates[0]}
-                          ,<span className="font-semibold"> Longitude: </span>
+                          ,
+                          <span className="font-semibold">
+                            {t("LONGITUDE")}:
+                          </span>
                           {kitchen.address.geoTag &&
                             kitchen.address.geoTag.coordinates[1]}
                         </div>
@@ -138,32 +152,6 @@ const UsersDetails = () => {
                     )}{" "}
                   </li>
                 </li>
-
-                {/* <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                  <div className="text-500 w-6 md:w-2 font-medium">
-                    User Types
-                  </div>
-                  <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                    <p>
-                      {kitchen.userType >= 0 ? (
-                        dataUserTypes[kitchen.userType].name
-                      ) : (
-                        <span>User type not set yet!</span>
-                      )}
-                    </p>
-                  </div>
-                </li> */}
-
-                {/* {kitchen.kitchen !== 3 || (
-                  <li className="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                    <div className="text-500 w-6 md:w-2 font-medium">
-                      Kitchen
-                    </div>
-                    <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                      {kitchen.kitchen}
-                    </div>
-                  </li>
-                )} */}
               </ul>
             </>
           )}

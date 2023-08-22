@@ -82,6 +82,7 @@ const SubscriptionPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [subscriptionDialog, setSubscriptionDialog] = useState(false);
+  const [reSubDialog, setReSubDialog] = useState(false);
   const [deleteSubscriptionDialog, setDeleteSubscriptionDialog] =
     useState(false);
   const [deleteSubscriptionsDialog, setDeleteSubscriptionsDialog] =
@@ -247,6 +248,7 @@ const SubscriptionPage = () => {
   const datastatuss = [
     { value: "Expired", name: "Expired" },
     { value: "Active", name: "Active" },
+    { value: "ReSubscribe", name: "ReSubscribe" },
   ];
 
   const searchMealItem = async (e: any) => {
@@ -324,7 +326,7 @@ const SubscriptionPage = () => {
   const statusFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Status Picker</div>
+        <div className="mb-3 text-bold"> {t("STATUS_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datastatuss}
@@ -412,9 +414,14 @@ const SubscriptionPage = () => {
     setSubscriptionDialog(true);
   };
 
+  const openReSub = async () => {};
+
   const hideDialog = () => {
     setSubmitted(false);
     setSubscriptionDialog(false);
+  };
+  const hideReSubDialog = () => {
+    setReSubDialog(false);
   };
 
   const hideDeleteSubscriptionDialog = () => {
@@ -436,34 +443,42 @@ const SubscriptionPage = () => {
         deliveryAddress: selectedDeliveryAddress,
       };
       if (subscription.id) {
-        let d = await subscriptionService.updateSubscription(_subscription);
-        if (d.error == undefined) {
-          const index = _subscriptions.findIndex(
-            (c) => c.id === subscription.id
+        if (subscription.status === "ReSubscribe") {
+          const { startDate, endDate, subscriptionId } = subscription;
+          const d = await subscriptionService.reSubscription(
+            { startDate, endDate },
+            subscriptionId
           );
-
-          if (index !== -1) {
-            _subscriptions[index] = {
-              ..._subscription,
-              startDate: _subscription.startDate.toString(),
-              endDate: _subscription.endDate.toString(),
-            };
-            // _subscriptions[index] = _subscription;
-            //_subscriptions.splice(index, 1, {..._subscription,id:id});
-          }
-          toast.current?.show({
-            severity: "success",
-            summary: "Loaded",
-            detail: "Subscription Updated",
-            life: 3000,
-          });
         } else {
-          toast.current?.show({
-            severity: "error",
-            summary: "Error",
-            detail: d.error,
-            life: 3000,
-          });
+          let d = await subscriptionService.updateSubscription(_subscription);
+          if (d.error == undefined) {
+            const index = _subscriptions.findIndex(
+              (c) => c.id === subscription.id
+            );
+
+            if (index !== -1) {
+              _subscriptions[index] = {
+                ..._subscription,
+                startDate: _subscription.startDate.toString(),
+                endDate: _subscription.endDate.toString(),
+              };
+              // _subscriptions[index] = _subscription;
+              //_subscriptions.splice(index, 1, {..._subscription,id:id});
+            }
+            toast.current?.show({
+              severity: "success",
+              summary: "Loaded",
+              detail: "Subscription Updated",
+              life: 3000,
+            });
+          } else {
+            toast.current?.show({
+              severity: "error",
+              summary: "Error",
+              detail: d.error,
+              life: 3000,
+            });
+          }
         }
       } else {
         let d = await subscriptionService.addSubscription(_subscription);
@@ -505,7 +520,14 @@ const SubscriptionPage = () => {
     }
   };
 
-  const editSubscription = (subscription: Subscription) => {
+  const editSubscription = async (subscription: Subscription) => {
+    const id = subscription.customerId;
+    const dataCustomer = await userService.getUsers({ id });
+    // console.log(
+    //   "🚀 ~ file: index.tsx:514 ~ editSubscription ~ dataCustomer:",
+    //   dataCustomer
+    // );
+
     setSubscription({ ...subscription });
     setSubscriptionDialog(true);
   };
@@ -721,15 +743,15 @@ const SubscriptionPage = () => {
         <div className="my-2">
           <Button
             loading={loading}
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
-            className="p-button-success mr-2"
+            className="p-button-success"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
-            className="p-button-danger"
+            className="p-button-danger mx-2"
             onClick={confirmDeleteSelected}
             disabled={!selectedSubscriptions || !selectedSubscriptions.length}
           />
@@ -742,7 +764,7 @@ const SubscriptionPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -970,7 +992,7 @@ const SubscriptionPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Subscriptions</h5>
+      <h5 className="m-0"> {t("MANAGE_SUBSCRIPTIONS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -985,13 +1007,13 @@ const SubscriptionPage = () => {
   const subscriptionDialogFooter = (
     <div dir={textFormat} className="flex justify-content-end">
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         loading={loading}
         icon="pi pi-check"
         className="p-button-text"
@@ -1002,13 +1024,13 @@ const SubscriptionPage = () => {
   const deleteSubscriptionDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteSubscriptionDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSubscription}
@@ -1018,13 +1040,13 @@ const SubscriptionPage = () => {
   const deleteSubscriptionsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteSubscriptionsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedSubscriptions}
@@ -1080,11 +1102,11 @@ const SubscriptionPage = () => {
 
             <Column
               showAddButton={false}
-              field="customerId"
-              header="Customer Id"
+              field="subscriptionId"
+              header={t("SUBSCRIPTION_ID")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
-              filterField="customerId"
+              filterField="subscriptionId"
               filter
               filterElement={customerIdFilterTemplate}
             ></Column>
@@ -1092,7 +1114,7 @@ const SubscriptionPage = () => {
             <Column
               showAddButton={false}
               field="startDate"
-              header="Start Date"
+              header={t("START_DATE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="startDate"
@@ -1104,7 +1126,7 @@ const SubscriptionPage = () => {
             <Column
               showAddButton={false}
               field="endDate"
-              header="End Date"
+              header={t("END_DATE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="endDate"
@@ -1116,7 +1138,7 @@ const SubscriptionPage = () => {
             <Column
               showAddButton={false}
               field="status"
-              header="Status"
+              header={t("STATUS")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="status"
@@ -1133,7 +1155,7 @@ const SubscriptionPage = () => {
           <Dialog
             visible={subscriptionDialog}
             style={{ width: "1100px" }}
-            header="Subscription Details"
+            header={t("SUBSCRIPTION_DETAILS")}
             modal
             className="p-fluid"
             footer={subscriptionDialogFooter}
@@ -1144,7 +1166,7 @@ const SubscriptionPage = () => {
             <div className="flex align-items-center gap-5">
               <div dir={textFormat} className="field">
                 <label className="font-bold" htmlFor="customerId">
-                  Customer
+                  {t("CUSTOMER")}
                 </label>
 
                 <Dropdown
@@ -1169,7 +1191,7 @@ const SubscriptionPage = () => {
                   }`}
                   htmlFor="deliveryAddress"
                 >
-                  Delivery Address{" "}
+                  {t("DELIVERY ADDRESS")}
                   {Object.keys(selectedCustomer).length === 0 &&
                     "(Select Customer First)"}
                 </label>
@@ -1190,7 +1212,7 @@ const SubscriptionPage = () => {
             <div dir={textFormat} className="flex gap-5">
               <div className="field">
                 <label className="font-bold" htmlFor="startDate">
-                  Start Date
+                  {t("START_DATE")}
                 </label>
                 <Calendar
                   id="startDate"
@@ -1212,7 +1234,7 @@ const SubscriptionPage = () => {
 
               <div className="field">
                 <label className="font-bold" htmlFor="endDate">
-                  End Date
+                  {t("END_DATE")}
                 </label>
                 <Calendar
                   id="endDate"
@@ -1231,7 +1253,7 @@ const SubscriptionPage = () => {
               </div>
               <div className="field ">
                 <label className="font-bold" htmlFor="status">
-                  Status
+                  {t("STATUS")}
                 </label>
                 <Dropdown
                   id="status"
@@ -1248,7 +1270,7 @@ const SubscriptionPage = () => {
               <Column field="name" header="Weekday" />
               <Column
                 field="breakfast"
-                header="Breakfast"
+                header={t("BREAKFAST")}
                 body={(rowData, rowIndex) =>
                   renderMealDropdown(rowData, rowIndex, "breakfast")
                 }
@@ -1256,7 +1278,7 @@ const SubscriptionPage = () => {
 
               <Column
                 field="lunch"
-                header="Lunch"
+                header={t("LUNCH")}
                 body={(rowData, rowIndex) =>
                   renderMealDropdown(rowData, rowIndex, "lunch")
                 }
@@ -1264,7 +1286,7 @@ const SubscriptionPage = () => {
 
               <Column
                 field="dinner"
-                header="Dinner"
+                header={t("DINNER")}
                 body={(rowData, rowIndex) =>
                   renderMealDropdown(rowData, rowIndex, "dinner")
                 }
@@ -1287,7 +1309,8 @@ const SubscriptionPage = () => {
               />
               {subscription && (
                 <span>
-                  Are you sure you want to delete <b>Subscription record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")}{" "}
+                  <b>Subscription record</b>?
                 </span>
               )}
             </div>

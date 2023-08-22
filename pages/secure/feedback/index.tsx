@@ -32,9 +32,11 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const FeedbackPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "customerId", type: validate.text, required: true },
     { id: "chefId", type: validate.text, required: true },
@@ -198,7 +200,7 @@ const FeedbackPage = () => {
   const customerIdFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">CustomerId Picker</div>
+        <div className="mb-3 text-bold">{t("CUSTOMER_ID_PACKER")}</div>
         <Dropdown
           value={options.value}
           options={datacustomers}
@@ -540,13 +542,13 @@ const FeedbackPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -561,7 +563,7 @@ const FeedbackPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -600,13 +602,13 @@ const FeedbackPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Feedbacks</h5>
+      <h5 className="m-0">{t("MANAGE_FEEDBACKS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           type="search"
           onInput={(e: any) => localFilter(e.target.value)}
-          placeholder="Local Search..."
+          placeholder={t("LOCAL_SEARCH")}
         />
       </span>
     </div>
@@ -615,13 +617,13 @@ const FeedbackPage = () => {
   const feedbackDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveFeedback}
@@ -631,13 +633,13 @@ const FeedbackPage = () => {
   const deleteFeedbackDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("No")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteFeedbackDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteFeedback}
@@ -647,13 +649,13 @@ const FeedbackPage = () => {
   const deleteFeedbacksDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteFeedbacksDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedFeedbacks}
@@ -710,7 +712,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -720,7 +722,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -732,7 +734,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="updateBy"
-              header="Update By"
+              header={t("UPDATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -742,7 +744,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="updateAt"
-              header="Update At"
+              header={t("UPDATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="updateAt"
@@ -754,7 +756,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="customerId"
-              header="customerId"
+              header={t("CUSTOMER_ID")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="customerId"
@@ -765,7 +767,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="chefId"
-              header="chefId"
+              header={t("CHEF_ID")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="chefId"
@@ -776,7 +778,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="orderId"
-              header="orderId"
+              header={t("ORDER_ID")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="orderId"
@@ -787,7 +789,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="rating"
-              header="rating"
+              header={t("RATING")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               dataType="numeric"
@@ -798,7 +800,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="comment"
-              header="comment"
+              header={t("COMMENT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -808,7 +810,7 @@ const FeedbackPage = () => {
             <Column
               showAddButton={false}
               field="kitchen"
-              header="Kitchen"
+              header={t("KITCHEN")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -824,7 +826,7 @@ const FeedbackPage = () => {
           <Dialog
             visible={feedbackDialog}
             style={{ width: "450px" }}
-            header="Feedback Details"
+            header={t("FEEDBACK_DETAILS")}
             modal
             className="p-fluid"
             footer={feedbackDialogFooter}
@@ -832,7 +834,7 @@ const FeedbackPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="customerId">customerId</label>
+                <label htmlFor="customerId">{t("CUSTOMER_ID")}</label>
                 <Dropdown
                   id="customerId"
                   optionLabel="name"
@@ -844,7 +846,7 @@ const FeedbackPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="chefId">chefId</label>
+                <label htmlFor="chefId">{t("CHEF_ID")}</label>
                 <AutoComplete
                   field="name"
                   id="chefId"
@@ -856,7 +858,7 @@ const FeedbackPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="orderId">orderId</label>
+                <label htmlFor="orderId">{t("ORDER_ID")}</label>
                 <AutoComplete
                   field="invoiceNo"
                   id="orderId"
@@ -868,7 +870,7 @@ const FeedbackPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="rating">rating</label>
+                <label htmlFor="rating">{t("RATING")}</label>
                 <InputNumber
                   id="rating"
                   value={feedback.rating}
@@ -877,7 +879,7 @@ const FeedbackPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="comment">comment</label>
+                <label htmlFor="comment">{t("COMMENT")}</label>
                 <InputText
                   id="comment"
                   value={feedback.comment}
@@ -894,7 +896,7 @@ const FeedbackPage = () => {
           <Dialog
             visible={deleteFeedbackDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteFeedbackDialogFooter}
             onHide={hideDeleteFeedbackDialog}
@@ -906,7 +908,7 @@ const FeedbackPage = () => {
               />
               {feedback && (
                 <span>
-                  Are you sure you want to delete <b>Feedback record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")} <b>Feedback record</b>?
                 </span>
               )}
             </div>
@@ -915,7 +917,7 @@ const FeedbackPage = () => {
           <Dialog
             visible={deleteFeedbacksDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteFeedbacksDialogFooter}
             onHide={hideDeleteFeedbacksDialog}
@@ -927,7 +929,7 @@ const FeedbackPage = () => {
               />
               {feedback && (
                 <span>
-                  Are you sure you want to delete the selected Feedback?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE_THE_SELECTED_FEEDBACK?")}
                 </span>
               )}
             </div>

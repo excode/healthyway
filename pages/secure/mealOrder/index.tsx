@@ -33,10 +33,12 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import cooking from "/public/layout/images/cooking.png";
 
 const MealOrderPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const validation = [
     { id: "invoiceNo", type: validate.text, max: 30, min: 0, required: true },
     { id: "customerName", type: validate.text, required: true },
@@ -669,13 +671,13 @@ const MealOrderPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -690,7 +692,7 @@ const MealOrderPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -703,7 +705,7 @@ const MealOrderPage = () => {
     return (
       <div className="flex align-content-center gap-2">
         <Button
-          name="completed"
+          name={t("COMPLETED")}
           icon="pi pi-check"
           className="p-button-rounded p-button-success "
           onClick={() => confirmMealOrderAction(rowData, dataStatus[2].value)}
@@ -711,7 +713,7 @@ const MealOrderPage = () => {
           {/* <Image src={packaging} alt="packaging" width={18} /> */}
         </Button>
         <Button
-          name="cooking"
+          name={t("COOKING")}
           className="p-button-rounded p-button-info "
           onClick={() => confirmMealOrderAction(rowData, dataStatus[1].value)}
           // onClick={() => confirmCookingMealOrder(rowData)}
@@ -725,7 +727,7 @@ const MealOrderPage = () => {
           }}
         > */}
         <Button
-          name="cancelled"
+          name={t("CANCELLED")}
           icon="pi pi-times"
           className="p-button-rounded p-button-danger"
           onClick={() => confirmMealOrderAction(rowData, dataStatus[3].value)}
@@ -737,7 +739,7 @@ const MealOrderPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage MealOrders</h5>
+      <h5 className="m-0">{t("MANAGE_MEAL_ORDERS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -752,13 +754,13 @@ const MealOrderPage = () => {
   const mealOrderDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveMealOrder}
@@ -768,13 +770,13 @@ const MealOrderPage = () => {
   const mealOrderConfirmationDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideMealOrderConfirmationDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveMealOrder}
@@ -784,13 +786,13 @@ const MealOrderPage = () => {
   const cookingMealOrderDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealOrderDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveMealOrder}
@@ -801,13 +803,13 @@ const MealOrderPage = () => {
   const deleteMealOrdersDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealOrdersDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedMealOrders}
@@ -840,7 +842,7 @@ const MealOrderPage = () => {
       <React.Fragment>
         <td colSpan={5}>
           <div className="flex justify-content-end font-bold w-full">
-            Total {data.session}: {calculateSessionMealTotal(data)}
+            {t("TOTAL")} {data.session}: {calculateSessionMealTotal(data)}
           </div>
         </td>
       </React.Fragment>
@@ -922,154 +924,6 @@ const MealOrderPage = () => {
             end={rightToolbarTemplate}
           ></Toolbar>
 
-          {/* <DataTable
-            ref={dt}
-            value={mealOrders}
-            selection={selectedMealOrders}
-            onSelectionChange={(e) =>
-              setSelectedMealOrders(e.value as MealOrder[])
-            }
-            dataKey="id"
-            loading={loading}
-            filters={filters1}
-            showGridlines
-            filterDisplay="menu"
-            onFilter={filterAction}
-            paginator
-            totalRecords={totalRecords}
-            rows={row}
-            lazy={true}
-            onSort={sortData}
-            onPage={changePage}
-            rowsPerPageOptions={[1, 5, 10, 25, 50]}
-            className="datatable-responsive"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} MealOrders"
-            emptyMessage="No MealOrders found."
-            header={header}
-            responsiveLayout="scroll"
-          >
-            <Column
-              selectionMode="multiple"
-              headerStyle={{ width: "4rem" }}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="createBy"
-              header="Created By"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by createBy"
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="updateBy"
-              header="Update By"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by updateBy"
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="updateAt"
-              header="Update At"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="updateAt"
-              dataType="date"
-              filter
-              filterElement={updateAtFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="orderDate"
-              header="orderDate"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="orderDate"
-              dataType="date"
-              filter
-              filterElement={orderDateFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="deliveryDate"
-              header="deliveryDate"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="deliveryDate"
-              dataType="date"
-              filter
-              filterElement={deliveryDateFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="status"
-              header="status"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="status"
-              filter
-              filterElement={statusFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="Instruction"
-              header="Instruction"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by Instruction"
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="orderType"
-              header="Order Type"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="orderType"
-              filter
-              filterElement={orderTypeFilterTemplate}
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="location"
-              header="Location"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by location"
-            ></Column>
-
-            <Column
-              showAddButton={false}
-              field="createAt"
-              header="Created At"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="createAt"
-              dataType="date"
-              filter
-              filterElement={createAtFilterTemplate}
-            ></Column>
-
-            <Column
-              body={actionBodyTemplate}
-              headerStyle={{ minWidth: "10rem" }}
-            ></Column>
-          </DataTable> */}
-
           <DataTable
             value={mealOrders}
             rowGroupMode="subheader"
@@ -1088,52 +942,41 @@ const MealOrderPage = () => {
           >
             <Column
               field="item.name"
-              header="Meal Name"
+              header={t("MEAL_NAME")}
               body={nameBodyTemplate}
               style={{ minWidth: "200px" }}
             ></Column>
-            {/* <Column
-              field="quantity"
-              header="Quantity"
-              className=""
-              // body={countryBodyTemplate}
-              style={{ minWidth: "200px" }}
-            ></Column> */}
-            {/* <Column
-              field="Instruction"
-              header="Instruction"
-              style={{ minWidth: "200px" }}
-            ></Column> */}
+
             <Column
               field="quantity"
-              header="Quantity"
+              header={t("QUANTITY")}
               style={{ minWidth: "200px" }}
             ></Column>
             <Column
               // field={timeLeft}
-              header="Time Left"
+              header={t("TIME_LEFT")}
               body={timeLeftBodyTemplate}
               style={{ minWidth: "200px" }}
             ></Column>
             <Column
               field="status"
-              header="Status"
+              header={t("STATUS")}
               body={statusBodyTemplate}
               style={{ minWidth: "100px" }}
             ></Column>
             <Column
               field="invoiceNo"
-              header="Invoice No"
+              header={t("INVOICE_NO")}
               style={{ minWidth: "200px" }}
             ></Column>
             <Column
               field="customerPhone"
-              header="Customer Phone"
+              header={t("CUSTOMER_PHONE")}
               style={{ minWidth: "200px" }}
             ></Column>
             <Column
               // field="customerPhone"
-              header="Action"
+              header={t("ACTION")}
               style={{ minWidth: "200px" }}
               body={actionBodyTemplate}
             ></Column>
@@ -1142,7 +985,7 @@ const MealOrderPage = () => {
           <Dialog
             visible={mealOrderDialog}
             style={{ width: "450px" }}
-            header="Meal Order Details"
+            header={t("MEAL_ORDER_DETAILS")}
             modal
             className="p-fluid"
             footer={mealOrderDialogFooter}
@@ -1150,7 +993,7 @@ const MealOrderPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="invoiceNo">Invoice No</label>
+                <label htmlFor="invoiceNo"> {t("INVOICE_NO")}</label>
                 <InputText
                   id="invoiceNo"
                   value={mealOrder.invoiceNo}
@@ -1163,7 +1006,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="customerName">Customer Name</label>
+                <label htmlFor="customerName"> {t("CUSTOMER_NAME")}</label>
                 <AutoComplete
                   field="name"
                   id="customerName"
@@ -1175,7 +1018,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="customerEmail">Email</label>
+                <label htmlFor="customerEmail">{t("EMAIL")}</label>
                 <AutoComplete
                   field="email"
                   id="customerEmail"
@@ -1187,7 +1030,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="customerPhone">Phone</label>
+                <label htmlFor="customerPhone">{t("PHONE")}</label>
                 <AutoComplete
                   field="mobile"
                   id="customerPhone"
@@ -1199,7 +1042,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="Instruction">Instruction</label>
+                <label htmlFor="Instruction">{t("INSTRUCTION")}</label>
                 <InputText
                   id="Instruction"
                   value={mealOrder.Instruction}
@@ -1212,7 +1055,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="orderType">Order Type</label>
+                <label htmlFor="orderType"> {t("ORDER_TYPE")}</label>
                 <Dropdown
                   id="orderType"
                   optionLabel="name"
@@ -1223,7 +1066,7 @@ const MealOrderPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="location">Location</label>
+                <label htmlFor="location"> {t("LOCATION")}</label>
                 <InputText
                   id="location"
                   value={mealOrder.location}
@@ -1252,7 +1095,7 @@ const MealOrderPage = () => {
               />
               {mealOrder && (
                 <span>
-                  Are you sure you want to{" "}
+                  Are you sure you want to
                   <span
                     className={`${
                       mealOrderConfirmationDialog.actionType ===

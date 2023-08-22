@@ -19,6 +19,7 @@ interface SubPlan {
 
 export type Subscription = {
   id?: string | any;
+  subscriptionId?: any;
   createBy?: string | any;
   createAt?: Date | any;
   updateBy?: string | any;
@@ -45,6 +46,7 @@ export type SubscriptionQuery = Omit<
   startDate?: Date;
   endDate?: Date;
   status?: string;
+  subscriptionId?: any;
   createBy_mode?: string;
   createAt_mode?: string;
   updateBy_mode?: string;
@@ -63,6 +65,7 @@ export type SubscriptionQuery = Omit<
   // subPlans?: SubPlan[];
 };
 export type SubscriptionKey = keyof Subscription;
+type reSub = { startDate: Date; endDate: Date };
 
 export class SubscriptionService {
   getSubscription(request: SubscriptionQuery) {
@@ -85,6 +88,14 @@ export class SubscriptionService {
   }
   addSubscription(request: Subscription) {
     return postData<Subscription>("/subscription", request);
+  }
+  reSubscription(request: any, subscriptionId: any) {
+    console.log("reSub:", request, subscriptionId);
+    // const { id } = request;
+    return patchData<Subscription>(
+      "/subscription/reSubscription/" + subscriptionId,
+      request
+    );
   }
   updateSubscription(request: Subscription) {
     const { id, ...rest } = request;

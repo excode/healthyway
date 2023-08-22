@@ -42,9 +42,11 @@ import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
+import { useTranslation } from "react-i18next";
 import countryData from "../../utilities/countryData.json";
 const UsersPage = () => {
   const { asPath } = useRouter();
+  const { t } = useTranslation();
   const [userData, setUserData] = useState<UserData>({ email: "" });
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const validation = [
@@ -195,7 +197,9 @@ const UsersPage = () => {
   const countryFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Country Picker</div>
+        <div className="mb-3 text-bold">
+          Country Picker {t("COUNTRY_PICKER")}
+        </div>
         <Dropdown
           value={options.value}
           options={datacountrys}
@@ -211,7 +215,7 @@ const UsersPage = () => {
   const userTypeFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">UserType Picker</div>
+        <div className="mb-3 text-bold">{t("USER_TYPE_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datauserTypes.filter(
@@ -251,7 +255,7 @@ const UsersPage = () => {
   const kitchenFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Kitchen Picker</div>
+        <div className="mb-3 text-bold">{t("KITCHEN_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datakitchens}
@@ -618,13 +622,13 @@ const UsersPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -639,7 +643,7 @@ const UsersPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -678,7 +682,7 @@ const UsersPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Kitchen Table</h5>
+      <h5 className="m-0"> {t("KITCHEN_TABLE")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -693,13 +697,13 @@ const UsersPage = () => {
   const usersDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveUsers}
@@ -709,13 +713,13 @@ const UsersPage = () => {
   const deleteUsersDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteUsersDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteUsers}
@@ -725,13 +729,13 @@ const UsersPage = () => {
   const deleteUserssDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteUserssDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedUserss}
@@ -786,7 +790,7 @@ const UsersPage = () => {
             <Column
               showAddButton={false}
               field="kitchenName"
-              header="Kitchen Name"
+              header={t("KITCHEN_NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -806,65 +810,23 @@ const UsersPage = () => {
             <Column
               showAddButton={false}
               field="chefId"
-              header="Chef"
+              header={t("CHEF")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
               filterPlaceholder="Search by email"
             ></Column>
 
-            {/* <Column
-              showAddButton={false}
-              field="mobile"
-              header="Mobile"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filter
-              filterPlaceholder="Search by mobile"
-            ></Column> */}
-
-            {/* <Column
-              showAddButton={false}
-              field="country"
-              header="Country"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="country"
-              filter
-              filterElement={countryFilterTemplate}
-            ></Column> */}
-
-            {/* <Column
-              showAddButton={false}
-              field="userType"
-              header="User Types"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="userType"
-              filter
-              filterElement={userTypeFilterTemplate}
-            ></Column> */}
-
-            {/* <Column
-              showAddButton={false}
-              field="kitchen"
-              header="Kitchen"
-              sortable
-              headerStyle={{ minWidth: "10rem" }}
-              filterField="kitchen"
-              filter
-              filterElement={kitchenFilterTemplate}
-            ></Column> */}
-
             <Column
               body={actionBodyTemplate}
               headerStyle={{ minWidth: "10rem" }}
             ></Column>
           </DataTable>
+
           <Dialog
             visible={usersDialog}
             style={{ width: "450px" }}
-            header="Kitchen Details"
+            header={t("KITCHEN_DETAILS")}
             modal
             className="p-fluid"
             footer={usersDialogFooter}
@@ -873,7 +835,7 @@ const UsersPage = () => {
             <div dir={textFormat}>
               <div className="grid ">
                 <div className="field col-6">
-                  <label htmlFor="kitchenName">Kitchen Name</label>
+                  <label htmlFor="kitchenName"> {t("KITCHEN_NAME")}</label>
                   <InputText
                     id="kitchenName"
                     placeholder="Type Kitchen Name"
@@ -887,75 +849,10 @@ const UsersPage = () => {
                 </div>
               </div>
 
-              {/* <div className="field">
-                <label htmlFor="email">Email</label>
-                <InputText
-                  id="email"
-                  placeholder="Email"
-                  value={users.email}
-                  onChange={(e) => onInputChange(e, "email")}
-                  required
-                  className={classNames({
-                    "p-invalid": submitted && !users.email,
-                  })}
-                />
-              </div> */}
-
-              {/* <div className="field">
-                <label htmlFor="mobile">Mobile</label>
-                <InputText
-                  id="mobile"
-                  placeholder="Mobile number"
-                  value={users.mobile}
-                  onChange={(e) => onInputChange(e, "mobile")}
-                />
-              </div> */}
-
-              {/* <div className="field">
-                <label htmlFor="password">Password</label>
-                <Password
-                  id="password"
-                  value={users.password}
-                  onChange={(e) => onInputChange(e, "password")}
-                  toggleMask
-                  required
-                  className={classNames({
-                    "p-invalid": submitted && !users.password,
-                  })}
-                  placeholder="Type a password"
-                />
-              </div> */}
-
-              {/* <div className="grid">
-                <div className="field col-6">
-                  <label htmlFor="country">Country</label>
-                  <Dropdown
-                    id="country"
-                    placeholder="Select Country"
-                    optionLabel="name"
-                    value={users.country}
-                    options={datacountrys}
-                    onChange={(e) => onInputChange(e, "country")}
-                  />
-                </div>
-                <div className="field col-6">
-                  <label htmlFor="userType">User Types</label>
-                  <Dropdown
-                    id="userType"
-                    optionLabel="name"
-                    value={users.userType}
-                    options={dataUserTypes.filter(
-                      (e) => e.value > userData!.permissionLevel!
-                    )}
-                    onChange={(e) => onInputChange(e, "userType")}
-                    placeholder="Select User Type"
-                  />
-                </div>
-              </div> */}
               {
                 // users.userType === 2 &&
                 <div className="field">
-                  <label htmlFor="kitchen">Assign Chef</label>
+                  <label htmlFor="kitchen">{t("ASSIGN_CHEF")}</label>
                   <Dropdown
                     id="kitchen"
                     optionLabel="firstName"
@@ -971,7 +868,7 @@ const UsersPage = () => {
               }
               <div>
                 <div className="field">
-                  <label htmlFor="kitchen">Address</label> <hr />
+                  <label htmlFor="kitchen"> {t("ADDRESS")}</label> <hr />
                   <div className="mt-5 flex gap-2">
                     <span className="p-float-label">
                       <InputText
@@ -982,7 +879,7 @@ const UsersPage = () => {
                         }
                       />
                       <label htmlFor="addressPreference">
-                        Address Preference
+                        {t("ADDRESS_PREFERENCE")}
                       </label>
                     </span>
                     <span className="p-float-label">
@@ -991,7 +888,7 @@ const UsersPage = () => {
                         value={kitchenAddress.zone}
                         onChange={(e) => onAddressChange(e, "zone")}
                       />
-                      <label htmlFor="username">Zone</label>
+                      <label htmlFor="username"> {t("ZONE")}</label>
                     </span>
                   </div>
                   <div className="field mt-5 flex gap-2">
@@ -1001,7 +898,7 @@ const UsersPage = () => {
                         value={kitchenAddress.building}
                         onChange={(e) => onAddressChange(e, "building")}
                       />
-                      <label htmlFor="building">Building</label>
+                      <label htmlFor="building"> {t("BUILDING")}</label>
                     </span>
                     <span className="p-float-label">
                       <InputText
@@ -1009,7 +906,7 @@ const UsersPage = () => {
                         value={kitchenAddress.unit}
                         onChange={(e) => onAddressChange(e, "unit")}
                       />
-                      <label htmlFor="unit">Unit</label>
+                      <label htmlFor="unit"> {t("UNIT")}</label>
                     </span>
                     <span className="p-float-label">
                       <InputText
@@ -1017,7 +914,7 @@ const UsersPage = () => {
                         value={kitchenAddress.streetName}
                         onChange={(e) => onAddressChange(e, "streetName")}
                       />
-                      <label htmlFor="streetName">Street Name</label>
+                      <label htmlFor="streetName"> {t("STREET_NAME")}</label>
                     </span>
                   </div>
                   <div className="field mt-5 flex gap-2">
@@ -1031,7 +928,7 @@ const UsersPage = () => {
                         maxFractionDigits={4}
                         // minFractionDigits={0}
                       />
-                      <label htmlFor="longitude">Longitude</label>
+                      <label htmlFor="longitude"> {t("LONGITUDE")}</label>
                     </span>
                     <span className="p-float-label">
                       <InputNumber
@@ -1042,134 +939,13 @@ const UsersPage = () => {
                         // onValueChange={(e) => onAddressChange(e, "latitude")}
                         maxFractionDigits={4}
                       />
-                      <label htmlFor="latitude">Latitude</label>
+                      <label htmlFor="latitude"> {t("LATITUDE")}</label>
                     </span>
                   </div>
                 </div>
               </div>
             </div>
           </Dialog>
-          {/* <Dialog
-            visible={usersDialog}
-            style={{ width: "450px" }}
-            header="Users Details"
-            modal
-            className="p-fluid"
-            footer={usersDialogFooter}
-            onHide={hideDialog}
-          >
-            <div dir={textFormat}>
-              <div className="grid ">
-                <div className="field col-6">
-                  <label htmlFor="firstName">First Name</label>
-                  <InputText
-                    id="firstName"
-                    placeholder="First Name"
-                    value={users.firstName}
-                    onChange={(e) => onInputChange(e, "firstName")}
-                    required
-                    className={classNames({
-                      "p-invalid": submitted && !users.firstName,
-                    })}
-                  />
-                </div>
-
-                <div className="field col-6">
-                  <label htmlFor="lastName">Last Name</label>
-                  <InputText
-                    id="lastName"
-                    placeholder="Last Name"
-                    value={users.lastName}
-                    onChange={(e) => onInputChange(e, "lastName")}
-                    required
-                    className={classNames({
-                      "p-invalid": submitted && !users.lastName,
-                    })}
-                  />
-                </div>
-              </div>
-
-              <div className="field">
-                <label htmlFor="email">Email</label>
-                <InputText
-                  id="email"
-                  placeholder="Email"
-                  value={users.email}
-                  onChange={(e) => onInputChange(e, "email")}
-                  required
-                  className={classNames({
-                    "p-invalid": submitted && !users.email,
-                  })}
-                />
-              </div>
-
-              <div className="field">
-                <label htmlFor="mobile">Mobile</label>
-                <InputText
-                  id="mobile"
-                  placeholder="Mobile number"
-                  value={users.mobile}
-                  onChange={(e) => onInputChange(e, "mobile")}
-                />
-              </div>
-
-              <div className="field">
-                <label htmlFor="password">Password</label>
-                <Password
-                  id="password"
-                  value={users.password}
-                  onChange={(e) => onInputChange(e, "password")}
-                  toggleMask
-                  required
-                  className={classNames({
-                    "p-invalid": submitted && !users.password,
-                  })}
-                />
-              </div>
-
-              <div className="grid">
-                <div className="field col-6">
-                  <label htmlFor="country">Country</label>
-                  <Dropdown
-                    id="country"
-                    placeholder=""
-                    optionLabel="name"
-                    value={users.country}
-                    options={datacountrys}
-                    onChange={(e) => onInputChange(e, "country")}
-                  />
-                </div>
-                <div className="field col-6">
-                  <label htmlFor="userType">User Types</label>
-                  <Dropdown
-                    id="userType"
-                    optionLabel="name"
-                    value={users.userType}
-                    options={datauserTypes.filter(
-                      (e) => e.value > userData!.permissionLevel!
-                    )}
-                    onChange={(e) => onInputChange(e, "userType")}
-                  />
-                </div>
-              </div>
-
-              {userData.permissionLevel == 0 ? (
-                <div className="field">
-                  <label htmlFor="kitchen">Kitchen</label>
-                  <Dropdown
-                    id="kitchen"
-                    optionLabel="kitchenName"
-                    optionValue="id"
-                    value={users.kitchen}
-                    options={datakitchens}
-                    onChange={(e) => onInputChange(e, "kitchen")}
-                  />
-                </div>
-              ) : (
-                <p></p>
-              )}
-            </div>
-          </Dialog> */}
 
           <Dialog
             visible={deleteUsersDialog}
@@ -1186,7 +962,7 @@ const UsersPage = () => {
               />
               {users && (
                 <span>
-                  Are you sure you want to delete <b>Users record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")} <b>Users record</b>?
                 </span>
               )}
             </div>

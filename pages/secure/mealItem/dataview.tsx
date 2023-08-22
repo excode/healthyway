@@ -2,6 +2,7 @@
 import config from "@config/index";
 import { SortType } from "@services/CommonTypes";
 import { MealItem, MealItemQuery, MealItemService } from "@services/MealItem";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import {
   DataView,
   DataViewLayoutOptions,
@@ -12,11 +13,12 @@ import { InputText } from "primereact/inputtext";
 import { Rating } from "primereact/rating";
 import { Toast } from "primereact/toast";
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LayoutType, SortOrderType } from "../../../types/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const MealItemDataview = () => {
   const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const { t } = useTranslation();
   const [layout, setLayout] = useState<LayoutType>("grid");
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState<SortOrderType>(0);
@@ -206,7 +208,7 @@ const MealItemDataview = () => {
   };
 
   const dataviewGridItem = (data: MealItem) => {
-    console.log({ data });
+    // console.log({ data });
     return (
       <div className="col-12 lg:col-4">
         <div className="card m-3 border-1 surface-border">
@@ -240,7 +242,7 @@ const MealItemDataview = () => {
             {/* <div className="mb-3">{data.updateBy}</div> */}
             <Rating value={data.id} readOnly cancel={false} />
             <span className="text-2xl font-semibold mt-2">
-              Price: $ {data.price}
+              {t("PRICE")}: $ {data.price}
             </span>
           </div>
           <div className="flex align-items-center justify-content-between">
@@ -271,7 +273,7 @@ const MealItemDataview = () => {
     <div className="grid list-demo">
       <div className="col-12">
         <div className="card">
-          <h5>MealItem</h5>
+          <h5> {t("MEAL_ITEM")}</h5>
           <DataView
             value={mealItems}
             layout={layout}

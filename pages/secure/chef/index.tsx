@@ -26,10 +26,12 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import CustomFileUpload from "@layout/fileUpload";
 import { UploadInfo } from "@services/UploadInfo";
 import { LangContext } from "hooks/lan";
-import { Image } from "primereact/image";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { Image } from "primereact/image";
+import { useTranslation } from "react-i18next";
 
 const ChefPage = () => {
+  const { t } = useTranslation();
   const { asPath } = useRouter();
   const validation = [
     { id: "name", type: validate.text, max: 20, min: 3, required: true },
@@ -261,7 +263,7 @@ const ChefPage = () => {
   const expertiseFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Expertise Picker</div>
+        <div className="mb-3 text-bold">{t("EXPERTISE_PACKER")} </div>
         <MultiSelect
           value={options.value}
           options={datamealItems}
@@ -565,13 +567,13 @@ const ChefPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -586,7 +588,7 @@ const ChefPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -625,13 +627,13 @@ const ChefPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Chefs</h5>
+      <h5 className="m-0">Manage Chefs {t("MANAGE_CHEFS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           type="search"
           onInput={(e: any) => localFilter(e.target.value)}
-          placeholder="Local Search..."
+          placeholder={t("LOCAL_SEARCH")}
         />
       </span>
     </div>
@@ -640,13 +642,13 @@ const ChefPage = () => {
   const chefDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveChef}
@@ -656,13 +658,13 @@ const ChefPage = () => {
   const deleteChefDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteChefDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteChef}
@@ -672,13 +674,13 @@ const ChefPage = () => {
   const deleteChefsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteChefsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedChefs}
@@ -733,7 +735,7 @@ const ChefPage = () => {
             <Column
               showAddButton={false}
               field="photo"
-              header="Photo"
+              header={t("PHOTO")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               body={photoBodyTemplate}
@@ -742,7 +744,7 @@ const ChefPage = () => {
             <Column
               showAddButton={false}
               field="name"
-              header="name"
+              header={t("NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -752,7 +754,7 @@ const ChefPage = () => {
             <Column
               showAddButton={false}
               field="email"
-              header="email"
+              header={t("EMAIL")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -762,7 +764,7 @@ const ChefPage = () => {
             <Column
               showAddButton={false}
               field="expertise"
-              header="Expertise"
+              header={t("EXPERTISE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="expertise"
@@ -773,7 +775,7 @@ const ChefPage = () => {
             <Column
               showAddButton={false}
               field="phoneNumber"
-              header="phoneNumber"
+              header={t("PHONE_NUMBER")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -783,7 +785,7 @@ const ChefPage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -793,7 +795,7 @@ const ChefPage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -812,7 +814,7 @@ const ChefPage = () => {
             rtl={true}
             visible={chefDialog}
             style={{ width: "450px" }}
-            header="Chef Details"
+            header={t("CHEF_DETAILS")}
             modal
             className="p-fluid"
             footer={chefDialogFooter}
@@ -820,7 +822,7 @@ const ChefPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="name">name</label>
+                <label htmlFor="name"> {t("NAME")}</label>
                 <InputText
                   id="name"
                   value={chef.name}
@@ -833,7 +835,7 @@ const ChefPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="email">email</label>
+                <label htmlFor="email"> {t("EMAIL")}</label>
                 <InputText
                   id="email"
                   value={chef.email}
@@ -846,7 +848,7 @@ const ChefPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="expertise">Expertise</label>
+                <label htmlFor="expertise">{t("EXPERTISE")}</label>
                 <MultiSelect
                   id="expertise"
                   optionLabel="name"
@@ -858,7 +860,7 @@ const ChefPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="address">address</label>
+                <label htmlFor="address"> {t("ADDRESS")}</label>
                 <InputText
                   id="address"
                   value={chef.address}
@@ -867,7 +869,7 @@ const ChefPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="phoneNumber">phoneNumber</label>
+                <label htmlFor="phoneNumber"> {t("PHONE_NUMBER")}</label>
                 <InputText
                   id="phoneNumber"
                   value={chef.phoneNumber}
@@ -892,7 +894,7 @@ const ChefPage = () => {
               />
               {chef && (
                 <span>
-                  Are you sure you want to delete <b>Chef record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")} <b>Chef record</b>?
                 </span>
               )}
             </div>

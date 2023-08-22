@@ -30,8 +30,10 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { classNames } from "primereact/utils";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const MealPreparePage = () => {
+  const { t } = useTranslation();
   const { asPath } = useRouter();
   const validation = [
     { id: "chefId", type: validate.text, required: true },
@@ -271,7 +273,7 @@ const MealPreparePage = () => {
   const statusFilterTemplate = (options: any) => {
     return (
       <>
-        <div className="mb-3 text-bold">Status Picker</div>
+        <div className="mb-3 text-bold">Status Picker {t("STATUS_PICKER")}</div>
         <Dropdown
           value={options.value}
           options={datastatuss}
@@ -590,13 +592,13 @@ const MealPreparePage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -611,7 +613,7 @@ const MealPreparePage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -650,7 +652,7 @@ const MealPreparePage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage MealPrepares</h5>
+      <h5 className="m-0">{t("MANAGE_MEAL_PREPARES")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -665,13 +667,13 @@ const MealPreparePage = () => {
   const mealPrepareDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={saveMealPrepare}
@@ -681,13 +683,13 @@ const MealPreparePage = () => {
   const deleteMealPrepareDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealPrepareDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteMealPrepare}
@@ -697,13 +699,13 @@ const MealPreparePage = () => {
   const deleteMealPreparesDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeleteMealPreparesDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedMealPrepares}
@@ -760,7 +762,7 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="createBy"
-              header="Created By"
+              header={t("CREATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -770,7 +772,7 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="createAt"
-              header="Created At"
+              header={t("CREATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="createAt"
@@ -782,17 +784,17 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="updateBy"
-              header="Update By"
+              header={t("UPDATED_BY")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
-              filterPlaceholder="Search by updateBy"
+              filterPlaceholder="Search by update By"
             ></Column>
 
             <Column
               showAddButton={false}
               field="updateAt"
-              header="Update At"
+              header={t("UPDATED_AT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="updateAt"
@@ -804,7 +806,7 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="chefId"
-              header="chefId"
+              header={t("CHEF_ID")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="chefId"
@@ -815,7 +817,7 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="orderId"
-              header="orderId"
+              header={t("ORDER_ID")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="orderId"
@@ -826,7 +828,7 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="startTime"
-              header="startTime"
+              header={t("START_TIME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="startTime"
@@ -838,7 +840,7 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="endTime"
-              header="endTime"
+              header={t("END_TIME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="endTime"
@@ -850,7 +852,7 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="status"
-              header="status"
+              header={t("STATUS")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="status"
@@ -861,7 +863,7 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="deliveryTime"
-              header="Delivery Time"
+              header={t("DELIVERY_TIME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="deliveryTime"
@@ -873,7 +875,7 @@ const MealPreparePage = () => {
             <Column
               showAddButton={false}
               field="kitchen"
-              header="Kitchen"
+              header={t("KITCHEN")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -897,7 +899,7 @@ const MealPreparePage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="chefId">chefId</label>
+                <label htmlFor="chefId">{t("CHEF_ID")}</label>
                 <AutoComplete
                   field="name"
                   id="chefId"
@@ -909,7 +911,7 @@ const MealPreparePage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="orderId">orderId</label>
+                <label htmlFor="orderId">{t("ORDER_ID")}</label>
                 <AutoComplete
                   field="invoiceNo"
                   id="orderId"
@@ -921,7 +923,7 @@ const MealPreparePage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="startTime">startTime</label>
+                <label htmlFor="startTime"> {t("START_TIME")}</label>
                 <Calendar
                   id="startTime"
                   value={
@@ -940,7 +942,7 @@ const MealPreparePage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="endTime">endTime</label>
+                <label htmlFor="endTime"> {t("END_TIME")}</label>
                 <Calendar
                   id="endTime"
                   value={
@@ -957,7 +959,7 @@ const MealPreparePage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="status">status</label>
+                <label htmlFor="status">{t("STATUS")}</label>
                 <Dropdown
                   id="status"
                   optionLabel="name"
@@ -968,7 +970,7 @@ const MealPreparePage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="deliveryTime">Delivery Time</label>
+                <label htmlFor="deliveryTime">{t("DELIVERY_TIME")}</label>
                 <Calendar
                   id="deliveryTime"
                   value={
@@ -991,7 +993,7 @@ const MealPreparePage = () => {
           <Dialog
             visible={deleteMealPrepareDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteMealPrepareDialogFooter}
             onHide={hideDeleteMealPrepareDialog}
@@ -1003,7 +1005,8 @@ const MealPreparePage = () => {
               />
               {mealPrepare && (
                 <span>
-                  Are you sure you want to delete <b>MealPrepare record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")}{" "}
+                  <b>MealPrepare record</b>?
                 </span>
               )}
             </div>
@@ -1012,7 +1015,7 @@ const MealPreparePage = () => {
           <Dialog
             visible={deleteMealPreparesDialog}
             style={{ width: "450px" }}
-            header="Confirm"
+            header={t("CONFIRM")}
             modal
             footer={deleteMealPreparesDialogFooter}
             onHide={hideDeleteMealPreparesDialog}

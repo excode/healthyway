@@ -33,8 +33,10 @@ import { UploadInfo } from "@services/UploadInfo";
 import { LangContext } from "hooks/lan";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Image } from "primereact/image";
+import { useTranslation } from "react-i18next";
 
 const PromotionsPage = () => {
+  const { t } = useTranslation();
   const { asPath } = useRouter();
   const validation = [
     { id: "name", type: validate.text, max: 50, min: 0, required: true },
@@ -607,13 +609,13 @@ const PromotionsPage = () => {
       <React.Fragment>
         <div className="my-2">
           <Button
-            label="New"
+            label={t("NEW")}
             icon="pi pi-plus"
             className="p-button-success mr-2"
             onClick={openNew}
           />
           <Button
-            label="Delete"
+            label={t("DELETE")}
             icon="pi pi-trash"
             className="p-button-danger"
             onClick={confirmDeleteSelected}
@@ -628,7 +630,7 @@ const PromotionsPage = () => {
     return (
       <React.Fragment>
         <Button
-          label="Export"
+          label={t("EXPORT")}
           icon="pi pi-upload"
           className="p-button-help"
           onClick={exportCSV}
@@ -667,7 +669,7 @@ const PromotionsPage = () => {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">Manage Promotionss</h5>
+      <h5 className="m-0"> {t("MANGE_PROMOTIONS")}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -682,13 +684,13 @@ const PromotionsPage = () => {
   const promotionsDialogFooter = (
     <>
       <Button
-        label="Cancel"
+        label={t("CANCEL")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDialog}
       />
       <Button
-        label="Save"
+        label={t("SAVE")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={savePromotions}
@@ -698,13 +700,13 @@ const PromotionsPage = () => {
   const deletePromotionsDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeletePromotionsDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deletePromotions}
@@ -714,13 +716,13 @@ const PromotionsPage = () => {
   const deletePromotionssDialogFooter = (
     <>
       <Button
-        label="No"
+        label={t("NO")}
         icon="pi pi-times"
         className="p-button-text"
         onClick={hideDeletePromotionssDialog}
       />
       <Button
-        label="Yes"
+        label={t("YES")}
         icon="pi pi-check"
         className="p-button-text"
         onClick={deleteSelectedPromotionss}
@@ -777,7 +779,7 @@ const PromotionsPage = () => {
             <Column
               showAddButton={false}
               field="image"
-              header="Image"
+              header={t("IMAGE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               body={imageBodyTemplate}
@@ -786,7 +788,7 @@ const PromotionsPage = () => {
             <Column
               showAddButton={false}
               field="mealPlan"
-              header="Meal Plan"
+              header={t("MEAL_PLAN")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="mealPlan"
@@ -797,7 +799,7 @@ const PromotionsPage = () => {
             <Column
               showAddButton={false}
               field="name"
-              header="Name"
+              header={t("NAME")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -807,7 +809,7 @@ const PromotionsPage = () => {
             <Column
               showAddButton={false}
               field="description"
-              header="Description"
+              header={t("DESCRIPTION")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -817,7 +819,7 @@ const PromotionsPage = () => {
             <Column
               showAddButton={false}
               field="startDate"
-              header="Start Date"
+              header={t("START_DATE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="startDate"
@@ -829,7 +831,7 @@ const PromotionsPage = () => {
             <Column
               showAddButton={false}
               field="endDate"
-              header="End Date"
+              header={t("END_DATE")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filterField="endDate"
@@ -841,7 +843,7 @@ const PromotionsPage = () => {
             <Column
               showAddButton={false}
               field="discount"
-              header="Discount"
+              header={t("DISCOUNT")}
               sortable
               headerStyle={{ minWidth: "10rem" }}
               filter
@@ -857,7 +859,7 @@ const PromotionsPage = () => {
           <Dialog
             visible={promotionsDialog}
             style={{ width: "450px" }}
-            header="Promotions Details"
+            header={t("PROMOTIONS_DETAILS")}
             modal
             className="p-fluid"
             footer={promotionsDialogFooter}
@@ -865,7 +867,7 @@ const PromotionsPage = () => {
           >
             <div dir={textFormat}>
               <div className="field">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">{t("NAME")}</label>
                 <InputText
                   id="name"
                   value={promotions.name}
@@ -878,7 +880,7 @@ const PromotionsPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="description">Description</label>
+                <label htmlFor="description"> {t("DESCRIPTION")}</label>
                 <InputText
                   id="description"
                   value={promotions.description}
@@ -891,7 +893,7 @@ const PromotionsPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="startDate">Start Date</label>
+                <label htmlFor="startDate"> {t("START_DATE")}</label>
                 <Calendar
                   id="startDate"
                   value={
@@ -908,7 +910,7 @@ const PromotionsPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="endDate">End Date</label>
+                <label htmlFor="endDate"> {t("END_DATE")}</label>
                 <Calendar
                   id="endDate"
                   value={
@@ -925,7 +927,7 @@ const PromotionsPage = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="discount">Discount</label>
+                <label htmlFor="discount"> {t("DISCOUNT")}</label>
                 <InputText
                   id="discount"
                   value={promotions.discount}
@@ -954,7 +956,8 @@ const PromotionsPage = () => {
               />
               {promotions && (
                 <span>
-                  Are you sure you want to delete <b>Promotions record</b>?
+                  {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")}{" "}
+                  <b>Promotions record</b>?
                 </span>
               )}
             </div>
