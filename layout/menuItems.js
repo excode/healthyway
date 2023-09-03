@@ -41,13 +41,12 @@ const menus = {
       icon: "pi pi-fw pi-align-center",
       to: "/secure/ingredient",
     },
-    
+
     {
       label: "MEAL_GROUP_NAME",
       icon: "pi pi-fw pi-clone",
       to: "/secure/mealGroup",
     },
-    
 
     { label: "USER_TABLE", icon: "pi pi-fw pi-users", to: "/secure/users" },
   ],

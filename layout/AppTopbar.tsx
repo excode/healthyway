@@ -31,17 +31,12 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [userData, setUserData] = useState<UserData>({ email: "" });
-  const [selectedLang, setSelectedLang] = useState('en');
+  const [selectedLang, setSelectedLang] = useState("ar");
   const { textFormat, setTextFormat } = useContext(LangContext);
   // const [textFormat, setTextFormat] = useState<string>("");
   // const lang = [{ name: "en" }, { name: "ar" }];
   const lang = ["ar", "en"];
   const changeLocale = (newLocale: string) => {
-    // i18n?.changeLanguage(newLocale);
-
-    // (router as any)?.push(router.pathname, router.asPath, {
-    //   locale: newLocale,
-    // });
     router?.push(router.pathname, router.asPath, {
       locale: newLocale,
     });
@@ -49,16 +44,13 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     // console.log(i18n?.language);
     setSelectedLang(newLocale);
   };
- 
-    useImperativeHandle(ref, () => ({
-      menubutton: menubuttonRef.current,
-      topbarmenu: topbarmenuRef.current,
-      topbarmenubutton: topbarmenubuttonRef.current,
-    }));
 
-  
+  useImperativeHandle(ref, () => ({
+    menubutton: menubuttonRef.current,
+    topbarmenu: topbarmenuRef.current,
+    topbarmenubutton: topbarmenubuttonRef.current,
+  }));
 
-  
   const role = ["Admin", "Kitchen", "Chef", "Customer"];
 
   // useEffect(() => {
@@ -71,7 +63,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
     setUserData(decoded);
     selectedLang === "ar" ? setTextFormat("rtl") : setTextFormat("ltr");
-  }, []);
+  }, [selectedLang]);
 
   const onPress = () => {
     removeCookie("user");
