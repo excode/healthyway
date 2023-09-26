@@ -18,22 +18,16 @@ import { UserData } from "@services/Login";
 import { LangContext } from "hooks/lan";
 //NEW
 
-
-
 const AppMenu = () => {
   const { layoutConfig } = useContext(LayoutContext);
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [menus, setMenus] = useState<AppMenuItem>(adminMenus);
   const { textFormat } = useContext(LangContext);
 
-  
-        const homeMenu =
-       {
-              label: "HOME",
-              items: [
-                { label: "DASHBOARD", icon: "pi pi-fw pi-home", to: "/secure" },
-              ],
-            };
+  const homeMenu = {
+    label: "HOME",
+    items: [{ label: "DASHBOARD", icon: "pi pi-fw pi-home", to: "/secure" }],
+  };
   var model: AppMenuItem[] = [
     // {
     //   label: "Home",
@@ -54,11 +48,11 @@ const AppMenu = () => {
     let token: string = data.accessToken || "";
     const decoded: UserData = jwt_decode<JwtPayload>(token) as UserData;
     if (decoded.permissionLevel == 0) {
-      setMenus(adminMenus) ;
+      setMenus(adminMenus);
     } else if (decoded.permissionLevel == 1) {
-     setMenus(kitchenMenus);
+      setMenus(kitchenMenus);
     } else if (decoded.permissionLevel == 2) {
-     setMenus(chefMenus) 
+      setMenus(chefMenus);
     }
   }, [textFormat]);
 
