@@ -1,4 +1,4 @@
-import config from "@config/index";
+import config from "@config/configs";
 import { validate, validateForm } from "@lib/validation";
 import { Chef, ChefKey, ChefQuery, ChefService } from "@services/Chef";
 import { SortType } from "@services/CommonTypes";

@@ -1,4 +1,4 @@
-import config from "@config/index";
+import config from "@config/configs";
 import { validate, validateForm } from "@lib/validation";
 import { SortType } from "@services/CommonTypes";
 import { MealPlan, MealPlanService } from "@services/MealPlan";

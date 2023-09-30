@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import config from "@config/index";
+import config from "@config/configs";
 import { SortType } from "@services/CommonTypes";
 import { MealItem, MealItemQuery, MealItemService } from "@services/MealItem";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";

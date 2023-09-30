@@ -1,4 +1,4 @@
-import config from "@config/index";
+import config from "@config/configs";
 import { MealItem, MealItemKey, MealItemService } from "@services/MealItem";
 import { useRouter } from "next/router";
 import { Button } from "primereact/button";

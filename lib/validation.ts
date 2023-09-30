@@ -1,4 +1,4 @@
-import config from "../config";
+import config from "../config/configs";
 type validationRule = {
   id: string;
   type: number;

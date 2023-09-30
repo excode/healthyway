@@ -1,4 +1,4 @@
-import config from "@config/index";
+import config from "@config/configs";
 import { MealGroup, MealGroupKey, MealGroupService } from "@services/MealGroup";
 import { useRouter } from "next/router";
 import { Button } from "primereact/button";

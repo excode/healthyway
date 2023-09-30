@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
-import config from "@config/index";
+import config from "@config/configs";
 import { Customer, CustomerService } from "@services/Customer";
 import { FeedbackService } from "@services/Feedback";
 import { MealItem, MealItemService } from "@services/MealItem";

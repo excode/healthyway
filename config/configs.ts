@@ -1,12 +1,13 @@
 type Config = {
   serverURI: string;
+  title: string;
   fixedLayout: boolean;
   hideLogoOnMobile: boolean;
-  multiLanguageSupport: false;
+  multiLanguageSupport: boolean;
   jwt_secret: string;
 };
 
-export default {
+const config: Config = {
   serverURI: "https://dev.ikra.my",
   // serverURI: "http://localhost:8080",
   title: "Meal Delivery & Subscription",
@@ -15,3 +16,5 @@ export default {
   multiLanguageSupport: false,
   jwt_secret: "654321",
 };
+
+export default config;

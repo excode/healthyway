@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import config from "@config/index";
+import config from "@config/configs";
 import { LangContext } from "hooks/lan";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -151,17 +151,10 @@ const Layout = ({ children }: ChildContainerProps) => {
       <Head>
         <title>{config.title}</title>
         <meta charSet="UTF-8" />
-        <meta
-          name="description"
-          content="The ultimate healthy food"
-        />
+        <meta name="description" content="The ultimate healthy food" />
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <meta property="og:type" content="website"></meta>
-        
-        
-      
-  \
+        <meta property="og:type" content="website"></meta>\
         <meta property="og:ttl" content="604800"></meta>
         <link rel="icon" href={`/favicon.ico`} type="image/x-icon"></link>
       </Head>

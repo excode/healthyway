@@ -1,7 +1,7 @@
 import { LoginData } from "@services/Login";
 import axios, { RawAxiosRequestHeaders } from "axios";
 import { parse } from "cookie";
-import config from "../config";
+import config from "../config/configs";
 
 export type GetLoginResponse = {
   error?: string;
